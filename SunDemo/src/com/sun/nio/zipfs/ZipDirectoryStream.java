@@ -38,7 +38,7 @@
  */
 
 
-package com.sun.zipfs;
+package com.sun.nio.zipfs;
 
 import com.sun.nio.zipfs.ZipFileSystem;
 import com.sun.nio.zipfs.ZipPath;

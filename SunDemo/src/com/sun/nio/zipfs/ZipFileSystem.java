@@ -38,17 +38,12 @@
  */
 
 
-package com.sun.zipfs;
-
-import com.sun.nio.zipfs.*;
-import com.sun.nio.zipfs.ZipFileAttributes;
-import com.sun.nio.zipfs.ZipFileStore;
+package com.sun.nio.zipfs;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

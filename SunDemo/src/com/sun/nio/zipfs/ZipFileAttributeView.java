@@ -39,9 +39,7 @@
 
 
 
-package com.sun.zipfs;
-
-import com.sun.nio.zipfs.*;
+package com.sun.nio.zipfs;
 
 import java.nio.file.attribute.*;
 import java.io.IOException;

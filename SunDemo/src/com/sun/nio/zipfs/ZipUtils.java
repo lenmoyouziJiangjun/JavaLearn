@@ -38,7 +38,7 @@
  */
 
 
-package com.sun.zipfs;
+package com.sun.nio.zipfs;
 
 import java.io.IOException;
 import java.io.OutputStream;

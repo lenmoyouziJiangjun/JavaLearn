@@ -38,12 +38,7 @@
  */
 
 
-package com.sun.zipfs;
-
-import com.sun.nio.zipfs.*;
-import com.sun.nio.zipfs.ZipDirectoryStream;
-import com.sun.nio.zipfs.ZipFileAttributeView;
-import com.sun.nio.zipfs.ZipFileAttributes;
+package com.sun.nio.zipfs;
 
 import java.io.*;
 import java.net.URI;

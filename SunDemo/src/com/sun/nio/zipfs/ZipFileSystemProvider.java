@@ -38,11 +38,7 @@
  */
 
 
-package com.sun.zipfs;
-
-import com.sun.nio.zipfs.*;
-import com.sun.nio.zipfs.ZipFileAttributes;
-import com.sun.nio.zipfs.ZipFileSystem;
+package com.sun.nio.zipfs;
 
 import java.io.*;
 import java.nio.channels.*;

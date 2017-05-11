@@ -1,4 +1,4 @@
-package datasturctures;
+package datasturctures.heap;
 
 /**
  * Version 1.0

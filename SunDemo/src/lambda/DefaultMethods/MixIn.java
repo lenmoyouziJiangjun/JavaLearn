@@ -58,9 +58,7 @@ public class MixIn {
             StringBuilder sb = new StringBuilder();
             sb.append("State of the: ").append(
                     this.getClass().getSimpleName()).append("\n");
-            for (Class cls = this.getClass();
-                    cls != null;
-                    cls = cls.getSuperclass()) {
+            for (Class cls = this.getClass();cls != null;cls = cls.getSuperclass()) {
                 for (Field f : cls.getDeclaredFields()) {
                     try {
                         f.setAccessible(true);

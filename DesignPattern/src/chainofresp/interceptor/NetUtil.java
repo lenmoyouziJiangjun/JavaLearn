@@ -1,4 +1,4 @@
-package interceptor.net;/**
+package chainofresp.interceptor;/**
  * Created by liaoxueyan on 17/6/27.
  */
 
@@ -18,7 +18,7 @@ public class NetUtil {
     public void doHttpRequest(){
         if(interceptors!=null){
             for(NetInterceptor interceptor:interceptors){
-                interceptor.intercept();
+//                chainofresp.interceptor.intercept();
             }
         }
     }

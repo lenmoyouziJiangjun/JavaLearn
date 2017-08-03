@@ -19,13 +19,20 @@ public class StubInterceptorBuilder {
         this.proxyFactory = factory;
     }
 
-    public Interceptor build(){
+    public Interceptor build() {
         return interceptor;
     }
 
-    public <T> StubInterceptorBuilder train(Trainer<T> trainer)
-
-
+    public <T> StubInterceptorBuilder train(Trainer<T> trainer) {
+        final TrainingContext trainingContext = TrainingContext.join(proxyFactory);
+        try {
+            final T stub = trainingContext.push(trainer.traineeType, interceptor);
+            trainer.train(stub);
+        } finally {
+            trainingContext.part();
+        }
+        return this;
+    }
 
 
 }

@@ -1,4 +1,4 @@
-package com.lll.basis;
+package com.lll.basic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,8 @@ public class OperatorTest {
         binaryOperator();
         dualOperatorTest();
         testDataType();
+        testNum(3.8f);
+        testOpe2();
     }
 
     /**
@@ -79,9 +81,12 @@ public class OperatorTest {
         }
     }
 
-    public static void testDataType(){
-        System.out.print("long max==="+Long.MAX_VALUE+"-----min===="+Long.MIN_VALUE);
-        System.out.print("int max==="+Integer.MAX_VALUE+"-----min===="+Integer.MIN_VALUE);
+    /**
+     * 测试技术数据类型精度
+     */
+    public static void testDataType() {
+        System.out.print("long max===" + Long.MAX_VALUE + "-----min====" + Long.MIN_VALUE);
+        System.out.print("int max===" + Integer.MAX_VALUE + "-----min====" + Integer.MIN_VALUE);
         // byte
         System.out.println("基本类型：byte 二进制位数：" + Byte.SIZE);
         System.out.println("包装类：java.lang.Byte");
@@ -99,8 +104,8 @@ public class OperatorTest {
         // int
         System.out.println("基本类型：int 二进制位数：" + Integer.SIZE);
         System.out.println("包装类：java.lang.Integer");
-        System.out.println("最小值：Integer.MIN_VALUE=" + Integer.MIN_VALUE);
-        System.out.println("最大值：Integer.MAX_VALUE=" + Integer.MAX_VALUE);
+        System.out.println("最小值：Integer.MIN_VALUE=" + Integer.MIN_VALUE + "------");
+        System.out.println("最大值：Integer.MAX_VALUE=" + Integer.MAX_VALUE + "------2的" + Math.log1p(2147483648D) + "次方");
         System.out.println();
 
         // long
@@ -134,6 +139,25 @@ public class OperatorTest {
         System.out.println("最大值：Character.MAX_VALUE="
                 + (int) Character.MAX_VALUE);
 
+    }
+
+    /**
+     * 精度问题
+     *
+     * @param f
+     */
+    public static void testNum(float f) {
+        int i = (int) f;//float 强转为int将舍弃小数部分
+        int i2 = (int) (f + .5f);//四舍五入
+        System.out.print("i====" + i);
+    }
+
+    public static void testOpe2() {
+        boolean b = 12 < 24 == false;
+        //执行步骤1：12<24 返回true;
+        //执行步骤2：true ==false; 返回false;
+        //执行步骤3： b = false;
+        System.out.println("b====" + b);
     }
 
 

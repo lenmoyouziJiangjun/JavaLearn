@@ -37,7 +37,7 @@ public final class FlowableReplay<T> extends ConnectableFlowable<T> implements H
     final Flowable<T> source;
     /** Holds the current subscriber that is, will be or just was subscribed to the source observable. */
     final AtomicReference<ReplaySubscriber<T>> current;
-    /** A factory that creates the appropriate buffer for the ReplaySubscriber. */
+    /** A javapattern.factory that creates the appropriate buffer for the ReplaySubscriber. */
     final Callable<? extends ReplayBuffer<T>> bufferFactory;
 
     final Publisher<T> onSubscribe;
@@ -46,11 +46,11 @@ public final class FlowableReplay<T> extends ConnectableFlowable<T> implements H
     static final Callable DEFAULT_UNBOUNDED_FACTORY = new DefaultUnboundedFactory();
 
     /**
-     * Given a connectable observable factory, it multicasts over the generated
+     * Given a connectable observable javapattern.factory, it multicasts over the generated
      * ConnectableObservable via a selector function.
      * @param <U> the connectable observable type
      * @param <R> the result type
-     * @param connectableFactory the factory that returns a ConnectableFlowable for each individual subscriber
+     * @param connectableFactory the javapattern.factory that returns a ConnectableFlowable for each individual subscriber
      * @param selector the function that receives a Flowable and should return another Flowable that will be subscribed to
      * @return the new Observable instance
      */
@@ -131,7 +131,7 @@ public final class FlowableReplay<T> extends ConnectableFlowable<T> implements H
     /**
      * Creates a OperatorReplay instance to replay values of the given source observable.
      * @param source the source observable
-     * @param bufferFactory the factory to instantiate the appropriate buffer when the observable becomes active
+     * @param bufferFactory the javapattern.factory to instantiate the appropriate buffer when the observable becomes active
      * @return the connectable observable
      */
     static <T> ConnectableFlowable<T> create(Flowable<T> source,
@@ -353,7 +353,7 @@ public final class FlowableReplay<T> extends ConnectableFlowable<T> implements H
                 }
                 // we do copy-on-write logic here
                 InnerSubscription<T>[] u;
-                // we don't create a new empty array if producer was the single inhabitant
+                // we don't create a new empty array if producer was the javapattern.single inhabitant
                 // but rather reuse an empty array
                 if (len == 1) {
                     u = EMPTY;

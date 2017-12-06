@@ -78,7 +78,7 @@ import javax.net.ssl.SSLEngineResult.*;
  * <P>
  * There are many, many ways to handle compute and I/O strategies.
  * What follows is a relatively simple one.  The reader is encouraged
- * to develop the strategy that best fits the application.
+ * to develop the javapattern.strategy that best fits the application.
  * <P>
  * In most of the non-blocking operations in this class, we let the
  * Selector tell us when we're ready to attempt an I/O operation (by the
@@ -178,7 +178,7 @@ class ChannelIOSecure extends ChannelIO {
     }
 
     /*
-     * Static factory method for creating a secure ChannelIO object.
+     * Static javapattern.factory method for creating a secure ChannelIO object.
      * <P>
      * We need to allocate different sized application data buffers
      * based on whether we're secure or not.  We can't determine

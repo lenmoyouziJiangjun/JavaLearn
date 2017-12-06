@@ -34,7 +34,7 @@ import io.reactivex.internal.util.EndConsumerHelper;
  * an immediate, asynchronous emission of data to {@link #onNext(Object)}. Make sure
  * all initialization happens before the call to {@code request()} in {@code onStart()}.
  * Calling {@link #request(long)} inside {@link #onNext(Object)} can happen at any time
- * because by design, {@code onNext} calls from upstream are non-reentrant and non-overlapping.
+ * because by javapattern.design, {@code onNext} calls from upstream are non-reentrant and non-overlapping.
  *
  * <p>Use the protected {@link #cancel()} to cancel the sequence from within an
  * {@code onNext} implementation.

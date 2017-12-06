@@ -417,7 +417,7 @@ public abstract class Completable implements CompletableSource {
 
     /**
      * Returns a Completable instance that when subscribed to, subscribes to the Single instance and
-     * emits a completion event if the single emits onSuccess or forwards any onError events.
+     * emits a completion event if the javapattern.single emits onSuccess or forwards any onError events.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code fromSingle} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -425,12 +425,12 @@ public abstract class Completable implements CompletableSource {
      * @param <T> the value type of the Single
      * @param single the Single instance to subscribe to, not null
      * @return the new Completable instance
-     * @throws NullPointerException if single is null
+     * @throws NullPointerException if javapattern.single is null
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Completable fromSingle(final SingleSource<T> single) {
-        ObjectHelper.requireNonNull(single, "single is null");
+        ObjectHelper.requireNonNull(single, "javapattern.single is null");
         return RxJavaPlugins.onAssembly(new CompletableFromSingle<T>(single));
     }
 
@@ -1906,7 +1906,7 @@ public abstract class Completable implements CompletableSource {
      * </dl>
      *
      * @param <T> the value type
-     * @return a {@link Maybe} that emits a single item T or an error.
+     * @return a {@link Maybe} that emits a javapattern.single item T or an error.
      */
     @CheckReturnValue
     @SuppressWarnings("unchecked")

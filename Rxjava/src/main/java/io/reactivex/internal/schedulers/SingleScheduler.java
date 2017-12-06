@@ -22,7 +22,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * A scheduler with a shared, single threaded underlying ScheduledExecutorService.
+ * A scheduler with a shared, javapattern.single threaded underlying ScheduledExecutorService.
  * @since 2.0
  */
 public final class SingleScheduler extends Scheduler {
@@ -31,7 +31,7 @@ public final class SingleScheduler extends Scheduler {
     final AtomicReference<ScheduledExecutorService> executor = new AtomicReference<ScheduledExecutorService>();
 
     /** The name of the system property for setting the thread priority for this Scheduler. */
-    private static final String KEY_SINGLE_PRIORITY = "rx2.single-priority";
+    private static final String KEY_SINGLE_PRIORITY = "rx2.javapattern.single-priority";
 
     private static final String THREAD_NAME_PREFIX = "RxSingleScheduler";
 
@@ -53,7 +53,7 @@ public final class SingleScheduler extends Scheduler {
     }
 
     /**
-     * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
+     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      */
     public SingleScheduler(ThreadFactory threadFactory) {

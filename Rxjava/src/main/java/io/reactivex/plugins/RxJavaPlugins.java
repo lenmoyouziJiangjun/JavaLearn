@@ -119,7 +119,7 @@ public final class RxJavaPlugins {
 
     /**
      * If true, attempting to run a blockingX operation on a (by default)
-     * computation or single scheduler will throw an IllegalStateException.
+     * computation or javapattern.single scheduler will throw an IllegalStateException.
      */
     static volatile boolean failNonBlockingScheduler;
 
@@ -143,7 +143,7 @@ public final class RxJavaPlugins {
     /**
      * Enables or disables the blockingX operators to fail
      * with an IllegalStateException on a non-blocking
-     * scheduler such as computation or single.
+     * scheduler such as computation or javapattern.single.
      * <p>History: 2.0.5 - experimental
      * @param enable enable or disable the feature
      * @since 2.1
@@ -158,7 +158,7 @@ public final class RxJavaPlugins {
     /**
      * Returns true if the blockingX operators fail
      * with an IllegalStateException on a non-blocking scheduler
-     * such as computation or single.
+     * such as computation or javapattern.single.
      * <p>History: 2.0.5 - experimental
      * @return true if the blockingX operators fail on a non-blocking scheduler
      * @since 2.1
@@ -1184,7 +1184,7 @@ public final class RxJavaPlugins {
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#computation()}
      * except using {@code threadFactory} for thread creation.
      * <p>History: 2.0.5 - experimental
-     * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
+     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
      * @since 2.1
@@ -1198,7 +1198,7 @@ public final class RxJavaPlugins {
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#io()}
      * except using {@code threadFactory} for thread creation.
      * <p>History: 2.0.5 - experimental
-     * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
+     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
      * @since 2.1
@@ -1212,7 +1212,7 @@ public final class RxJavaPlugins {
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#newThread()}
      * except using {@code threadFactory} for thread creation.
      * <p>History: 2.0.5 - experimental
-     * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
+     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
      * @since 2.1
@@ -1226,7 +1226,7 @@ public final class RxJavaPlugins {
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#single()}
      * except using {@code threadFactory} for thread creation.
      * <p>History: 2.0.5 - experimental
-     * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
+     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
      * @since 2.1

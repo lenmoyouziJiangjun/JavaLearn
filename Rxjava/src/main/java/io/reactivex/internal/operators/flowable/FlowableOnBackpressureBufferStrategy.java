@@ -26,7 +26,7 @@ import io.reactivex.internal.util.BackpressureHelper;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
- * Handle backpressure with a bounded buffer and custom strategy.
+ * Handle backpressure with a bounded buffer and custom javapattern.strategy.
  *
  * @param <T> the input and output value type
  */

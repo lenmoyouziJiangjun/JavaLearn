@@ -35,7 +35,7 @@
  * <li>Observable == IObservable (base type)</li>
  * <li>Observer == IObserver (event consumer)</li>
  * <li>Disposable == IDisposable (resource/cancellation management)</li>
- * <li>Observable == Observable (factory methods)</li>
+ * <li>Observable == Observable (javapattern.factory methods)</li>
  * <li>Flowable == IAsyncEnumerable (backpressure)</li>
  * <li>Subscriber == IAsyncEnumerator</li>
  * </ul>

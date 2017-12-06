@@ -68,7 +68,7 @@ public final class ImmutableTriple<L, M, R> extends Triple<L, M, R> {
     /**
      * <p>Obtains an immutable triple of from three objects inferring the generic types.</p>
      *
-     * <p>This factory allows the triple to be created using inference to
+     * <p>This javapattern.factory allows the triple to be created using inference to
      * obtain the generic types.</p>
      *
      * @param <L> the left element type

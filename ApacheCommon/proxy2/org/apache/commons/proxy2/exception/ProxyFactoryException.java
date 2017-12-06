@@ -20,7 +20,7 @@ package org.apache.commons.proxy2.exception;
 import org.apache.commons.proxy2.ProxyFactory;
 
 /**
- * A runtime exception type to be used by {@link ProxyFactory proxy factories} when a problem
+ * A runtime exception type to be used by {@link ProxyFactory javapattern.proxy factories} when a problem
  * occurs.
  *
  * @since 1.0

@@ -20,7 +20,7 @@ public abstract class AbstractSubclassingProxyFactory extends AbstractProxyFacto
     /**
      * Returns true if a suitable superclass can be found, given the desired <code>proxyClasses</code>.
      *
-     * @param proxyClasses the proxy classes
+     * @param proxyClasses the javapattern.proxy classes
      * @return true if a suitable superclass can be found, given the desired <code>proxyClasses</code>
      */
     @Override
@@ -35,11 +35,11 @@ public abstract class AbstractSubclassingProxyFactory extends AbstractProxyFacto
     }
 
     /**
-     * Returns either {@link Object} if all of the <code>proxyClasses</code> are interfaces or the single non-interface
+     * Returns either {@link Object} if all of the <code>proxyClasses</code> are interfaces or the javapattern.single non-interface
      * class from <code>proxyClasses</code>.
      *
-     * @param proxyClasses the proxy classes
-     * @return either {@link Object} if all of the <code>proxyClasses</code> are interfaces or the single non-interface
+     * @param proxyClasses the javapattern.proxy classes
+     * @return either {@link Object} if all of the <code>proxyClasses</code> are interfaces or the javapattern.single non-interface
      * class from <code>proxyClasses</code>
      * @throws ProxyFactoryException if multiple non-interface classes are contained in <code>proxyClasses</code> or any of the
      *                               non-interface classes are final

@@ -28,7 +28,7 @@ import io.reactivex.internal.util.BackpressureHelper;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
- * Processor that allows only a single Subscriber to subscribe to it during its lifetime.
+ * Processor that allows only a javapattern.single Subscriber to subscribe to it during its lifetime.
  *
  * <p>This processor buffers notifications and replays them to the Subscriber as requested.
  *
@@ -104,7 +104,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
 
     /**
      * Creates an UnicastProcessor with the given internal buffer capacity hint and a callback for
-     * the case when the single Subscriber cancels its subscription.
+     * the case when the javapattern.single Subscriber cancels its subscription.
      *
      * <p>The callback, if not null, is called exactly once and
      * non-overlapped with any active replay.
@@ -122,7 +122,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
 
     /**
      * Creates an UnicastProcessor with the given internal buffer capacity hint, delay error flag and a callback for
-     * the case when the single Subscriber cancels its subscription.
+     * the case when the javapattern.single Subscriber cancels its subscription.
      *
      * <p>The callback, if not null, is called exactly once and
      * non-overlapped with any active replay.
@@ -152,7 +152,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
 
     /**
      * Creates an UnicastProcessor with the given capacity hint and callback
-     * for when the Processor is terminated normally or its single Subscriber cancels.
+     * for when the Processor is terminated normally or its javapattern.single Subscriber cancels.
      * @param capacityHint the capacity hint for the internal, unbounded queue
      * @param onTerminate the callback to run when the Processor is terminated or cancelled, null not allowed
      * @since 2.0
@@ -163,7 +163,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
 
     /**
      * Creates an UnicastProcessor with the given capacity hint and callback
-     * for when the Processor is terminated normally or its single Subscriber cancels.
+     * for when the Processor is terminated normally or its javapattern.single Subscriber cancels.
      * @param capacityHint the capacity hint for the internal, unbounded queue
      * @param onTerminate the callback to run when the Processor is terminated or cancelled, null not allowed
      * @param delayError deliver pending onNext events before onError
@@ -396,7 +396,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
                 drain();
             }
         } else {
-            EmptySubscription.error(new IllegalStateException("This processor allows only a single Subscriber"), s);
+            EmptySubscription.error(new IllegalStateException("This processor allows only a javapattern.single Subscriber"), s);
         }
     }
 

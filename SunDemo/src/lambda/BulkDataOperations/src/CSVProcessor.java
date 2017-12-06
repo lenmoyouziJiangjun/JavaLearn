@@ -68,7 +68,6 @@ import static java.util.stream.Collectors.*;
  * BufferedReader.lines(), Collection.forEach(...), Comparator.comparing(...),
  * Comparator.reversed(), Arrays.stream(...).</li>
  * </ul>
- *
  */
 public class CSVProcessor {
 
@@ -114,7 +113,7 @@ public class CSVProcessor {
                      */
                     Comparator<String> cmp
                             = Comparator.comparing(str -> getCell(str, column),
-                                    String.CASE_INSENSITIVE_ORDER);
+                            String.CASE_INSENSITIVE_ORDER);
                     /*
                      * sorted(...) is used to sort records.
                      * forEach(...) is used to output sorted records.
@@ -189,7 +188,7 @@ public class CSVProcessor {
         //Create a comparator to compare records by the column.
         Comparator<String> comparator
                 = Comparator.comparing(
-                        (String str) -> parseDouble(getCell(str, column)));
+                (String str) -> parseDouble(getCell(str, column)));
         //Find max record by using Collectors.maxBy(...)
         System.out.println(
                 "Max: " + br.lines().collect(maxBy(comparator)).get());
@@ -202,7 +201,7 @@ public class CSVProcessor {
         //Collectors.toDoubleSummaryStatistics(...)
         DoubleSummaryStatistics doubleSummaryStatistics
                 = br.lines().collect(summarizingDouble(
-                    str -> parseDouble(getCell(str, column))));
+                str -> parseDouble(getCell(str, column))));
         System.out.println("Average: " + doubleSummaryStatistics.getAverage());
         System.out.println("Sum: " + doubleSummaryStatistics.getSum());
     }

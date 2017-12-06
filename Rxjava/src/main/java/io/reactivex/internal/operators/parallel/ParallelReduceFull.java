@@ -26,7 +26,7 @@ import io.reactivex.parallel.ParallelFlowable;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
- * Reduces all 'rails' into a single value which then gets reduced into a single
+ * Reduces all 'rails' into a javapattern.single value which then gets reduced into a javapattern.single
  * Publisher sequence.
  *
  * @param <T> the value type

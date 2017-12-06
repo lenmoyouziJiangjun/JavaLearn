@@ -21,7 +21,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 import java.util.concurrent.*;
 
 /**
- * Static factory methods for returning standard Scheduler instances.
+ * Static javapattern.factory methods for returning standard Scheduler instances.
  * <p>
  * The initial and runtime values of the various scheduler types can be overridden via the
  * {@code RxJavaPlugins.setInit(scheduler name)SchedulerHandler()} and
@@ -33,7 +33,7 @@ import java.util.concurrent.*;
  * <li>{@code rx2.computation-threads} (int): sets the number of threads in the {@link #computation()} Scheduler, default is the number of available CPUs</li>
  * <li>{@code rx2.computation-priority} (int): sets the thread priority of the {@link #computation()} Scheduler, default is {@link Thread#NORM_PRIORITY}</li>
  * <li>{@code rx2.newthread-priority} (int): sets the thread priority of the {@link #newThread()} Scheduler, default is {@link Thread#NORM_PRIORITY}</li>
- * <li>{@code rx2.single-priority} (int): sets the thread priority of the {@link #single()} Scheduler, default is {@link Thread#NORM_PRIORITY}</li>
+ * <li>{@code rx2.javapattern.single-priority} (int): sets the thread priority of the {@link #single()} Scheduler, default is {@link Thread#NORM_PRIORITY}</li>
  * <li>{@code rx2.purge-enabled} (boolean): enables periodic purging of all Scheduler's backing thread pools, default is false</li>
  * <li>{@code rx2.purge-period-seconds} (int): specifies the periodic purge interval of all Scheduler's backing thread pools, default is 1 second</li>
  * </ul>
@@ -94,7 +94,7 @@ public final class Schedulers {
      * <p>
      * It is not recommended to perform blocking, IO-bound work on this scheduler. Use {@link #io()} instead.
      * <p>
-     * The default instance has a backing pool of single-threaded {@link ScheduledExecutorService} instances equal to
+     * The default instance has a backing pool of javapattern.single-threaded {@link ScheduledExecutorService} instances equal to
      * the number of available processors ({@link Runtime#availableProcessors()}) to the Java VM.
      * <p>
      * Unhandled errors will be delivered to the scheduler Thread's {@link Thread.UncaughtExceptionHandler}.
@@ -140,7 +140,7 @@ public final class Schedulers {
      * <p>
      * This can be used for asynchronously performing blocking IO.
      * <p>
-     * The implementation is backed by a pool of single-threaded {@link ScheduledExecutorService} instances
+     * The implementation is backed by a pool of javapattern.single-threaded {@link ScheduledExecutorService} instances
      * that will try to reuse previoulsy started instances used by the worker
      * returned by {@link io.reactivex.Scheduler#createWorker()} but otherwise will start a new backing
      * {@link ScheduledExecutorService} instance. Note that this scheduler may create an unbounded number
@@ -201,7 +201,7 @@ public final class Schedulers {
     /**
      * Returns a default, shared {@link Scheduler} instance that creates a new {@link Thread} for each unit of work.
      * <p>
-     * The default implementation of this scheduler creates a new, single-threaded {@link ScheduledExecutorService} for
+     * The default implementation of this scheduler creates a new, javapattern.single-threaded {@link ScheduledExecutorService} for
      * each invocation of the {@link Scheduler#scheduleDirect(Runnable)} (plus its overloads) and {@link Scheduler#createWorker()}
      * methods, thus an unbounded number of worker threads may be created that can
      * result in system slowdowns or {@code OutOfMemoryError}. Therefore, for casual uses or when implementing an operator,
@@ -238,7 +238,7 @@ public final class Schedulers {
     }
 
     /**
-     * Returns a default, shared, single-thread-backed {@link Scheduler} instance for work
+     * Returns a default, shared, javapattern.single-thread-backed {@link Scheduler} instance for work
      * requiring strongly-sequential execution on the same background thread.
      * <p>
      * Uses:
@@ -262,7 +262,7 @@ public final class Schedulers {
      * before the {@link Schedulers} class is referenced in your code.
      * <p><strong>Supported system properties ({@code System.getProperty()}):</strong>
      * <ul>
-     * <li>{@code rx2.single-priority} (int): sets the thread priority of the {@link #single()} Scheduler, default is {@link Thread#NORM_PRIORITY}</li>
+     * <li>{@code rx2.javapattern.single-priority} (int): sets the thread priority of the {@link #single()} Scheduler, default is {@link Thread#NORM_PRIORITY}</li>
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
@@ -279,7 +279,7 @@ public final class Schedulers {
      * <p>Operators on the base reactive classes that use this scheduler are marked with the
      * &#64;{@link io.reactivex.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.annotations.SchedulerSupport#SINGLE SINGLE})
      * annotation.
-     * @return a {@link Scheduler} that shares a single backing thread.
+     * @return a {@link Scheduler} that shares a javapattern.single backing thread.
      * @since 2.0
      */
     @NonNull
@@ -307,7 +307,7 @@ public final class Schedulers {
      * cancelling tasks scheduled by this scheduler can be cancelled/interrupted by calling
      * {@link io.reactivex.disposables.Disposable#dispose()}. In addition, tasks scheduled with
      * a time delay or periodically will use the provided executor. Note, however, if the provided
-     * {@code ScheduledExecutorService} instance is not single threaded, tasks scheduled
+     * {@code ScheduledExecutorService} instance is not javapattern.single threaded, tasks scheduled
      * with a time delay close to each other may end up executing in different order than
      * the original schedule() call was issued. This limitation may be lifted in a future patch.
      * <p>

@@ -14,7 +14,7 @@ import java.util.Properties;
  * Version 1.0
  * Created by lll on 17/9/4.
  * Description
- * This is the factory class used for creating {@link CryptoCipher} instances.
+ * This is the javapattern.factory class used for creating {@link CryptoCipher} instances.
  * copyright generalray4239@gmail.com
  */
 public class CryptoCipherFactory {

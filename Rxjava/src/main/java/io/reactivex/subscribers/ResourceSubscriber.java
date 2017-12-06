@@ -49,7 +49,7 @@ import io.reactivex.internal.util.EndConsumerHelper;
  * an immediate, asynchronous emission of data to {@link #onNext(Object)}. Make sure
  * all initialization happens before the call to {@code request()} in {@code onStart()}.
  * Calling {@link #request(long)} inside {@link #onNext(Object)} can happen at any time
- * because by design, {@code onNext} calls from upstream are non-reentrant and non-overlapping.
+ * because by javapattern.design, {@code onNext} calls from upstream are non-reentrant and non-overlapping.
  *
  * <p>Like all other consumers, {@code ResourceSubscriber} can be subscribed only once.
  * Any subsequent attempt to subscribe it to a new source will yield an
@@ -65,7 +65,7 @@ import io.reactivex.internal.util.EndConsumerHelper;
  *     Flowable.range(1, 5)
  *     .subscribeWith(new ResourceSubscriber&lt;Integer>() {
  *         &#64;Override public void onStart() {
- *             add(Schedulers.single()
+ *             add(Schedulers.javapattern.single()
  *                 .scheduleDirect(() -> System.out.println("Time!"),
  *                     2, TimeUnit.SECONDS));
  *             request(1);

@@ -36,11 +36,11 @@ import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * The Single class implements the Reactive Pattern for a single value response.
+ * The Single class implements the Reactive Pattern for a javapattern.single value response.
  * See {@link Flowable} or {@link Observable} for the
  * implementation of the Reactive Pattern for a stream or vector of values.
  * <p>
- * {@code Single} behaves the same as {@link Observable} except that it can only emit either a single successful
+ * {@code Single} behaves the same as {@link Observable} except that it can only emit either a javapattern.single successful
  * value, or an error (there is no "onComplete" notification as there is for {@link Observable})
  * <p>
  * Like an {@link Observable}, a {@code Single} is lazy, can be either "hot" or "cold", synchronous or
@@ -106,7 +106,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the Single sources provided by
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the Single sources provided by
      * an Iterable sequence.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -127,7 +127,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the Single sources provided by
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the Single sources provided by
      * an Observable sequence.
      * <dl>
      * <dt><b>Scheduler:</b></dt>
@@ -147,7 +147,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the Single sources provided by
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the Single sources provided by
      * a Publisher sequence.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -169,7 +169,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the Single sources provided by
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the Single sources provided by
      * a Publisher sequence and prefetched by the specified amount.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -299,7 +299,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the Single sources provided in
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the Single sources provided in
      * an array.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -576,7 +576,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Wraps a specific Publisher into a Single and signals its single element or error.
+     * Wraps a specific Publisher into a Single and signals its javapattern.single element or error.
      * <p>If the source Publisher is empty, a NoSuchElementException is signalled. If
      * the source has more than one element, an IndexOutOfBoundsException is signalled.
      * <dl>
@@ -599,7 +599,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Wraps a specific ObservableSource into a Single and signals its single element or error.
+     * Wraps a specific ObservableSource into a Single and signals its javapattern.single element or error.
      * <p>If the ObservableSource is empty, a NoSuchElementException is signalled.
      * If the source has more than one element, an IndexOutOfBoundsException is signalled.
      * <p>
@@ -647,7 +647,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Merges an Iterable sequence of SingleSource instances into a single Flowable sequence,
+     * Merges an Iterable sequence of SingleSource instances into a javapattern.single Flowable sequence,
      * running all SingleSources at once.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -668,7 +668,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Merges a Flowable sequence of SingleSource instances into a single Flowable sequence,
+     * Merges a Flowable sequence of SingleSource instances into a javapattern.single Flowable sequence,
      * running all SingleSources at once.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -691,7 +691,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Flattens a {@code Single} that emits a {@code Single} into a single {@code Single} that emits the item
+     * Flattens a {@code Single} that emits a {@code Single} into a javapattern.single {@code Single} that emits the item
      * emitted by the nested {@code Single}, without any transformation.
      * <p>
      * <img width="640" height="370" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.merge.oo.png" alt="">
@@ -717,11 +717,11 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Flattens two Singles into a single Flowable, without any transformation.
+     * Flattens two Singles into a javapattern.single Flowable, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Singles so that they appear as a single Flowable, by
+     * You can combine items emitted by multiple Singles so that they appear as a javapattern.single Flowable, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -751,11 +751,11 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Flattens three Singles into a single Flowable, without any transformation.
+     * Flattens three Singles into a javapattern.single Flowable, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Singles so that they appear as a single Flowable, by using
+     * You can combine items emitted by multiple Singles so that they appear as a javapattern.single Flowable, by using
      * the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -789,11 +789,11 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Flattens four Singles into a single Flowable, without any transformation.
+     * Flattens four Singles into a javapattern.single Flowable, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Singles so that they appear as a single Flowable, by using
+     * You can combine items emitted by multiple Singles so that they appear as a javapattern.single Flowable, by using
      * the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -871,7 +871,7 @@ public abstract class Single<T> implements SingleSource<T> {
      * </dl>
      * @param delay the delay amount
      * @param unit the time unit of the delay
-     * @param scheduler the scheduler where the single 0L will be emitted
+     * @param scheduler the scheduler where the javapattern.single 0L will be emitted
      * @return the new Single instance
      * @since 2.0
      */
@@ -1539,7 +1539,7 @@ public abstract class Single<T> implements SingleSource<T> {
      * <dd>{@code compose} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @param <R> the value type of the single returned by the transformer function
+     * @param <R> the value type of the javapattern.single returned by the transformer function
      * @param transformer the transformer function, not null
      * @return the source Single, transformed by the transformer function
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Implementing-Your-Own-Operators">RxJava wiki: Implementing Your Own Operators</a>
@@ -2246,11 +2246,11 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Flattens this and another Single into a single Flowable, without any transformation.
+     * Flattens this and another Single into a javapattern.single Flowable, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Singles so that they appear as a single Flowable, by using
+     * You can combine items emitted by multiple Singles so that they appear as a javapattern.single Flowable, by using
      * the {@code mergeWith} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -2993,7 +2993,7 @@ public abstract class Single<T> implements SingleSource<T> {
      * <dd>{@code toFlowable} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a {@link Flowable} that emits a single item T or an error.
+     * @return a {@link Flowable} that emits a javapattern.single item T or an error.
      */
     @BackpressureSupport(BackpressureKind.FULL)
     @CheckReturnValue
@@ -3007,7 +3007,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Returns a {@link Future} representing the single value emitted by this {@code Single}.
+     * Returns a {@link Future} representing the javapattern.single value emitted by this {@code Single}.
      * <p>
      * <img width="640" height="395" src="https://github.com/ReactiveX/RxJava/wiki/images/rx-operators/B.toFuture.png" alt="">
      * <dl>
@@ -3015,7 +3015,7 @@ public abstract class Single<T> implements SingleSource<T> {
      *  <dd>{@code toFuture} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a {@link Future} that expects a single item to be emitted by this {@code Single}
+     * @return a {@link Future} that expects a javapattern.single item to be emitted by this {@code Single}
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX documentation: To</a>
      */
     @CheckReturnValue
@@ -3033,7 +3033,7 @@ public abstract class Single<T> implements SingleSource<T> {
      * <dd>{@code toMaybe} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a {@link Maybe} that emits a single item T or an error.
+     * @return a {@link Maybe} that emits a javapattern.single item T or an error.
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
@@ -3053,7 +3053,7 @@ public abstract class Single<T> implements SingleSource<T> {
      * <dd>{@code toObservable} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return an {@link Observable} that emits a single item T or an error.
+     * @return an {@link Observable} that emits a javapattern.single item T or an error.
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)

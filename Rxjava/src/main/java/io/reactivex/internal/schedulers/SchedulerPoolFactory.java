@@ -109,8 +109,8 @@ public final class SchedulerPoolFactory {
     }
 
     /**
-     * Creates a ScheduledExecutorService with the given factory.
-     * @param factory the thread factory
+     * Creates a ScheduledExecutorService with the given javapattern.factory.
+     * @param factory the thread javapattern.factory
      * @return the ScheduledExecutorService
      */
     public static ScheduledExecutorService create(ThreadFactory factory) {

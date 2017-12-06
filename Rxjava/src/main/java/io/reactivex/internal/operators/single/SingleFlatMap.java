@@ -73,7 +73,7 @@ public final class SingleFlatMap<T, R> extends Single<R> {
             SingleSource<? extends R> o;
 
             try {
-                o = ObjectHelper.requireNonNull(mapper.apply(value), "The single returned by the mapper is null");
+                o = ObjectHelper.requireNonNull(mapper.apply(value), "The javapattern.single returned by the mapper is null");
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
                 actual.onError(e);

@@ -91,7 +91,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the MaybeSource sources provided by
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the MaybeSource sources provided by
      * an Iterable sequence.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -210,7 +210,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the MaybeSource sources provided by
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the MaybeSource sources provided by
      * a Publisher sequence.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -232,7 +232,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the MaybeSource sources provided by
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the MaybeSource sources provided by
      * a Publisher sequence.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -258,7 +258,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenate the single values, in a non-overlapping fashion, of the MaybeSource sources in the array.
+     * Concatenate the javapattern.single values, in a non-overlapping fashion, of the MaybeSource sources in the array.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The returned {@code Flowable} honors the backpressure of the downstream consumer.</dd>
@@ -315,7 +315,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenates a sequence of MaybeSource eagerly into a single stream of values.
+     * Concatenates a sequence of MaybeSource eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * source MaybeSources. The operator buffers the value emitted by these MaybeSources and then drains them
@@ -339,7 +339,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenates the Iterable sequence of MaybeSources into a single sequence by subscribing to each MaybeSource,
+     * Concatenates the Iterable sequence of MaybeSources into a javapattern.single sequence by subscribing to each MaybeSource,
      * one after the other, one at a time and delays any errors till the all inner MaybeSources terminate.
      *
      * <dl>
@@ -363,7 +363,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenates the Publisher sequence of Publishers into a single sequence by subscribing to each inner Publisher,
+     * Concatenates the Publisher sequence of Publishers into a javapattern.single sequence by subscribing to each inner Publisher,
      * one after the other, one at a time and delays any errors till the all inner and the outer Publishers terminate.
      *
      * <dl>
@@ -386,7 +386,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenates a sequence of MaybeSources eagerly into a single stream of values.
+     * Concatenates a sequence of MaybeSources eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * source MaybeSources. The operator buffers the values emitted by these MaybeSources and then drains them
@@ -410,7 +410,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenates a Publisher sequence of Publishers eagerly into a single stream of values.
+     * Concatenates a Publisher sequence of Publishers eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * emitted source Publishers as they are observed. The operator buffers the values emitted by these
@@ -555,7 +555,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * </dl>
      *
      * @param supplier
-     *            a Callable factory to return a Throwable for each individual MaybeObserver
+     *            a Callable javapattern.factory to return a Throwable for each individual MaybeObserver
      * @param <T>
      *            the type of the items (ostensibly) emitted by the Maybe
      * @return a Maybe that invokes the {@link MaybeObserver}'s {@link MaybeObserver#onError onError} method when
@@ -617,7 +617,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * @param <T> the target type
      * @param singleSource the SingleSource to convert from
      * @return the new Maybe instance
-     * @throws NullPointerException if single is null
+     * @throws NullPointerException if javapattern.single is null
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
@@ -769,7 +769,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Merges an Iterable sequence of MaybeSource instances into a single Flowable sequence,
+     * Merges an Iterable sequence of MaybeSource instances into a javapattern.single Flowable sequence,
      * running all MaybeSources at once.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -789,7 +789,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Merges a Flowable sequence of MaybeSource instances into a single Flowable sequence,
+     * Merges a Flowable sequence of MaybeSource instances into a javapattern.single Flowable sequence,
      * running all MaybeSources at once.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -809,7 +809,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Merges a Flowable sequence of MaybeSource instances into a single Flowable sequence,
+     * Merges a Flowable sequence of MaybeSource instances into a javapattern.single Flowable sequence,
      * running at most maxConcurrency MaybeSources at once.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -833,7 +833,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Flattens a {@code MaybeSource} that emits a {@code MaybeSource} into a single {@code MaybeSource} that emits the item
+     * Flattens a {@code MaybeSource} that emits a {@code MaybeSource} into a javapattern.single {@code MaybeSource} that emits the item
      * emitted by the nested {@code MaybeSource}, without any transformation.
      * <p>
      * <img width="640" height="393" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Maybe.merge.oo.png" alt="">
@@ -859,11 +859,11 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Flattens two MaybeSources into a single Flowable, without any transformation.
+     * Flattens two MaybeSources into a javapattern.single Flowable, without any transformation.
      * <p>
      * <img width="640" height="483" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Maybe.merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple MaybeSources so that they appear as a single Flowable, by
+     * You can combine items emitted by multiple MaybeSources so that they appear as a javapattern.single Flowable, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -893,11 +893,11 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Flattens three MaybeSources into a single Flowable, without any transformation.
+     * Flattens three MaybeSources into a javapattern.single Flowable, without any transformation.
      * <p>
      * <img width="640" height="483" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Maybe.merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple MaybeSources so that they appear as a single Flowable, by using
+     * You can combine items emitted by multiple MaybeSources so that they appear as a javapattern.single Flowable, by using
      * the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -931,11 +931,11 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Flattens four MaybeSources into a single Flowable, without any transformation.
+     * Flattens four MaybeSources into a javapattern.single Flowable, without any transformation.
      * <p>
      * <img width="640" height="483" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Maybe.merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple MaybeSources so that they appear as a single Flowable, by using
+     * You can combine items emitted by multiple MaybeSources so that they appear as a javapattern.single Flowable, by using
      * the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -972,7 +972,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Merges an array sequence of MaybeSource instances into a single Flowable sequence,
+     * Merges an array sequence of MaybeSource instances into a javapattern.single Flowable sequence,
      * running all MaybeSources at once.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -1331,7 +1331,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * </dl>
      *
      * @param delay
-     *            the initial delay before emitting a single {@code 0L}
+     *            the initial delay before emitting a javapattern.single {@code 0L}
      * @param unit
      *            time units to use for {@code delay}
      * @return a Maybe that emits {@code 0L} after a specified delay
@@ -1353,7 +1353,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * </dl>
      *
      * @param delay
-     *            the initial delay before emitting a single 0L
+     *            the initial delay before emitting a javapattern.single 0L
      * @param unit
      *            time units to use for {@code delay}
      * @param scheduler
@@ -1404,9 +1404,9 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * @param <T> the element type of the generated MaybeSource
      * @param <D> the type of the resource associated with the output sequence
      * @param resourceSupplier
-     *            the factory function to create a resource object that depends on the Maybe
+     *            the javapattern.factory function to create a resource object that depends on the Maybe
      * @param sourceSupplier
-     *            the factory function to create a MaybeSource
+     *            the javapattern.factory function to create a MaybeSource
      * @param resourceDisposer
      *            the function that will dispose of the resource
      * @return the Maybe whose lifetime controls the lifetime of the dependent resource object
@@ -1436,9 +1436,9 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * @param <T> the element type of the generated MaybeSource
      * @param <D> the type of the resource associated with the output sequence
      * @param resourceSupplier
-     *            the factory function to create a resource object that depends on the Maybe
+     *            the javapattern.factory function to create a resource object that depends on the Maybe
      * @param sourceSupplier
-     *            the factory function to create a MaybeSource
+     *            the javapattern.factory function to create a MaybeSource
      * @param resourceDisposer
      *            the function that will dispose of the resource
      * @param eager
@@ -2034,7 +2034,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * <img width="640" height="410" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/cache.png" alt="">
      * <p>
      * The operator subscribes only when the first downstream subscriber subscribes and maintains
-     * a single subscription towards this Maybe.
+     * a javapattern.single subscription towards this Maybe.
      * <p>
      * <em>Note:</em> You sacrifice the ability to dispose the origin when you use the {@code cache}.
      * <dl>
@@ -2178,7 +2178,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *  <dd>{@code count} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a Single that emits a single item: the number of items emitted by the source Maybe as a
+     * @return a Single that emits a javapattern.single item: the number of items emitted by the source Maybe as a
      *         64-bit Long item
      * @see <a href="http://reactivex.io/documentation/operators/count.html">ReactiveX operators documentation: Count</a>
      * @see #count()
@@ -2979,11 +2979,11 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Flattens this and another Maybe into a single Flowable, without any transformation.
+     * Flattens this and another Maybe into a javapattern.single Flowable, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Maybes so that they appear as a single Flowable, by
+     * You can combine items emitted by multiple Maybes so that they appear as a javapattern.single Flowable, by
      * using the {@code mergeWith} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -3251,7 +3251,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * </dl>
      *
      * @param valueSupplier
-     *            a function that returns a single value that will be emitted as success value
+     *            a function that returns a javapattern.single value that will be emitted as success value
      *            the current Maybe signals an onError event
      * @return the new Maybe instance
      * @see <a href="http://reactivex.io/documentation/operators/catch.html">ReactiveX operators documentation: Catch</a>

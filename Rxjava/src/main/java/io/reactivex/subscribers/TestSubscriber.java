@@ -28,7 +28,7 @@ import io.reactivex.observers.BaseTestConsumer;
  * A subscriber that records events and allows making assertions about them.
  *
  * <p>You can override the onSubscribe, onNext, onError, onComplete, request and
- * cancel methods but not the others (this is by design).
+ * cancel methods but not the others (this is by javapattern.design).
  *
  * <p>The TestSubscriber implements Disposable for convenience where dispose calls cancel.
  *

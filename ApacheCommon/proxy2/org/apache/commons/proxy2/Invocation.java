@@ -25,9 +25,9 @@ public interface Invocation {
     Method getMethod();
 
     /**
-     * Returns the proxy object on which this invocation was invoked.
+     * Returns the javapattern.proxy object on which this invocation was invoked.
      *
-     * @return the proxy object on which this invocation was invoked
+     * @return the javapattern.proxy object on which this invocation was invoked
      */
     Object getProxy();
 

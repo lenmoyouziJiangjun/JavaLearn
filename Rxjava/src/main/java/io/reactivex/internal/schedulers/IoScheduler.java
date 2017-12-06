@@ -151,7 +151,7 @@ public final class IoScheduler extends Scheduler {
     }
 
     /**
-     * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
+     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      */
     public IoScheduler(ThreadFactory threadFactory) {

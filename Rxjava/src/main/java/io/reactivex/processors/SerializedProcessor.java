@@ -20,7 +20,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Serializes calls to the Subscriber methods.
- * <p>All other Publisher and Subject methods are thread-safe by design.
+ * <p>All other Publisher and Subject methods are thread-safe by javapattern.design.
  *
  * @param <T> the item value type
  */

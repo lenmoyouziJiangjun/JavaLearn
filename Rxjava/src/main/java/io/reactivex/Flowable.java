@@ -35,7 +35,7 @@ import io.reactivex.schedulers.*;
 import io.reactivex.subscribers.*;
 
 /**
- * The Flowable class that implements the Reactive-Streams Pattern and offers factory methods,
+ * The Flowable class that implements the Reactive-Streams Pattern and offers javapattern.factory methods,
  * intermediate operators and the ability to consume reactive dataflows.
  * <p>
  * Reactive-Streams operates with {@code Publisher}s which {@code Flowable} extends. Many operators
@@ -1145,7 +1145,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates elements of each Publisher provided via an Iterable sequence into a single sequence
+     * Concatenates elements of each Publisher provided via an Iterable sequence into a javapattern.single sequence
      * of elements without interleaving them.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/concat.png" alt="">
@@ -1414,7 +1414,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates a sequence of Publishers eagerly into a single stream of values.
+     * Concatenates a sequence of Publishers eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * source Publishers. The operator buffers the values emitted by these Publishers and then drains them
@@ -1441,7 +1441,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates a sequence of Publishers eagerly into a single stream of values.
+     * Concatenates a sequence of Publishers eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * source Publishers. The operator buffers the values emitted by these Publishers and then drains them
@@ -1475,7 +1475,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates the Iterable sequence of Publishers into a single sequence by subscribing to each Publisher,
+     * Concatenates the Iterable sequence of Publishers into a javapattern.single sequence by subscribing to each Publisher,
      * one after the other, one at a time and delays any errors till the all inner Publishers terminate.
      *
      * <dl>
@@ -1502,7 +1502,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates the Publisher sequence of Publishers into a single sequence by subscribing to each inner Publisher,
+     * Concatenates the Publisher sequence of Publishers into a javapattern.single sequence by subscribing to each inner Publisher,
      * one after the other, one at a time and delays any errors till the all inner and the outer Publishers terminate.
      *
      * <dl>
@@ -1524,7 +1524,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates the Publisher sequence of Publishers into a single sequence by subscribing to each inner Publisher,
+     * Concatenates the Publisher sequence of Publishers into a javapattern.single sequence by subscribing to each inner Publisher,
      * one after the other, one at a time and delays any errors till the all inner and the outer Publishers terminate.
      *
      * <dl>
@@ -1550,7 +1550,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates a Publisher sequence of Publishers eagerly into a single stream of values.
+     * Concatenates a Publisher sequence of Publishers eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * emitted source Publishers as they are observed. The operator buffers the values emitted by these
@@ -1576,7 +1576,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates a Publisher sequence of Publishers eagerly into a single stream of values.
+     * Concatenates a Publisher sequence of Publishers eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * emitted source Publishers as they are observed. The operator buffers the values emitted by these
@@ -1609,7 +1609,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates a sequence of Publishers eagerly into a single stream of values.
+     * Concatenates a sequence of Publishers eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * source Publishers. The operator buffers the values emitted by these Publishers and then drains them
@@ -1635,7 +1635,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Concatenates a sequence of Publishers eagerly into a single stream of values.
+     * Concatenates a sequence of Publishers eagerly into a javapattern.single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * source Publishers. The operator buffers the values emitted by these Publishers and then drains them
@@ -1723,9 +1723,9 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Flowable that calls a Publisher factory to create a Publisher for each new Subscriber
+     * Returns a Flowable that calls a Publisher javapattern.factory to create a Publisher for each new Subscriber
      * that subscribes. That is, for each subscriber, the actual Publisher that subscriber observes is
-     * determined by the factory function.
+     * determined by the javapattern.factory function.
      * <p>
      * <img width="640" height="340" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/defer.png" alt="">
      * <p>
@@ -1741,12 +1741,12 @@ public abstract class Flowable<T> implements Publisher<T> {
      * </dl>
      *
      * @param supplier
-     *            the Publisher factory function to invoke for each {@link Subscriber} that subscribes to the
+     *            the Publisher javapattern.factory function to invoke for each {@link Subscriber} that subscribes to the
      *            resulting Publisher
      * @param <T>
      *            the type of the items emitted by the Publisher
      * @return a Flowable whose {@link Subscriber}s' subscriptions trigger an invocation of the given
-     *         Publisher factory function
+     *         Publisher javapattern.factory function
      * @see <a href="http://reactivex.io/documentation/operators/defer.html">ReactiveX operators documentation: Defer</a>
      */
     @CheckReturnValue
@@ -1796,7 +1796,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * </dl>
      *
      * @param supplier
-     *            a Callable factory to return a Throwable for each individual Subscriber
+     *            a Callable javapattern.factory to return a Throwable for each individual Subscriber
      * @param <T>
      *            the type of the items (ostensibly) emitted by the Publisher
      * @return a Flowable that invokes the {@link Subscriber}'s {@link Subscriber#onError onError} method when
@@ -2451,7 +2451,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Flowable that emits a single item and then completes.
+     * Returns a Flowable that emits a javapattern.single item and then completes.
      * <p>
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/just.png" alt="">
      * <p>
@@ -2461,7 +2461,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * This is similar to the {@link #fromArray(Object[])} method, except that {@code from} will convert
      * an {@link Iterable} object into a Publisher that emits each of the items in the Iterable, one at a
      * time, while the {@code just} method converts an Iterable into a Publisher that emits the entire
-     * Iterable as a single item.
+     * Iterable as a javapattern.single item.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream.</dd>
@@ -2473,7 +2473,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the item to emit
      * @param <T>
      *            the type of that item
-     * @return a Flowable that emits {@code value} as a single item and then completes
+     * @return a Flowable that emits {@code value} as a javapattern.single item and then completes
      * @see <a href="http://reactivex.io/documentation/operators/just.html">ReactiveX operators documentation: Just</a>
      */
     @CheckReturnValue
@@ -2877,7 +2877,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine the items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine the items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -2914,7 +2914,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine the items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine the items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -2950,7 +2950,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine the items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine the items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -2981,7 +2981,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine the items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine the items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -3011,12 +3011,12 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Flattens a Publisher that emits Publishers into a single Publisher that emits the items emitted by
+     * Flattens a Publisher that emits Publishers into a javapattern.single Publisher that emits the items emitted by
      * those Publishers, without any transformation.
      * <p>
      * <img width="640" height="370" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.oo.png" alt="">
      * <p>
-     * You can combine the items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine the items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -3042,13 +3042,13 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Flattens a Publisher that emits Publishers into a single Publisher that emits the items emitted by
+     * Flattens a Publisher that emits Publishers into a javapattern.single Publisher that emits the items emitted by
      * those Publishers, without any transformation, while limiting the maximum number of concurrent
      * subscriptions to these Publishers.
      * <p>
      * <img width="640" height="370" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.oo.png" alt="">
      * <p>
-     * You can combine the items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine the items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -3083,7 +3083,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="370" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.io.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -3108,11 +3108,11 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Flattens two Publishers into a single Publisher, without any transformation.
+     * Flattens two Publishers into a javapattern.single Publisher, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -3141,11 +3141,11 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Flattens three Publishers into a single Publisher, without any transformation.
+     * Flattens three Publishers into a javapattern.single Publisher, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -3177,11 +3177,11 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Flattens four Publishers into a single Publisher, without any transformation.
+     * Flattens four Publishers into a javapattern.single Publisher, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code merge} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -4031,7 +4031,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * </dl>
      *
      * @param delay
-     *            the initial delay before emitting a single {@code 0L}
+     *            the initial delay before emitting a javapattern.single {@code 0L}
      * @param unit
      *            time units to use for {@code delay}
      * @return a Flowable that emits {@code 0L} after a specified delay, and then completes
@@ -4058,7 +4058,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * </dl>
      *
      * @param delay
-     *            the initial delay before emitting a single 0L
+     *            the initial delay before emitting a javapattern.single 0L
      * @param unit
      *            time units to use for {@code delay}
      * @param scheduler
@@ -4121,9 +4121,9 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param <T> the element type of the generated Publisher
      * @param <D> the type of the resource associated with the output sequence
      * @param resourceSupplier
-     *            the factory function to create a resource object that depends on the Publisher
+     *            the javapattern.factory function to create a resource object that depends on the Publisher
      * @param sourceSupplier
-     *            the factory function to create a Publisher
+     *            the javapattern.factory function to create a Publisher
      * @param resourceDisposer
      *            the function that will dispose of the resource
      * @return the Publisher whose lifetime controls the lifetime of the dependent resource object
@@ -4156,9 +4156,9 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param <T> the element type of the generated Publisher
      * @param <D> the type of the resource associated with the output sequence
      * @param resourceSupplier
-     *            the factory function to create a resource object that depends on the Publisher
+     *            the javapattern.factory function to create a resource object that depends on the Publisher
      * @param sourceSupplier
-     *            the factory function to create a Publisher
+     *            the javapattern.factory function to create a Publisher
      * @param resourceDisposer
      *            the function that will dispose of the resource
      * @param eager
@@ -5517,7 +5517,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * If this {@code Flowable} completes after emitting a single item, return that item, otherwise
+     * If this {@code Flowable} completes after emitting a javapattern.single item, return that item, otherwise
      * throw a {@code NoSuchElementException}.
      * <p>
      * <img width="640" height="315" src="https://github.com/ReactiveX/RxJava/wiki/images/rx-operators/B.single.png" alt="">
@@ -5529,7 +5529,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  <dd>{@code blockingSingle} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return the single item emitted by this {@code Flowable}
+     * @return the javapattern.single item emitted by this {@code Flowable}
      * @see <a href="http://reactivex.io/documentation/operators/first.html">ReactiveX documentation: First</a>
      */
     @CheckReturnValue
@@ -5540,7 +5540,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * If this {@code Flowable} completes after emitting a single item, return that item; if it emits
+     * If this {@code Flowable} completes after emitting a javapattern.single item, return that item; if it emits
      * more than one item, throw an {@code IllegalArgumentException}; if it emits no items, return a default
      * value.
      * <p>
@@ -5555,7 +5555,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *
      * @param defaultItem
      *            a default value to return if this {@code Flowable} emits no items
-     * @return the single item emitted by this {@code Flowable}, or the default value if it emits no
+     * @return the javapattern.single item emitted by this {@code Flowable}, or the default value if it emits no
      *         items
      * @see <a href="http://reactivex.io/documentation/operators/first.html">ReactiveX documentation: First</a>
      */
@@ -5567,7 +5567,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link Future} representing the single value emitted by this {@code Flowable}.
+     * Returns a {@link Future} representing the javapattern.single value emitted by this {@code Flowable}.
      * <p>
      * If the {@link Flowable} emits more than one item, {@link Future} will receive an
      * {@link IllegalArgumentException}. If the {@link Flowable} is empty, {@link Future}
@@ -5584,7 +5584,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  <dd>{@code toFuture} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a {@link Future} that expects a single item to be emitted by this {@code Flowable}
+     * @return a {@link Future} that expects a javapattern.single item to be emitted by this {@code Flowable}
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX documentation: To</a>
      */
     @CheckReturnValue
@@ -5779,7 +5779,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            buffer. Note that when {@code skip} and {@code count} are equal, this is the same operation as
      *            {@link #buffer(int)}.
      * @param bufferSupplier
-     *            a factory function that returns an instance of the collection subclass to be used and returned
+     *            a javapattern.factory function that returns an instance of the collection subclass to be used and returned
      *            as the buffer
      * @return a Flowable that emits buffers for every {@code skip} item from the source Publisher and
      *         containing at most {@code count} items
@@ -5815,7 +5815,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param count
      *            the maximum number of items in each buffer before it should be emitted
      * @param bufferSupplier
-     *            a factory function that returns an instance of the collection subclass to be used and returned
+     *            a javapattern.factory function that returns an instance of the collection subclass to be used and returned
      *            as the buffer
      * @return a Flowable that emits connected, non-overlapping buffers, each containing at most
      *         {@code count} items from the source Publisher
@@ -5922,7 +5922,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param scheduler
      *            the {@link Scheduler} to use when determining the end and start of a buffer
      * @param bufferSupplier
-     *            a factory function that returns an instance of the collection subclass to be used and returned
+     *            a javapattern.factory function that returns an instance of the collection subclass to be used and returned
      *            as the buffer
      * @return a Flowable that emits new buffers of items emitted by the source Publisher periodically after
      *         a fixed timespan has elapsed
@@ -6071,7 +6071,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param count
      *            the maximum size of each buffer before it is emitted
      * @param bufferSupplier
-     *            a factory function that returns an instance of the collection subclass to be used and returned
+     *            a javapattern.factory function that returns an instance of the collection subclass to be used and returned
      *            as the buffer
      * @param restartTimerOnMaxSize if true the time window is restarted when the max capacity of the current buffer
      *            is reached
@@ -6186,7 +6186,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the {@link Function} that is used to produce a Publisher for every buffer created. When this
      *            Publisher emits an item, the associated buffer is emitted.
      * @param bufferSupplier
-     *            a factory function that returns an instance of the collection subclass to be used and returned
+     *            a javapattern.factory function that returns an instance of the collection subclass to be used and returned
      *            as the buffer
      * @return a Flowable that emits buffers, containing items from the source Publisher, that are created
      *         and closed when the specified Publishers emit items
@@ -6297,7 +6297,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param boundaryIndicator
      *            the boundary Publisher
      * @param bufferSupplier
-     *            a factory function that returns an instance of the collection subclass to be used and returned
+     *            a javapattern.factory function that returns an instance of the collection subclass to be used and returned
      *            as the buffer
      * @return a Flowable that emits buffered items from the source Publisher when the boundary Publisher
      *         emits an item
@@ -6365,7 +6365,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            Whenever the source {@code Publisher} emits an item, {@code buffer} emits the current buffer and
      *            begins to fill a new one
      * @param bufferSupplier
-     *            a factory function that returns an instance of the collection subclass to be used and returned
+     *            a javapattern.factory function that returns an instance of the collection subclass to be used and returned
      *            as the buffer
      * @return a Flowable that emits a connected, non-overlapping buffer of items from the source Publisher
      *         each time the Publisher created with the {@code closingIndicator} argument emits an item
@@ -6391,7 +6391,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * subscribe/cancel behavior of all the {@link Subscriber}s.
      * <p>
      * The operator subscribes only when the first downstream subscriber subscribes and maintains
-     * a single subscription towards this Publisher. In contrast, the operator family of {@link #replay()}
+     * a javapattern.single subscription towards this Publisher. In contrast, the operator family of {@link #replay()}
      * that return a {@link ConnectableFlowable} require an explicit call to {@link ConnectableFlowable#connect()}.
      * <p>
      * <em>Note:</em> You sacrifice the ability to cancel the origin when you use the {@code cache}
@@ -6449,7 +6449,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * subscribe/cancel behavior of all the {@link Subscriber}s.
      * <p>
      * The operator subscribes only when the first downstream subscriber subscribes and maintains
-     * a single subscription towards this Publisher. In contrast, the operator family of {@link #replay()}
+     * a javapattern.single subscription towards this Publisher. In contrast, the operator family of {@link #replay()}
      * that return a {@link ConnectableFlowable} require an explicit call to {@link ConnectableFlowable#connect()}.
      * <p>
      * <em>Note:</em> You sacrifice the ability to cancel the origin when you use the {@code cache}
@@ -6532,7 +6532,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Collects items emitted by the source Publisher into a single mutable data structure and returns
+     * Collects items emitted by the source Publisher into a javapattern.single mutable data structure and returns
      * a Single that emits this structure.
      * <p>
      * <img width="640" height="330" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/collect.png" alt="">
@@ -6541,7 +6541,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>This operator does not support backpressure because by intent it will receive all values and reduce
-     *      them to a single {@code onNext}.</dd>
+     *      them to a javapattern.single {@code onNext}.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code collect} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -6553,7 +6553,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *           a function that accepts the {@code state} and an emitted item, and modifies {@code state}
      *           accordingly
      * @return a Single that emits the result of collecting the values emitted by the source Publisher
-     *         into a single mutable data structure
+     *         into a javapattern.single mutable data structure
      * @see <a href="http://reactivex.io/documentation/operators/reduce.html">ReactiveX operators documentation: Reduce</a>
      */
     @CheckReturnValue
@@ -6566,7 +6566,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Collects items emitted by the source Publisher into a single mutable data structure and returns
+     * Collects items emitted by the source Publisher into a javapattern.single mutable data structure and returns
      * a Single that emits this structure.
      * <p>
      * <img width="640" height="330" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/collect.png" alt="">
@@ -6575,7 +6575,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>This operator does not support backpressure because by intent it will receive all values and reduce
-     *      them to a single {@code onNext}.</dd>
+     *      them to a javapattern.single {@code onNext}.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code collectInto} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -6587,7 +6587,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *           a function that accepts the {@code state} and an emitted item, and modifies {@code state}
      *           accordingly
      * @return a Single that emits the result of collecting the values emitted by the source Publisher
-     *         into a single mutable data structure
+     *         into a javapattern.single mutable data structure
      * @see <a href="http://reactivex.io/documentation/operators/reduce.html">ReactiveX operators documentation: Reduce</a>
      */
     @CheckReturnValue
@@ -6778,7 +6778,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
 
     /**
-     * Maps a sequence of values into Publishers and concatenates these Publishers eagerly into a single
+     * Maps a sequence of values into Publishers and concatenates these Publishers eagerly into a javapattern.single
      * Publisher.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
@@ -6805,7 +6805,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Maps a sequence of values into Publishers and concatenates these Publishers eagerly into a single
+     * Maps a sequence of values into Publishers and concatenates these Publishers eagerly into a javapattern.single
      * Publisher.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
@@ -6838,7 +6838,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Maps a sequence of values into Publishers and concatenates these Publishers eagerly into a single
+     * Maps a sequence of values into Publishers and concatenates these Publishers eagerly into a javapattern.single
      * Publisher.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
@@ -6869,7 +6869,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Maps a sequence of values into Publishers and concatenates these Publishers eagerly into a single
+     * Maps a sequence of values into Publishers and concatenates these Publishers eagerly into a javapattern.single
      * Publisher.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
@@ -7038,7 +7038,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  <dd>{@code count} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a Single that emits a single item: the number of items emitted by the source Publisher as a
+     * @return a Single that emits a javapattern.single item: the number of items emitted by the source Publisher as a
      *         64-bit Long item
      * @see <a href="http://reactivex.io/documentation/operators/count.html">ReactiveX operators documentation: Count</a>
      * @see #count()
@@ -8072,7 +8072,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Maybe that emits the single item at a specified index in a sequence of emissions from
+     * Returns a Maybe that emits the javapattern.single item at a specified index in a sequence of emissions from
      * this Flowable or completes if this Flowable sequence has fewer elements than index.
      * <p>
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/elementAt.png" alt="">
@@ -8086,7 +8086,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *
      * @param index
      *            the zero-based index of the item to retrieve
-     * @return a Maybe that emits a single item: the item at the specified position in the sequence of
+     * @return a Maybe that emits a javapattern.single item: the item at the specified position in the sequence of
      *         those emitted by the source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/elementat.html">ReactiveX operators documentation: ElementAt</a>
      */
@@ -9165,7 +9165,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Groups the items emitted by a {@code Publisher} according to a specified criterion, and emits these
-     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a single
+     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a javapattern.single
      * {@link Subscriber} during its lifetime and if this {@code Subscriber} cancels before the
      * source terminates, the next emission by the source having the same key will trigger a new
      * {@code GroupedPublisher} emission.
@@ -9205,7 +9205,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Groups the items emitted by a {@code Publisher} according to a specified criterion, and emits these
-     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a single
+     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a javapattern.single
      * {@link Subscriber} during its lifetime and if this {@code Subscriber} cancels before the
      * source terminates, the next emission by the source having the same key will trigger a new
      * {@code GroupedPublisher} emission.
@@ -9248,7 +9248,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Groups the items emitted by a {@code Publisher} according to a specified criterion, and emits these
-     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a single
+     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a javapattern.single
      * {@link Subscriber} during its lifetime and if this {@code Subscriber} cancels before the
      * source terminates, the next emission by the source having the same key will trigger a new
      * {@code GroupedPublisher} emission.
@@ -9293,7 +9293,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Groups the items emitted by a {@code Publisher} according to a specified criterion, and emits these
-     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a single
+     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a javapattern.single
      * {@link Subscriber} during its lifetime and if this {@code Subscriber} cancels before the
      * source terminates, the next emission by the source having the same key will trigger a new
      * {@code GroupedPublisher} emission.
@@ -9341,7 +9341,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Groups the items emitted by a {@code Publisher} according to a specified criterion, and emits these
-     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a single
+     * grouped items as {@link GroupedFlowable}s. The emitted {@code GroupedPublisher} allows only a javapattern.single
      * {@link Subscriber} during its lifetime and if this {@code Subscriber} cancels before the
      * source terminates, the next emission by the source having the same key will trigger a new
      * {@code GroupedPublisher} emission.
@@ -9729,11 +9729,11 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Flattens this and another Publisher into a single Publisher, without any transformation.
+     * Flattens this and another Publisher into a javapattern.single Publisher, without any transformation.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/merge.png" alt="">
      * <p>
-     * You can combine items emitted by multiple Publishers so that they appear as a single Publisher, by
+     * You can combine items emitted by multiple Publishers so that they appear as a javapattern.single Publisher, by
      * using the {@code mergeWith} method.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -10138,7 +10138,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     @BackpressureSupport(BackpressureKind.SPECIAL)
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Flowable<T> onBackpressureBuffer(long capacity, Action onOverflow, BackpressureOverflowStrategy overflowStrategy) {
-        ObjectHelper.requireNonNull(overflowStrategy, "strategy is null");
+        ObjectHelper.requireNonNull(overflowStrategy, "javapattern.strategy is null");
         ObjectHelper.verifyPositive(capacity, "capacity");
         return RxJavaPlugins.onAssembly(new FlowableOnBackpressureBufferStrategy<T>(this, capacity, onOverflow, overflowStrategy));
     }
@@ -10343,7 +10343,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * </dl>
      *
      * @param valueSupplier
-     *            a function that returns a single value that will be emitted along with a regular onComplete in case
+     *            a function that returns a javapattern.single value that will be emitted along with a regular onComplete in case
      *            the current Flowable signals an onError event
      * @return the original Publisher with appropriately modified behavior
      * @see <a href="http://reactivex.io/documentation/operators/catch.html">ReactiveX operators documentation: Catch</a>
@@ -10470,7 +10470,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * apply {@link ParallelFlowable#runOn(Scheduler)} to specify the Scheduler where
      * each rail will execute.
      * <p>
-     * To merge the parallel 'rails' back into a single sequence, use {@link ParallelFlowable#sequential()}.
+     * To merge the parallel 'rails' back into a javapattern.single sequence, use {@link ParallelFlowable#sequential()}.
      * <p>
      * <img width="640" height="547" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flowable.parallel.png" alt="">
      * <dl>
@@ -10500,7 +10500,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * apply {@link ParallelFlowable#runOn(Scheduler)} to specify the Scheduler where
      * each rail will execute.
      * <p>
-     * To merge the parallel 'rails' back into a single sequence, use {@link ParallelFlowable#sequential()}.
+     * To merge the parallel 'rails' back into a javapattern.single sequence, use {@link ParallelFlowable#sequential()}.
      * <p>
      * <img width="640" height="547" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flowable.parallel.png" alt="">
      * <dl>
@@ -10533,7 +10533,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * apply {@link ParallelFlowable#runOn(Scheduler)} to specify the Scheduler where
      * each rail will execute.
      * <p>
-     * To merge the parallel 'rails' back into a single sequence, use {@link ParallelFlowable#sequential()}.
+     * To merge the parallel 'rails' back into a javapattern.single sequence, use {@link ParallelFlowable#sequential()}.
      * <p>
      * <img width="640" height="547" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flowable.parallel.png" alt="">
      * <dl>
@@ -10587,7 +10587,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits the results of invoking a specified selector on items emitted by a
-     * {@link ConnectableFlowable} that shares a single subscription to the underlying sequence.
+     * {@link ConnectableFlowable} that shares a javapattern.single subscription to the underlying sequence.
      * <p>
      * <img width="640" height="510" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/publishConnect.f.png" alt="">
      * <dl>
@@ -10607,7 +10607,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            a function that can use the multicasted source sequence as many times as needed, without
      *            causing multiple subscriptions to the source sequence. Subscribers to the given source will
      *            receive all notifications of the source from the time of the subscription forward.
-     * @return a Flowable that emits the results of invoking the selector on the items emitted by a {@link ConnectableFlowable} that shares a single subscription to the underlying sequence
+     * @return a Flowable that emits the results of invoking the selector on the items emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the underlying sequence
      * @see <a href="http://reactivex.io/documentation/operators/publish.html">ReactiveX operators documentation: Publish</a>
      */
     @CheckReturnValue
@@ -10619,7 +10619,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits the results of invoking a specified selector on items emitted by a
-     * {@link ConnectableFlowable} that shares a single subscription to the underlying sequence.
+     * {@link ConnectableFlowable} that shares a javapattern.single subscription to the underlying sequence.
      * <p>
      * <img width="640" height="510" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/publishConnect.f.png" alt="">
      * <dl>
@@ -10641,7 +10641,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            receive all notifications of the source from the time of the subscription forward.
      * @param prefetch
      *            the number of elements to prefetch from the current Flowable
-     * @return a Flowable that emits the results of invoking the selector on the items emitted by a {@link ConnectableFlowable} that shares a single subscription to the underlying sequence
+     * @return a Flowable that emits the results of invoking the selector on the items emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the underlying sequence
      * @see <a href="http://reactivex.io/documentation/operators/publish.html">ReactiveX operators documentation: Publish</a>
      */
     @CheckReturnValue
@@ -10731,7 +10731,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param reducer
      *            an accumulator function to be invoked on each item emitted by the source Publisher, whose
      *            result will be used in the next accumulator call
-     * @return a Maybe that emits a single item that is the result of accumulating the items emitted by
+     * @return a Maybe that emits a javapattern.single item that is the result of accumulating the items emitted by
      *         the source Flowable
      * @see <a href="http://reactivex.io/documentation/operators/reduce.html">ReactiveX operators documentation: Reduce</a>
      * @see <a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)">Wikipedia: Fold (higher-order function)</a>
@@ -10787,7 +10787,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param reducer
      *            an accumulator function to be invoked on each item emitted by the source Publisher, the
      *            result of which will be used in the next accumulator call
-     * @return a Single that emits a single item that is the result of accumulating the output from the
+     * @return a Single that emits a javapattern.single item that is the result of accumulating the output from the
      *         items emitted by the source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/reduce.html">ReactiveX operators documentation: Reduce</a>
      * @see <a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)">Wikipedia: Fold (higher-order function)</a>
@@ -10828,7 +10828,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param reducer
      *            an accumulator function to be invoked on each item emitted by the source Publisher, the
      *            result of which will be used in the next accumulator call
-     * @return a Single that emits a single item that is the result of accumulating the output from the
+     * @return a Single that emits a javapattern.single item that is the result of accumulating the output from the
      *         items emitted by the source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/reduce.html">ReactiveX operators documentation: Reduce</a>
      * @see <a href="http://en.wikipedia.org/wiki/Fold_(higher-order_function)">Wikipedia: Fold (higher-order function)</a>
@@ -10959,7 +10959,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link ConnectableFlowable} that shares a single subscription to the underlying Publisher
+     * Returns a {@link ConnectableFlowable} that shares a javapattern.single subscription to the underlying Publisher
      * that will replay all of its items and notifications to any future {@link Subscriber}. A Connectable
      * Publisher resembles an ordinary Publisher, except that it does not begin emitting items when it is
      * subscribed to, but only when its {@code connect} method is called.
@@ -10987,7 +10987,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits items that are the results of invoking a specified selector on the items
-     * emitted by a {@link ConnectableFlowable} that shares a single subscription to the source Publisher.
+     * emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher.
      * <p>
      * <img width="640" height="450" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/replay.f.png" alt="">
      * <dl>
@@ -11005,7 +11005,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the selector function, which can use the multicasted sequence as many times as needed, without
      *            causing multiple subscriptions to the Publisher
      * @return a Flowable that emits items that are the results of invoking the selector on a
-     *         {@link ConnectableFlowable} that shares a single subscription to the source Publisher
+     *         {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
     @CheckReturnValue
@@ -11018,7 +11018,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits items that are the results of invoking a specified selector on items
-     * emitted by a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     * emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      * replaying {@code bufferSize} notifications.
      * <p>
      * <img width="640" height="440" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/replay.fn.png" alt="">
@@ -11039,7 +11039,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param bufferSize
      *            the buffer size that limits the number of items the connectable Publisher can replay
      * @return a Flowable that emits items that are the results of invoking the selector on items emitted by
-     *         a {@link ConnectableFlowable} that shares a single subscription to the source Publisher
+     *         a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher
      *         replaying no more than {@code bufferSize} items
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11054,7 +11054,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits items that are the results of invoking a specified selector on items
-     * emitted by a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     * emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      * replaying no more than {@code bufferSize} items that were emitted within a specified time window.
      * <p>
      * <img width="640" height="445" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/replay.fnt.png" alt="">
@@ -11079,7 +11079,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param unit
      *            the time unit of {@code time}
      * @return a Flowable that emits items that are the results of invoking the selector on items emitted by
-     *         a {@link ConnectableFlowable} that shares a single subscription to the source Publisher, and
+     *         a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher, and
      *         replays no more than {@code bufferSize} items that were emitted within the window defined by
      *         {@code time}
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
@@ -11093,7 +11093,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits items that are the results of invoking a specified selector on items
-     * emitted by a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     * emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      * replaying no more than {@code bufferSize} items that were emitted within a specified time window.
      * <p>
      * <img width="640" height="445" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/replay.fnts.png" alt="">
@@ -11120,7 +11120,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param scheduler
      *            the Scheduler that is the time source for the window
      * @return a Flowable that emits items that are the results of invoking the selector on items emitted by
-     *         a {@link ConnectableFlowable} that shares a single subscription to the source Publisher, and
+     *         a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher, and
      *         replays no more than {@code bufferSize} items that were emitted within the window defined by
      *         {@code time}
      * @throws IllegalArgumentException
@@ -11141,7 +11141,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits items that are the results of invoking a specified selector on items
-     * emitted by a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     * emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      * replaying a maximum of {@code bufferSize} items.
      * <p>
      * <img width="640" height="440" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/replay.fns.png" alt="">
@@ -11164,7 +11164,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param scheduler
      *            the Scheduler on which the replay is observed
      * @return a Flowable that emits items that are the results of invoking the selector on items emitted by
-     *         a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     *         a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      *         replaying no more than {@code bufferSize} notifications
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11182,7 +11182,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits items that are the results of invoking a specified selector on items
-     * emitted by a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     * emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      * replaying all items that were emitted within a specified time window.
      * <p>
      * <img width="640" height="435" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/replay.ft.png" alt="">
@@ -11205,7 +11205,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param unit
      *            the time unit of {@code time}
      * @return a Flowable that emits items that are the results of invoking the selector on items emitted by
-     *         a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     *         a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      *         replaying all items that were emitted within the window defined by {@code time}
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11218,7 +11218,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits items that are the results of invoking a specified selector on items
-     * emitted by a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     * emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      * replaying all items that were emitted within a specified time window.
      * <p>
      * <img width="640" height="440" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/replay.fts.png" alt="">
@@ -11243,7 +11243,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param scheduler
      *            the scheduler that is the time source for the window
      * @return a Flowable that emits items that are the results of invoking the selector on items emitted by
-     *         a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     *         a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      *         replaying all items that were emitted within the window defined by {@code time}
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11259,7 +11259,7 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a Flowable that emits items that are the results of invoking a specified selector on items
-     * emitted by a {@link ConnectableFlowable} that shares a single subscription to the source Publisher.
+     * emitted by a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher.
      * <p>
      * <img width="640" height="445" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/replay.fs.png" alt="">
      * <dl>
@@ -11279,7 +11279,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param scheduler
      *            the Scheduler where the replay is observed
      * @return a Flowable that emits items that are the results of invoking the selector on items emitted by
-     *         a {@link ConnectableFlowable} that shares a single subscription to the source Publisher,
+     *         a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher,
      *         replaying all items
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11294,7 +11294,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link ConnectableFlowable} that shares a single subscription to the source Publisher that
+     * Returns a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher that
      * replays at most {@code bufferSize} items emitted by that Publisher. A Connectable Publisher resembles
      * an ordinary Publisher, except that it does not begin emitting items when it is subscribed to, but only
      * when its {@code connect} method is called.
@@ -11311,7 +11311,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *
      * @param bufferSize
      *            the buffer size that limits the number of items that can be replayed
-     * @return a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * @return a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      *         replays at most {@code bufferSize} items emitted by that Publisher
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11324,7 +11324,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * Returns a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      * replays at most {@code bufferSize} items that were emitted during a specified time window. A Connectable
      * Publisher resembles an ordinary Publisher, except that it does not begin emitting items when it is
      * subscribed to, but only when its {@code connect} method is called.
@@ -11345,7 +11345,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the duration of the window in which the replayed items must have been emitted
      * @param unit
      *            the time unit of {@code time}
-     * @return a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * @return a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      *         replays at most {@code bufferSize} items that were emitted during the window defined by
      *         {@code time}
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
@@ -11358,7 +11358,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * Returns a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      * that replays a maximum of {@code bufferSize} items that are emitted within a specified time window. A
      * Connectable Publisher resembles an ordinary Publisher, except that it does not begin emitting items
      * when it is subscribed to, but only when its {@code connect} method is called.
@@ -11381,7 +11381,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the time unit of {@code time}
      * @param scheduler
      *            the scheduler that is used as a time source for the window
-     * @return a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * @return a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      *         replays at most {@code bufferSize} items that were emitted during the window defined by
      *         {@code time}
      * @throws IllegalArgumentException
@@ -11400,7 +11400,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * Returns a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      * replays at most {@code bufferSize} items emitted by that Publisher. A Connectable Publisher resembles
      * an ordinary Publisher, except that it does not begin emitting items when it is subscribed to, but only
      * when its {@code connect} method is called.
@@ -11419,7 +11419,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the buffer size that limits the number of items that can be replayed
      * @param scheduler
      *            the scheduler on which the Subscribers will observe the emitted items
-     * @return a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * @return a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      *         replays at most {@code bufferSize} items that were emitted by the Publisher
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11432,7 +11432,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * Returns a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      * replays all items emitted by that Publisher within a specified time window. A Connectable Publisher
      * resembles an ordinary Publisher, except that it does not begin emitting items when it is subscribed to,
      * but only when its {@code connect} method is called.
@@ -11451,7 +11451,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the duration of the window in which the replayed items must have been emitted
      * @param unit
      *            the time unit of {@code time}
-     * @return a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * @return a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      *         replays the items that were emitted during the window defined by {@code time}
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11463,7 +11463,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * Returns a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      * replays all items emitted by that Publisher within a specified time window. A Connectable Publisher
      * resembles an ordinary Publisher, except that it does not begin emitting items when it is subscribed to,
      * but only when its {@code connect} method is called.
@@ -11484,7 +11484,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the time unit of {@code time}
      * @param scheduler
      *            the Scheduler that is the time source for the window
-     * @return a {@link ConnectableFlowable} that shares a single subscription to the source Publisher and
+     * @return a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher and
      *         replays the items that were emitted during the window defined by {@code time}
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
      */
@@ -11498,7 +11498,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a {@link ConnectableFlowable} that shares a single subscription to the source Publisher that
+     * Returns a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher that
      * will replay all of its items and notifications to any future {@link Subscriber} on the given
      * {@link Scheduler}. A Connectable Publisher resembles an ordinary Publisher, except that it does not
      * begin emitting items when it is subscribed to, but only when its {@code connect} method is called.
@@ -11515,7 +11515,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *
      * @param scheduler
      *            the Scheduler on which the Subscribers will observe the emitted items
-     * @return a {@link ConnectableFlowable} that shares a single subscription to the source Publisher that
+     * @return a {@link ConnectableFlowable} that shares a javapattern.single subscription to the source Publisher that
      *         will replay all of its items and notifications to any future {@link Subscriber} on the given
      *         {@link Scheduler}
      * @see <a href="http://reactivex.io/documentation/operators/replay.html">ReactiveX operators documentation: Replay</a>
@@ -12175,7 +12175,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  <dd>{@code singleElement} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a Maybe that emits the single item emitted by the source Publisher
+     * @return a Maybe that emits the javapattern.single item emitted by the source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/first.html">ReactiveX operators documentation: First</a>
      */
     @CheckReturnValue
@@ -12186,8 +12186,8 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits the single item emitted by the source Publisher, if that Publisher
-     * emits only a single item, or a default item if the source Publisher emits no items. If the source
+     * Returns a Single that emits the javapattern.single item emitted by the source Publisher, if that Publisher
+     * emits only a javapattern.single item, or a default item if the source Publisher emits no items. If the source
      * Publisher emits more than one item, an {@code IllegalArgumentException} is signalled instead.
      * <p>
      * <img width="640" height="315" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/singleOrDefault.png" alt="">
@@ -12196,12 +12196,12 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
      *  unbounded manner (i.e., without applying backpressure).</dd>
      *  <dt><b>Scheduler:</b></dt>
-     *  <dd>{@code single} does not operate by default on a particular {@link Scheduler}.</dd>
+     *  <dd>{@code javapattern.single} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
      * @param defaultItem
      *            a default value to emit if the source Publisher emits no item
-     * @return a Single that emits the single item emitted by the source Publisher, or a default item if
+     * @return a Single that emits the javapattern.single item emitted by the source Publisher, or a default item if
      *         the source Publisher is empty
      * @see <a href="http://reactivex.io/documentation/operators/first.html">ReactiveX operators documentation: First</a>
      */
@@ -12214,8 +12214,8 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits the single item emitted by this Flowable, if this Flowable
-     * emits only a single item, otherwise
+     * Returns a Single that emits the javapattern.single item emitted by this Flowable, if this Flowable
+     * emits only a javapattern.single item, otherwise
      * if this Flowable completes without emitting any items a {@link NoSuchElementException} will be signalled and
      * if this Flowable emits more than one item, an {@code IllegalArgumentException} will be signalled.
      * <p>
@@ -12949,9 +12949,9 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Establish a connection between this Flowable and the given FlowableSubscriber and
      * start streaming events based on the demand of the FlowableSubscriber.
      * <p>
-     * This is a "factory method" and can be called multiple times, each time starting a new {@link Subscription}.
+     * This is a "javapattern.factory method" and can be called multiple times, each time starting a new {@link Subscription}.
      * <p>
-     * Each {@link Subscription} will work for only a single {@link FlowableSubscriber}.
+     * Each {@link Subscription} will work for only a javapattern.single {@link FlowableSubscriber}.
      * <p>
      * If the same {@link FlowableSubscriber} instance is subscribed to multiple {@link Flowable}s and/or the
      * same {@link Flowable} multiple times, it must ensure the serialization over its {@code onXXX}
@@ -14574,7 +14574,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single item, a list composed of all the items emitted by the
+     * Returns a Single that emits a javapattern.single item, a list composed of all the items emitted by the
      * finite upstream source Publisher.
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toList.png" alt="">
@@ -14596,7 +14596,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  <dd>{@code toList} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a Single that emits a single item: a List containing all of the items emitted by the source
+     * @return a Single that emits a javapattern.single item: a List containing all of the items emitted by the source
      *         Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14608,7 +14608,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single item, a list composed of all the items emitted by the
+     * Returns a Single that emits a javapattern.single item, a list composed of all the items emitted by the
      * finite source Publisher.
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toList.png" alt="">
@@ -14632,7 +14632,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *
      * @param capacityHint
      *         the number of elements expected from the current Flowable
-     * @return a Flowable that emits a single item: a List containing all of the items emitted by the source
+     * @return a Flowable that emits a javapattern.single item: a List containing all of the items emitted by the source
      *         Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14645,7 +14645,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single item, a list composed of all the items emitted by the
+     * Returns a Single that emits a javapattern.single item, a list composed of all the items emitted by the
      * finite source Publisher.
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toList.png" alt="">
@@ -14670,7 +14670,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param <U> the subclass of a collection of Ts
      * @param collectionSupplier
      *               the Callable returning the collection (for each individual Subscriber) to be filled in
-     * @return a Single that emits a single item: a List containing all of the items emitted by the source
+     * @return a Single that emits a javapattern.single item: a List containing all of the items emitted by the source
      *         Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14683,7 +14683,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single HashMap containing all items emitted by the source Publisher,
+     * Returns a Single that emits a javapattern.single HashMap containing all items emitted by the source Publisher,
      * mapped by the keys returned by a specified {@code keySelector} function.
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMap.png" alt="">
@@ -14700,7 +14700,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param <K> the key type of the Map
      * @param keySelector
      *            the function that extracts the key from a source item to be used in the HashMap
-     * @return a Single that emits a single item: a HashMap containing the mapped items from the source
+     * @return a Single that emits a javapattern.single item: a HashMap containing the mapped items from the source
      *         Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14713,12 +14713,12 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single HashMap containing values corresponding to items emitted by the
+     * Returns a Single that emits a javapattern.single HashMap containing values corresponding to items emitted by the
      * source Publisher, mapped by the keys returned by a specified {@code keySelector} function.
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMap.png" alt="">
      * <p>
-     * If more than one source item maps to the same key, the HashMap will contain a single entry that
+     * If more than one source item maps to the same key, the HashMap will contain a javapattern.single entry that
      * corresponds to the latest of those items.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -14734,7 +14734,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the function that extracts the key from a source item to be used in the HashMap
      * @param valueSelector
      *            the function that extracts the value from a source item to be used in the HashMap
-     * @return a Single that emits a single item: a HashMap containing the mapped items from the source
+     * @return a Single that emits a javapattern.single item: a HashMap containing the mapped items from the source
      *         Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14748,7 +14748,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single Map, returned by a specified {@code mapFactory} function, that
+     * Returns a Single that emits a javapattern.single Map, returned by a specified {@code mapFactory} function, that
      * contains keys and values extracted from the items emitted by the source Publisher.
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMap.png" alt="">
@@ -14768,7 +14768,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the function that extracts the value from the source items to be used as value in the Map
      * @param mapSupplier
      *            the function that returns a Map instance to be used
-     * @return a Flowable that emits a single item: a Map that contains the mapped items emitted by the
+     * @return a Flowable that emits a javapattern.single item: a Map that contains the mapped items emitted by the
      *         source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14784,7 +14784,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single HashMap that contains an ArrayList of items emitted by the
+     * Returns a Single that emits a javapattern.single HashMap that contains an ArrayList of items emitted by the
      * source Publisher keyed by a specified {@code keySelector} function.
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMultiMap.png" alt="">
@@ -14798,7 +14798,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * @param <K> the key type of the Map
      * @param keySelector
      *            the function that extracts the key from the source items to be used as key in the HashMap
-     * @return a Single that emits a single item: a HashMap that contains an ArrayList of items mapped from
+     * @return a Single that emits a javapattern.single item: a HashMap that contains an ArrayList of items mapped from
      *         the source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14813,7 +14813,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single HashMap that contains an ArrayList of values extracted by a
+     * Returns a Single that emits a javapattern.single HashMap that contains an ArrayList of values extracted by a
      * specified {@code valueSelector} function from items emitted by the source Publisher, keyed by a
      * specified {@code keySelector} function.
      * <p>
@@ -14832,7 +14832,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the function that extracts a key from the source items to be used as key in the HashMap
      * @param valueSelector
      *            the function that extracts a value from the source items to be used as value in the HashMap
-     * @return a Single that emits a single item: a HashMap that contains an ArrayList of items mapped from
+     * @return a Single that emits a javapattern.single item: a HashMap that contains an ArrayList of items mapped from
      *         the source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14846,7 +14846,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single Map, returned by a specified {@code mapFactory} function, that
+     * Returns a Single that emits a javapattern.single Map, returned by a specified {@code mapFactory} function, that
      * contains a custom collection of values, extracted by a specified {@code valueSelector} function from
      * items emitted by the source Publisher, and keyed by the {@code keySelector} function.
      * <p>
@@ -14869,7 +14869,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the function that returns a Map instance to be used
      * @param collectionFactory
      *            the function that returns a Collection instance for a particular key to be used in the Map
-     * @return a Single that emits a single item: a Map that contains the collection of mapped items from
+     * @return a Single that emits a javapattern.single item: a Map that contains the collection of mapped items from
      *         the source Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */
@@ -14889,7 +14889,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     }
 
     /**
-     * Returns a Single that emits a single Map, returned by a specified {@code mapFactory} function, that
+     * Returns a Single that emits a javapattern.single Map, returned by a specified {@code mapFactory} function, that
      * contains an ArrayList of values, extracted by a specified {@code valueSelector} function from items
      * emitted by the source Publisher and keyed by the {@code keySelector} function.
      * <p>
@@ -14910,7 +14910,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *            the function that extracts a value from the source items to be used as the value in the Map
      * @param mapSupplier
      *            the function that returns a Map instance to be used
-     * @return a Single that emits a single item: a Map that contains a list items mapped from the source
+     * @return a Single that emits a javapattern.single item: a Map that contains a list items mapped from the source
      *         Publisher
      * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
      */

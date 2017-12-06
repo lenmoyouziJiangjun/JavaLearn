@@ -6,7 +6,7 @@ import org.apache.commons.proxy2.exception.ObjectProviderException;
 /**
  * Version 1.0
  * Created by lll on 17/6/28.
- * Description Provides an object to a delegating proxy.
+ * Description Provides an object to a delegating javapattern.proxy.
  * copyright generalray4239@gmail.com
  */
 public interface ObjectProvider<T> {

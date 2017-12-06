@@ -78,22 +78,7 @@ public class PasswordGenerator {
      */
     public static void main(String[] args) {
 
-        if (args.length != 1) {
-            usage();
-            return;
-        }
-
-        long passwordLength;
-        try {
-            passwordLength = Long.parseLong(args[0]);
-            if (passwordLength < 1) {
-                printMessageAndUsage("Length has to be positive");
-                return;
-            }
-        } catch (NumberFormatException ex) {
-            printMessageAndUsage("Unexpected number format" + args[0]);
-            return;
-        }
+        long passwordLength =10;
         /*
          * Stream of random integers is created containing Integer values
          * in range from 0 to PASSWORD_CHARS.size().

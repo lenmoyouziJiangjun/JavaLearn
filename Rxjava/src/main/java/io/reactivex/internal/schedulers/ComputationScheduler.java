@@ -110,7 +110,7 @@ public final class ComputationScheduler extends Scheduler {
      * Create a scheduler with pool size equal to the available processor
      * count and using least-recent worker selection policy.
      *
-     * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
+     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      */
     public ComputationScheduler(ThreadFactory threadFactory) {

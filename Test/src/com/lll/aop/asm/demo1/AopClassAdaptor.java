@@ -53,7 +53,7 @@ class AopMedhod extends MethodVisitor implements Opcodes{
     @Override
     public void visitCode() {
         super.visitCode();
-        visitMethodInsn(INVOKESTATIC, "com.lll.aop.asm.proxy.AopInterceptor", "beforeInvoke", "()V");
+        visitMethodInsn(INVOKESTATIC, "com.lll.aop.asm.javapattern.proxy.AopInterceptor", "beforeInvoke", "()V");
     }
 
     @Override

@@ -146,7 +146,7 @@ read()/write() will not return until the I/O operation has completed.  The
 "N*" servers use non-blocking mode and Selectors to determine which
 Channels are ready to perform I/O.
 
-B1:	A single-threaded server which completely services each
+B1:	A javapattern.single-threaded server which completely services each
 	connection before moving to the next.
 
 B2:	A multi-threaded server which creates a new thread for each
@@ -157,8 +157,8 @@ BP:	A multi-threaded server which creates a pool of threads for use
 	by the server.  The Thread pool decides how to schedule those
 	threads.
 
-N1:	A single-threaded server.  All accept() and read()/write()
-	operations are performed by a single thread, but only after
+N1:	A javapattern.single-threaded server.  All accept() and read()/write()
+	operations are performed by a javapattern.single thread, but only after
 	being selected for those operations by a Selector.
 
 N2:	A dual-threaded server which performs accept()s in one thread, and
@@ -227,7 +227,7 @@ In the "N*" variations, a Dispatcher object is created, which is
 responsible for performing the select, and then issuing the
 corresponding handler:
 
-    N1:	A single thread is used for all accept()/read()/write() operations
+    N1:	A javapattern.single thread is used for all accept()/read()/write() operations
     N2:	Similar to N1, but a separate thread is used for the accept()
 	operations.
 

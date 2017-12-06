@@ -136,7 +136,7 @@ public class ASMProxyFactory extends AbstractProxyFactory {
             mg.push(Type.getType(method.getDeclaringClass()));
 
             // the following code generates the bytecode for this line of Java:
-            // Method method = <proxy>.class.getMethod("add", new Class[] {
+            // Method method = <javapattern.proxy>.class.getMethod("add", new Class[] {
             // <array of function argument classes> });
 
             // get the method name to invoke, and push to stack

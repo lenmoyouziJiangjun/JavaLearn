@@ -25,7 +25,7 @@ import io.reactivex.internal.fuseable.SimplePlainQueue;
 import io.reactivex.internal.util.Pow2;
 
 /**
- * A single-producer single-consumer array-backed queue which can allocate new arrays in case the consumer is slower
+ * A javapattern.single-producer javapattern.single-consumer array-backed queue which can allocate new arrays in case the consumer is slower
  * than the producer.
  * @param <T> the contained value type
  */

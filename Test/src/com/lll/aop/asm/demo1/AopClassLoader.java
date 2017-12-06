@@ -25,7 +25,7 @@ public class AopClassLoader extends ClassLoader implements Opcodes{
             try {
                 ClassWriter cw = new ClassWriter(0);
                 //加载class文件
-                InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("com.lll.aop.asm.proxy.TestAsm.class");
+                InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("com.lll.aop.asm.javapattern.proxy.TestAsm.class");
                 ClassReader reader = new ClassReader(is);
                 reader.accept(new AopClassAdaptor(ASM4, cw),ClassReader.SKIP_DEBUG);
                 byte[] code = cw.toByteArray();

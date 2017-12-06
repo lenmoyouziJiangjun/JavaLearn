@@ -18,7 +18,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
     /**
      * Returns true if all <code>proxyClasses</code> are interfaces.
      *
-     * @param proxyClasses the proxy classes
+     * @param proxyClasses the javapattern.proxy classes
      * @return true if all <code>proxyClasses</code> are interfaces
      */
     @Override
@@ -33,12 +33,12 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
     }
 
     /**
-     * Creates a proxy which delegates to the object provided by <code>delegateProvider</code>. The proxy will be
+     * Creates a javapattern.proxy which delegates to the object provided by <code>delegateProvider</code>. The javapattern.proxy will be
      * generated using the current thread's "context class loader."
      *
      * @param delegateProvider the delegate provider
-     * @param proxyClasses     the interfaces that the proxy should implement
-     * @return a proxy which delegates to the object provided by the target object provider
+     * @param proxyClasses     the interfaces that the javapattern.proxy should implement
+     * @return a javapattern.proxy which delegates to the object provided by the target object provider
      */
     @Override
     public <T> T createDelegatorProxy(ObjectProvider<?> delegateProvider, Class<?>... proxyClasses) {
@@ -46,13 +46,13 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
     }
 
     /**
-     * Creates a proxy which passes through a {@link Interceptor interceptor} before eventually reaching the
-     * <code>target</code> object. The proxy will be generated using the current thread's "context class loader."
+     * Creates a javapattern.proxy which passes through a {@link Interceptor interceptor} before eventually reaching the
+     * <code>target</code> object. The javapattern.proxy will be generated using the current thread's "context class loader."
      *
      * @param target       the target object
      * @param interceptor  the method interceptor
-     * @param proxyClasses the interfaces that the proxy should implement
-     * @return a proxy which passes through a {@link Interceptor interceptor} before eventually reaching the
+     * @param proxyClasses the interfaces that the javapattern.proxy should implement
+     * @return a javapattern.proxy which passes through a {@link Interceptor interceptor} before eventually reaching the
      * <code>target</code> object.
      */
     @Override
@@ -62,12 +62,12 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
     }
 
     /**
-     * Creates a proxy which uses the provided {@link Invoker} to handle all method invocations. The proxy will be
+     * Creates a javapattern.proxy which uses the provided {@link Invoker} to handle all method invocations. The javapattern.proxy will be
      * generated using the current thread's "context class loader."
      *
      * @param invoker      the invoker
-     * @param proxyClasses the interfaces that the proxy should implement
-     * @return a proxy which uses the provided {@link Invoker} to handle all method invocations
+     * @param proxyClasses the interfaces that the javapattern.proxy should implement
+     * @return a javapattern.proxy which uses the provided {@link Invoker} to handle all method invocations
      */
     @Override
     public <T> T createInvokerProxy(Invoker invoker, Class<?>... proxyClasses) {

@@ -64,7 +64,7 @@ public final class ImmutablePair<L, R> extends Pair<L, R> {
     /**
      * <p>Obtains an immutable pair of from two objects inferring the generic types.</p>
      *
-     * <p>This factory allows the pair to be created using inference to
+     * <p>This javapattern.factory allows the pair to be created using inference to
      * obtain the generic types.</p>
      *
      * @param <L> the left element type

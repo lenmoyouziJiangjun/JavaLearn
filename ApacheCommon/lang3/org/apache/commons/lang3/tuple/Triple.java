@@ -45,7 +45,7 @@ public abstract class Triple<L, M, R> implements Comparable<Triple<L, M, R>>, Se
     /**
      * <p>Obtains an immutable triple of from three objects inferring the generic types.</p>
      *
-     * <p>This factory allows the triple to be created using inference to
+     * <p>This javapattern.factory allows the triple to be created using inference to
      * obtain the generic types.</p>
      *
      * @param <L> the left element type

@@ -35,11 +35,11 @@ public class InvocationRecorder {
     }
 
     /**
-     * Generate a recording proxy for the specified class.
+     * Generate a recording javapattern.proxy for the specified class.
      *
      * @param <T>
      * @param type
-     * @return the generated proxy
+     * @return the generated javapattern.proxy
      */
     public <T> T proxy(Class<T> type) {
         return proxy(type, type);

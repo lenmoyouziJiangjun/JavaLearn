@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Scheduler implementations, value+time record class and the standard factory class to
+ * Scheduler implementations, value+time record class and the standard javapattern.factory class to
  * return standard RxJava schedulers or wrap any Executor-based (thread pool) instances.
  */
 package io.reactivex.schedulers;

@@ -28,7 +28,7 @@ import io.reactivex.internal.observers.BasicIntQueueDisposable;
 import io.reactivex.internal.queue.SpscLinkedArrayQueue;
 
 /**
- * Subject that allows only a single Subscriber to subscribe to it during its lifetime.
+ * Subject that allows only a javapattern.single Subscriber to subscribe to it during its lifetime.
  *
  * <p>This subject buffers notifications and replays them to the Subscriber as requested.
  *
@@ -48,7 +48,7 @@ public final class UnicastSubject<T> extends Subject<T> {
     /** The queue that buffers the source events. */
     final SpscLinkedArrayQueue<T> queue;
 
-    /** The single Observer. */
+    /** The javapattern.single Observer. */
     final AtomicReference<Observer<? super T>> actual;
 
     /** The optional callback when the Subject gets cancelled or terminates. */
@@ -57,7 +57,7 @@ public final class UnicastSubject<T> extends Subject<T> {
     /** deliver onNext events before error event. */
     final boolean delayError;
 
-    /** Indicates the single observer has cancelled. */
+    /** Indicates the javapattern.single observer has cancelled. */
     volatile boolean disposed;
 
     /** Indicates the source has terminated. */
@@ -99,7 +99,7 @@ public final class UnicastSubject<T> extends Subject<T> {
 
     /**
      * Creates an UnicastSubject with the given internal buffer capacity hint and a callback for
-     * the case when the single Subscriber cancels its subscription.
+     * the case when the javapattern.single Subscriber cancels its subscription.
      *
      * <p>The callback, if not null, is called exactly once and
      * non-overlapped with any active replay.
@@ -116,7 +116,7 @@ public final class UnicastSubject<T> extends Subject<T> {
 
     /**
      * Creates an UnicastSubject with the given internal buffer capacity hint, delay error flag and
-     * a callback for the case when the single Subscriber cancels its subscription.
+     * a callback for the case when the javapattern.single Subscriber cancels its subscription.
      *
      * <p>The callback, if not null, is called exactly once and
      * non-overlapped with any active replay.
@@ -169,7 +169,7 @@ public final class UnicastSubject<T> extends Subject<T> {
 
     /**
      * Creates an UnicastSubject with the given capacity hint and callback
-     * for when the Subject is terminated normally or its single Subscriber cancels.
+     * for when the Subject is terminated normally or its javapattern.single Subscriber cancels.
      * @param capacityHint the capacity hint for the internal, unbounded queue
      * @param onTerminate the callback to run when the Subject is terminated or cancelled, null not allowed
      * @since 2.0
@@ -181,7 +181,7 @@ public final class UnicastSubject<T> extends Subject<T> {
 
     /**
      * Creates an UnicastSubject with the given capacity hint, delay error flag and callback
-     * for when the Subject is terminated normally or its single Subscriber cancels.
+     * for when the Subject is terminated normally or its javapattern.single Subscriber cancels.
      * @param capacityHint the capacity hint for the internal, unbounded queue
      * @param onTerminate the callback to run when the Subject is terminated or cancelled, null not allowed
      * @param delayError deliver pending onNext events before onError
@@ -207,7 +207,7 @@ public final class UnicastSubject<T> extends Subject<T> {
             }
             drain();
         } else {
-            EmptyDisposable.error(new IllegalStateException("Only a single observer allowed."), observer);
+            EmptyDisposable.error(new IllegalStateException("Only a javapattern.single observer allowed."), observer);
         }
     }
 

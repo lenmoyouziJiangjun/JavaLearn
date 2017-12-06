@@ -42,7 +42,7 @@ public class MutableTriple<L, M, R> extends Triple<L, M, R> {
     /**
      * <p>Obtains an mutable triple of three objects inferring the generic types.</p>
      *
-     * <p>This factory allows the triple to be created using inference to
+     * <p>This javapattern.factory allows the triple to be created using inference to
      * obtain the generic types.</p>
      *
      * @param <L> the left element type

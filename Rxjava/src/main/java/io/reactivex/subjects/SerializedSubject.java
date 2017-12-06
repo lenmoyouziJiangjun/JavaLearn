@@ -21,7 +21,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Serializes calls to the Observer methods.
- * <p>All other Observable and Subject methods are thread-safe by design.
+ * <p>All other Observable and Subject methods are thread-safe by javapattern.design.
  *
  * @param <T> the item value type
  */

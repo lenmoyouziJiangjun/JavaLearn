@@ -104,6 +104,6 @@ public class DefaultProxyFactory implements ProxyFactory {
                 return proxyFactory;
             }
         }
-        throw new IllegalArgumentException("Could not proxy " + Arrays.toString(proxyClasses));
+        throw new IllegalArgumentException("Could not javapattern.proxy " + Arrays.toString(proxyClasses));
     }
 }

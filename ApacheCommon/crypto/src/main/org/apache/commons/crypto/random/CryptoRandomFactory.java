@@ -14,7 +14,7 @@ import java.util.Properties;
  * Created by lll on 17/9/5.
  * Description
  * <p>
- * This is the factory class used for creating {@link CryptoRandom} instances
+ * This is the javapattern.factory class used for creating {@link CryptoRandom} instances
  * </p>
  * * copyright generalray4239@gmail.com
  */

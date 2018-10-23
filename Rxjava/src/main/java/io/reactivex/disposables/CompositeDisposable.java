@@ -135,7 +135,6 @@ public final class CompositeDisposable implements Disposable, DisposableContaine
         return false;
     }
 
-    @Override
     public boolean remove(@NonNull Disposable d) {
         if (delete(d)) {
             d.dispose();
@@ -144,7 +143,6 @@ public final class CompositeDisposable implements Disposable, DisposableContaine
         return false;
     }
 
-    @Override
     public boolean delete(@NonNull Disposable d) {
         ObjectHelper.requireNonNull(d, "Disposable item is null");
         if (disposed) {

@@ -132,6 +132,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
     public ScheduledRunnable scheduleActual(final Runnable run, long delayTime, @NonNull TimeUnit unit, @Nullable DisposableContainer parent) {
         Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
 
+        //将Runnable 封装成一个ScheduledRunnable
         ScheduledRunnable sr = new ScheduledRunnable(decoratedRun, parent);
 
         if (parent != null) {
@@ -143,6 +144,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
         Future<?> f;
         try {
             if (delayTime <= 0) {
+                //executor为ScheduledExecutorService类型
                 f = executor.submit((Callable<Object>)sr);
             } else {
                 f = executor.schedule((Callable<Object>)sr, delayTime, unit);
@@ -155,7 +157,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
             RxJavaPlugins.onError(ex);
         }
 
-        return sr;
+        return sr;//疯转好线程执行结果的Future
     }
 
     @Override

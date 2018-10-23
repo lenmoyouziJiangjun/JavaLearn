@@ -2,6 +2,7 @@ package com.lll.basic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Version 1.0
@@ -11,12 +12,21 @@ import java.util.List;
  */
 public class OperatorTest {
 
+
+    public static final int MEASURED_SIZE_MASK = 0x00ffffff;
+
+    public static final int MEASURED_STATE_MASK = 0xff000000;
+
+
     public static void main(String[] args) throws Exception {
-        binaryOperator();
-        dualOperatorTest();
-        testDataType();
-        testNum(3.8f);
-        testOpe2();
+//        binaryOperator();
+//        dualOperatorTest();
+//        testDataType();
+//        testNum(3.8f);
+//        testOpe2();
+//        testDextroposition();
+
+        testSort();
     }
 
     /**
@@ -48,12 +58,29 @@ public class OperatorTest {
      * 左移：<<  :乘以2的n次方
      * 右移：>>  :除以2的n次方
      * 无符号右移：>>> :忽略符号位，空位都以0补齐
+     * <p>
+     * 1、10进制转2进制：Integer.toBinaryString()
+     * 2、10进制转8进制：toOctalString
+     * <p>
+     * 3、将一个二进制字符串转为十进制： parseUnsignedInt（）
      */
     public static void binaryOperator() {
-        System.out.println("1&2==" + (1 & 2));
-        System.out.println("1|2==" + (1 | 2));
+
+        System.out.println("1&2==" + Integer.toBinaryString(1) + "&" + Integer.toBinaryString(2) + "=====" + (1 & 2));
+        System.out.println("1|2==" + Integer.toBinaryString(1) + "|" + Integer.toBinaryString(2) + "=======" + (1 | 2));
         System.out.println("~2==" + (~2));
         System.out.println("1^2==" + (1 ^ 2));
+
+        System.out.println("ffffff====" + Integer.parseInt("ffffff", 16) + "---");
+        System.out.println("123转2进制====" + Integer.toBinaryString(123) + "---");
+
+        System.out.println("1 & 0x00ffffff===" + (1 & MEASURED_SIZE_MASK));
+        System.out.println("1 & 0xff000000===" + (1 & MEASURED_STATE_MASK));
+
+        System.out.println("1 | 0xff000000===" + (1 & MEASURED_STATE_MASK));
+
+        System.out.println("1 ^ 0xff000000===" + (1 & MEASURED_STATE_MASK));
+
 
         //交换两个数
         int x = 10, y = 12;
@@ -71,13 +98,18 @@ public class OperatorTest {
      * ++ 和-- 测试
      */
     public static void dualOperatorTest() {
-        List<Integer> list = new ArrayList<>();
+        int n1 = 0;
+        int n2 = 0;
         for (int i = 0; i < 10; ++i) {
-            list.add(i);
-            System.out.println("-i==" + i + "----list.size()==" + list.size());
+            //i====0--n1==0----++n1==1===n1=1
+            // ++n1 == n1当前值+1；并将n1当前值+1赋值给n1;
+            System.out.println("i====" + i + "--n1==" + n1 + "----++n1==" + (++n1) + "===n1=" + n1);
         }
-        for (int i = 0, size = list.size(); i < size; i++) {
-            System.out.println("i===" + i + "-----" + list.get(i));
+
+        for (int j = 0; j < 10; j++) {
+            //j====0----n2==0---n2++====0====n2==1
+            //n2++ == n2当前值；并将n2当前值+1 赋值给n2;
+            System.out.println("j====" + j + "----n2==" + n2 + "---n2++====" + (n2++) + "====n2==" + n2);
         }
     }
 
@@ -140,6 +172,52 @@ public class OperatorTest {
                 + (int) Character.MAX_VALUE);
 
     }
+
+    /**
+     * 左移右移运算符
+     */
+    public static void testDextroposition() {
+        //左移，放大， 乘以2的N次方
+        System.out.println("1<<1======" + (1 << 1));//2
+        System.out.println("1<<1======" + (1 << 2));//4
+
+        //右移，缩小，除以2的N次方
+        System.out.println("1>>1======" + (1 >> 1));
+        ///无符号右移
+        System.out.println("3>>>1======" + (3 >>> 1));
+        System.out.println("8>>>1======" + (8 >>> 1));
+
+        System.out.println("10>>2======" + (10 >> 2));
+        System.out.println("-10>>>2======" + (-10 >>> 2));
+    }
+
+    private static <T> void siftUpComparable(int k, T x, Object[] array) {
+        Comparable<? super T> key = (Comparable<? super T>) x;
+        while (k > 0) {
+            int parent = (k - 1) >>> 1;
+            Object e = array[parent];
+            if (key.compareTo((T) e) >=0) {
+                break;
+            }
+            array[k] = e;
+            k = parent;
+        }
+        array[k] = key;
+    }
+
+    public static void testSort() {
+        String array[] = new String[10];
+        for (int i = 0; i < array.length; i++) {
+            String value = "abc"+new Random().nextInt(10);
+            System.out.println("--" + i + "----testSort-----value==" + value);
+            siftUpComparable(i, value, array);
+        }
+
+        for (int i = 0; i < array.length; i++) {
+            System.out.println("--testSort-----array[" + i + "]----==" + array[i]);
+        }
+    }
+
 
     /**
      * 精度问题

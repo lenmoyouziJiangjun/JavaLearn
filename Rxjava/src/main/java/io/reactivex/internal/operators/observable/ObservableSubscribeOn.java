@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -22,13 +22,19 @@ import io.reactivex.internal.disposables.DisposableHelper;
 public final class ObservableSubscribeOn<T> extends AbstractObservableWithUpstream<T, T> {
     final Scheduler scheduler;
 
+    /**
+     *
+     * @param source 上一个observable 作为source传递过来
+     * @param scheduler
+     */
     public ObservableSubscribeOn(ObservableSource<T> source, Scheduler scheduler) {
         super(source);
         this.scheduler = scheduler;
     }
 
     @Override
-    public void subscribeActual(final Observer<? super T> s) {
+    public void subscribeActual(final Observer<? super T> s) {//如果有设置observerOn的话，这个s为ObservableObserveOn 的ObserveOnObserver对象
+        //将Oserver封装成一个SubscribeOnObserver对象
         final SubscribeOnObserver<T> parent = new SubscribeOnObserver<T>(s);
 
         s.onSubscribe(parent);
@@ -54,7 +60,8 @@ public final class ObservableSubscribeOn<T> extends AbstractObservableWithUpstre
         }
 
         @Override
-        public void onNext(T t) {
+        public void onNext(T t) {//最终的执行就在定义的Observable的subscribeActual。
+                                 //例如ObservableFromArray 的subscribeActual的方法里面
             actual.onNext(t);
         }
 
@@ -93,6 +100,7 @@ public final class ObservableSubscribeOn<T> extends AbstractObservableWithUpstre
 
         @Override
         public void run() {
+            //调用obervabel的subscribe 方法，执行
             source.subscribe(parent);
         }
     }

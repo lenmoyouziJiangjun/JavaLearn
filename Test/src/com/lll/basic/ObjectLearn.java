@@ -7,6 +7,18 @@ import java.util.*;
  * Created by lll on 12/5/17.
  * Description
  * 对象的equals 和hashCode方法介绍
+ *
+ * 1、object 的equals方法和hashCode方法根据就没有什么关系。
+ *     硬要说有什么关系的话：就是java默认一个规范：
+ *    1. 如果两个对象相等的话，它们的hash code必须相等；
+ *    2. 但如果两个对象的hash code相等的话，这两个对象不一定相等。
+ *
+ * 2、object 的equals 方法：比较两个对象是否具有相同的引用。
+ * 3、object 的hashCode方法：对象存储地址。
+ *
+ * 4、java建议我们重写equals方法就重写hashCode方法，主要是为了方便将对象存储到散列表中(Map,HashSet)
+ *
+ * <p>
  * <p>
  * copyright generalray4239@gmail.com
  */
@@ -107,4 +119,26 @@ public class ObjectLearn {
 
         collection.forEach(obj -> System.out.println(collection.size() + "-----" + obj.toString()));
     }
+
+//    public void method1(List<String> args){
+//
+//    }
+//
+//    public void method1(List<Integer> args){//方法重载，编译出错，泛型擦除，
+//
+//    }
+//
+//    public List<Integer>  method2(){
+//        return null;
+//    }
+//
+//    public List<String>  method2(){//方法已经被定义：泛型擦除
+//        return null;
+//    }
+//
+//    public String method2(){//方法重载，要求方法名称相同，返回值类型不同，参数
+//        return null;
+//    }
+
+
 }

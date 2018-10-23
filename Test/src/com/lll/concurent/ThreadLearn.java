@@ -1,5 +1,9 @@
 package com.lll.concurent;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
+
 /**
  * Version 1.0
  * Created by lll on 12/4/17.
@@ -31,13 +35,13 @@ public class ThreadLearn {
                     } else {
 //                          interrupt();// 设置中断标志位为false;
                         try {
-                            System.out.print("当前线程的状态为"+Thread.currentThread().isInterrupted()+"\n");
+                            System.out.print("当前线程的状态为" + Thread.currentThread().isInterrupted() + "\n");
                             sleep(1000);//如果线程
-                            System.out.print("线程没有中断成功"+Thread.currentThread().isInterrupted()+"\n");
+                            System.out.print("线程没有中断成功" + Thread.currentThread().isInterrupted() + "\n");
 //
                         } catch (InterruptedException e) {
                             e.printStackTrace();//表示调用sleep的时候，中断标志位为true了，抛出异常的时候会自动将标志位设置为false；
-                            System.out.print("线程sleep的时候轮训到状态为中断了"+Thread.currentThread().isInterrupted()+"\n");
+                            System.out.print("线程sleep的时候轮训到状态为中断了" + Thread.currentThread().isInterrupted() + "\n");
 //                            Thread.interrupted();//清空状态，标志位回归，false;
                             interrupt();
                         }
@@ -96,8 +100,70 @@ public class ThreadLearn {
         }
     }
 
+    /**
+     * 1、thread 的join方法：
+     * <p>
+     * 2、thread 的yield方法：
+     */
+    public static void testThreadJoin() {
+        Thread thread1 = new Thread() {
+            @Override
+            public void run() {
+                int i = 0;
+                while (i < 100) {
+                    ++i;
+                    System.out.println("i====" + i);
+                }
+            }
+        };
+        Thread thread2 = new Thread() {
+            @Override
+            public void run() {
+                int i = 0;
+                while (i < 100) {
+                    ++i;
+                    System.out.println("i====" + i);
+                }
+            }
+        };
+        Thread thread3 = new Thread() {
+            @Override
+            public void run() {
+                Thread.yield();
+                int i = 0;
+                while (i < 100) {
+                    ++i;
+                    System.out.println("i====" + i);
+                }
+            }
+        };
+        thread1.start();
+        thread2.start();
+        try {
+            thread1.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        thread3.start();
+
+
+    }
+
+
     public static void main(String[] args) {
         testInterrupted();
+        System.out.println("----内核数量----"+Runtime.getRuntime().availableProcessors());
+        ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+        ThreadInfo[] infos = bean.dumpAllThreads(false, false);
+        for (ThreadInfo info : infos) {
+            System.out.println(info.getThreadId() + "--------" + info.getThreadName() + "----" + info.getThreadState());
+            StackTraceElement[] elements = info.getStackTrace();
+            for(StackTraceElement element:elements){
+                System.out.println("stack==="+element.getClassName()+"----"+element.getMethodName()+"---line Num-"+element.getLineNumber());
+            }
+        }
+
+
 
     }
 }

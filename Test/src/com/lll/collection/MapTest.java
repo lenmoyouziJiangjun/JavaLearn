@@ -1,6 +1,8 @@
 package com.lll.collection;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * Version 1.0
@@ -24,7 +26,30 @@ public class MapTest {
      * LinkedHashMap继承了HashMap，只是节点Node为链表节点。
      */
     public static Map<String, String> linkedHashMap = new LinkedHashMap<String, String>(8, .75f, true);
+
+    /**
+     *
+     */
     public static Map<String, String> treeMap = new TreeMap<String, String>();
+
+    /**
+     * 使用"==" 代替equals对键进行散列映射。转为解决特殊问题设计的
+     */
+    public static Map<String, String> identityHashMap = new IdentityHashMap<>();
+
+    /**
+     *
+     */
+    public static Map<String, MapTest> weakHashMap = new WeakHashMap<>();
+    /**
+     *
+     */
+    public static Map<String, String> concurrentHashMap = new ConcurrentHashMap<>();
+    /**
+     *
+     */
+    public static Map<String, String> concurrentSkipListMap = new ConcurrentSkipListMap<>();
+
 
     public static void main(String[] args) {
         hashMapPut();
@@ -32,6 +57,8 @@ public class MapTest {
         linkedHashMapPut();
         System.out.println("==============我是分割线=====================");
         treeMapPut();
+        System.out.println("==============我是分割线=====================");
+        identityHashMapPut();
     }
 
 
@@ -65,15 +92,15 @@ public class MapTest {
 
     /**
      * LinkedHashMap的添加元素的逻辑
-     * 1、LinkedHashMap 定义了一个Entry节点，继承HashMap的Node节点。并增加了before 和 after两个元素，双端链表
+     * 1、LinkedHashMapLearn 定义了一个Entry节点，继承HashMap的Node节点。并增加了before 和 after两个元素，双端链表
      * <p>
      * 2、LinkedHashMap定义了链表的头尾节点
-     * transient LinkedHashMap.Entry<K,V> head;
-     * transient LinkedHashMap.Entry<K,V> tail;
+     * transient LinkedHashMapLearn.Entry<K,V> head;
+     * transient LinkedHashMapLearn.Entry<K,V> tail;
      * 3、重写了HashMap的newNode方法，  里面增加了链表功能linkNodeLast。
      * <p>
-     * private void linkNodeLast(LinkedHashMap.Entry<K,V> p) {
-     * LinkedHashMap.Entry<K,V> last = tail;//
+     * private void linkNodeLast(LinkedHashMapLearn.Entry<K,V> p) {
+     * LinkedHashMapLearn.Entry<K,V> last = tail;//
      * tail = p;
      * if (last == null)
      * head = p;
@@ -95,9 +122,7 @@ public class MapTest {
 
 
     /**
-     *  trueMap底层采用红黑树的方式添加数据，因此元素是根据Key的字典属性排列
-     *
-     *
+     * trueMap底层采用红黑树的方式添加数据，因此元素是根据Key的字典属性排列
      */
     public static void treeMapPut() {
         treeMap.put("key1", "value1");
@@ -109,6 +134,37 @@ public class MapTest {
         treeMap.put("dkey4", "dvalue5");
         printMap(treeMap);//无序；
     }
+
+    /**
+     *  一般的map  key采用 hashCode方法生成的hash去equals 比较
+     *  而identityHashMapPut 采用 if (item == k) {}的方式去比较。所以对于两个
+     *
+     */
+    public static void identityHashMapPut() {
+        String key4 = "key4";
+        String key5 = new String("key4");
+        System.out.println("------identityHashMap----"+(key4==key5)+"-------"+key4.equals(key5));//----false-------true
+        System.out.println("------identityHashMap----"+(key4=="key4")+"-------"+key4.equals("key4"));//----true-------true
+        identityHashMap.put("key1", "value1");
+        identityHashMap.put("key2", "value2");
+        identityHashMap.put("key3", "value3");
+        identityHashMap.put(key5, "value4");
+        identityHashMap.put(key4, "value5");//key重复了，新的替换掉老的
+        identityHashMap.put("akey4", "avalue5");
+        identityHashMap.put("dkey4", "dvalue5");
+        printMap(identityHashMap);//无序；
+    }
+
+    public static void weakHashMapPut(){
+        weakHashMap.put("tes1",new MapTest());
+        weakHashMap.put("tes2",new MapTest());
+        weakHashMap.put("tes3",new MapTest());
+        weakHashMap.put("tes4",new MapTest());
+        weakHashMap.put("tes5",new MapTest());
+        weakHashMap.put("tes6",new MapTest());
+
+    }
+
 
 
     private static void printMap(Map map) {

@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -36,6 +36,7 @@ public abstract class Scheduler {
      * The associated system parameter, {@code rx.scheduler.drift-tolerance}, expects its value in minutes.
      */
     static final long CLOCK_DRIFT_TOLERANCE_NANOSECONDS;
+
     static {
         CLOCK_DRIFT_TOLERANCE_NANOSECONDS = TimeUnit.MINUTES.toNanos(
                 Long.getLong("rx2.scheduler.drift-tolerance", 15));
@@ -126,12 +127,14 @@ public abstract class Scheduler {
      */
     @NonNull
     public Disposable scheduleDirect(@NonNull Runnable run, long delay, @NonNull TimeUnit unit) {
-        final Worker w = createWorker();
-
+        final Worker w = createWorker();//创建Worker,对于ioScheduler创建的是EventLoopWorker
+        //这个runnable对应ObservableSubscribeOn的SubscribeTask
+        //这个task的逻辑就是调用source.subscribe方法
         final Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
 
         DisposeTask task = new DisposeTask(decoratedRun, w);
 
+        //调用ioScheduler的EventLoopWorker的
         w.schedule(task, delay, unit);
 
         return task;
@@ -197,7 +200,7 @@ public abstract class Scheduler {
      * <p>
      * Limit the amount concurrency two at a time without creating a new fix
      * size thread pool:
-     * 
+     *
      * <pre>
      * Scheduler limitScheduler = Schedulers.computation().when(workers -> {
      *  // use merge max concurrent to limit the number of concurrent
@@ -215,7 +218,7 @@ public abstract class Scheduler {
      * {@link Flowable#zip(org.reactivestreams.Publisher, org.reactivestreams.Publisher, io.reactivex.functions.BiFunction)} where
      * subscribing to the first {@link Flowable} could deadlock the
      * subscription to the second.
-     * 
+     *
      * <pre>
      * Scheduler limitScheduler = Schedulers.computation().when(workers -> {
      *  // use merge max concurrent to limit the number of concurrent
@@ -223,12 +226,12 @@ public abstract class Scheduler {
      *  return Completable.merge(Flowable.merge(workers, 2));
      * });
      * </pre>
-     * 
+     *
      * Slowing down the rate to no more than than 1 a second. This suffers from
      * the same problem as the one above I could find an {@link Flowable}
      * operator that limits the rate without dropping the values (aka leaky
      * bucket algorithm).
-     * 
+     *
      * <pre>
      * Scheduler slowScheduler = Schedulers.computation().when(workers -> {
      *  // use concatenate to make each worker happen one at a time.
@@ -238,7 +241,7 @@ public abstract class Scheduler {
      *  }));
      * });
      * </pre>
-     * 
+     *
      * <p>History: 2.0.1 - experimental
      * @param <S> a Scheduler and a Subscription
      * @param combine the function that takes a two-level nested Flowable sequence of a Completable and returns
@@ -358,7 +361,7 @@ public abstract class Scheduler {
             long startInNanoseconds;
 
             PeriodicTask(long firstStartInNanoseconds, @NonNull Runnable decoratedRun,
-                    long firstNowNanoseconds, @NonNull SequentialDisposable sd, long periodInNanoseconds) {
+                         long firstNowNanoseconds, @NonNull SequentialDisposable sd, long periodInNanoseconds) {
                 this.decoratedRun = decoratedRun;
                 this.sd = sd;
                 this.periodInNanoseconds = periodInNanoseconds;
@@ -396,8 +399,7 @@ public abstract class Scheduler {
         }
     }
 
-    static class PeriodicDirectTask
-    implements Runnable, Disposable {
+    static class PeriodicDirectTask implements Runnable, Disposable {
         final Runnable run;
         @NonNull
         final Worker worker;
@@ -435,7 +437,7 @@ public abstract class Scheduler {
     }
 
     static final class DisposeTask implements Runnable, Disposable {
-        final Runnable decoratedRun;
+        final Runnable decoratedRun;//observable 的 SubscribeTask
         final Worker w;
 
         Thread runner;
@@ -459,7 +461,7 @@ public abstract class Scheduler {
         @Override
         public void dispose() {
             if (runner == Thread.currentThread() && w instanceof NewThreadWorker) {
-                ((NewThreadWorker)w).shutdown();
+                ((NewThreadWorker) w).shutdown();//运行方法和取消方法是同一个线程且 worker为NewThreadWorker
             } else {
                 w.dispose();
             }

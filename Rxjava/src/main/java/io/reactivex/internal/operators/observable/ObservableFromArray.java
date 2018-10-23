@@ -38,7 +38,7 @@ public final class ObservableFromArray<T> extends Observable<T> {
 
     static final class FromArrayDisposable<T> extends BasicQueueDisposable<T> {
 
-        final Observer<? super T> actual;
+        final Observer<? super T> actual;//最终会转为我们自定义的observer
 
         final T[] array;
 

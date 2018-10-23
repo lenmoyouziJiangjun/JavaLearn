@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -28,6 +28,7 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
     final Scheduler scheduler;
     final boolean delayError;
     final int bufferSize;
+
     public ObservableObserveOn(ObservableSource<T> source, Scheduler scheduler, boolean delayError, int bufferSize) {
         super(source);
         this.scheduler = scheduler;
@@ -41,13 +42,12 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
             source.subscribe(observer);
         } else {
             Scheduler.Worker w = scheduler.createWorker();
-
+            //父亲调用subscribe方法，按照一般流程，应该是ObservableSubscribeOn 的subscribeActual 方法执行ObserveOnObserver的onSubscribe
             source.subscribe(new ObserveOnObserver<T>(observer, w, delayError, bufferSize));
         }
     }
 
-    static final class ObserveOnObserver<T> extends BasicIntQueueDisposable<T>
-    implements Observer<T>, Runnable {
+    static final class ObserveOnObserver<T> extends BasicIntQueueDisposable<T> implements Observer<T>, Runnable {
 
         private static final long serialVersionUID = 6576896619930983584L;
         final Observer<? super T> actual;
@@ -76,7 +76,7 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
         }
 
         @Override
-        public void onSubscribe(Disposable s) {
+        public void onSubscribe(Disposable s) {//按照正常流程，这个s为ObservableSubscribeOn 的SubscribeOnObserver
             if (DisposableHelper.validate(this.s, s)) {
                 this.s = s;
                 if (s instanceof QueueDisposable) {
@@ -101,8 +101,8 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
                     }
                 }
 
-                queue = new SpscLinkedArrayQueue<T>(bufferSize);
-
+                queue = new SpscLinkedArrayQueue<T>(bufferSize);//初始一个队列
+                //是我们在使用的时候，自定义的那个observer
                 actual.onSubscribe(this);
             }
         }
@@ -114,7 +114,7 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
             }
 
             if (sourceMode != QueueDisposable.ASYNC) {
-                queue.offer(t);
+                queue.offer(t);//队列添加数据
             }
             schedule();
         }
@@ -158,7 +158,7 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
 
         void schedule() {
             if (getAndIncrement() == 0) {
-                worker.schedule(this);
+                worker.schedule(this);//线程的schedule方法
             }
         }
 
@@ -168,12 +168,12 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
             final SimpleQueue<T> q = queue;
             final Observer<? super T> a = actual;
 
-            for (;;) {
+            for (; ; ) {
                 if (checkTerminated(done, q.isEmpty(), a)) {
                     return;
                 }
 
-                for (;;) {
+                for (; ; ) {
                     boolean d = done;
                     T v;
 
@@ -210,7 +210,7 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
         void drainFused() {
             int missed = 1;
 
-            for (;;) {
+            for (; ; ) {
                 if (cancelled) {
                     return;
                 }
@@ -245,7 +245,7 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
         }
 
         @Override
-        public void run() {
+        public void run() {//RxAndroid会的schedule方法会回调这个，来执行next的调用
             if (outputFused) {
                 drainFused();
             } else {
@@ -276,8 +276,7 @@ public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream
                         a.onError(e);
                         worker.dispose();
                         return true;
-                    } else
-                    if (empty) {
+                    } else if (empty) {
                         a.onComplete();
                         worker.dispose();
                         return true;

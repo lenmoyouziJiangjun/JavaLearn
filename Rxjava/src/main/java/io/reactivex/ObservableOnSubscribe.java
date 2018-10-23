@@ -24,6 +24,7 @@ import io.reactivex.annotations.*;
 public interface ObservableOnSubscribe<T> {
 
     /**
+     * 这个方法将会被ObservableCreate 的subscribeActual 回调。
      * Called for each Observer that subscribes.
      * @param e the safe emitter instance, never null
      * @throws Exception on error

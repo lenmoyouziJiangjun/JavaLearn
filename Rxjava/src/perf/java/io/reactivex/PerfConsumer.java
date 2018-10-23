@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package perf.java.io.reactivex;
 
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.Subscription;

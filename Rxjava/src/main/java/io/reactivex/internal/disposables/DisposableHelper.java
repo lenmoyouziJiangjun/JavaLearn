@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -28,8 +28,7 @@ public enum DisposableHelper implements Disposable {
     /**
      * The singleton instance representing a terminal, disposed state, don't leak it.
      */
-    DISPOSED
-    ;
+    DISPOSED;
 
     /**
      * Checks if the given Disposable is the common {@link #DISPOSED} enum value.
@@ -47,7 +46,7 @@ public enum DisposableHelper implements Disposable {
      * @return true if successful, false if the field contains the {@link #DISPOSED} instance.
      */
     public static boolean set(AtomicReference<Disposable> field, Disposable d) {
-        for (;;) {
+        for (; ; ) {
             Disposable current = field.get();
             if (current == DISPOSED) {
                 if (d != null) {
@@ -70,7 +69,7 @@ public enum DisposableHelper implements Disposable {
      * If the target field contains the common DISPOSED instance, the supplied disposable
      * is disposed. If the field contains other non-null Disposable, an IllegalStateException
      * is signalled to the RxJavaPlugins.onError hook.
-     * 
+     *
      * @param field the target field
      * @param d the disposable to set, not null
      * @return true if the operation succeeded, false
@@ -96,7 +95,7 @@ public enum DisposableHelper implements Disposable {
      * the common DISPOSED instance and the given disposable (if not null) is disposed.
      */
     public static boolean replace(AtomicReference<Disposable> field, Disposable d) {
-        for (;;) {
+        for (; ; ) {
             Disposable current = field.get();
             if (current == DISPOSED) {
                 if (d != null) {

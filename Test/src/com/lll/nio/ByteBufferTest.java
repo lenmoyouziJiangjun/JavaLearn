@@ -2,6 +2,8 @@ package com.lll.nio;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
@@ -15,7 +17,8 @@ import java.nio.channels.WritableByteChannel;
 public class ByteBufferTest {
 
     public static void main(String[] args) throws Exception {
-        testByteBuffer();
+//        testByteBuffer();
+        testFloatBuffer();
     }
 
     public static void testByteBuffer() throws IOException {
@@ -35,6 +38,18 @@ public class ByteBufferTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void testFloatBuffer() {
+        //定义一个浮点数组
+        float[] t = new float[]{1.f, 3.5f, 2.4f, 3.1f, 1.2f};
+        int size = t.length * Float.BYTES;
+        FloatBuffer buffer = ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
+        buffer.put(t, 0, t.length).position(0);
+
+        System.out.println("Float.BYTES==="+Float.BYTES+"====toString=="+buffer.toString());
+
     }
 
 

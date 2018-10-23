@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -45,8 +45,8 @@ public final class ObservableCreate<T> extends Observable<T> {
     }
 
     static final class CreateEmitter<T>
-    extends AtomicReference<Disposable>
-    implements ObservableEmitter<T>, Disposable {
+            extends AtomicReference<Disposable>
+            implements ObservableEmitter<T>, Disposable {
 
 
         private static final long serialVersionUID = -3434801548987643227L;
@@ -134,8 +134,8 @@ public final class ObservableCreate<T> extends Observable<T> {
      * @param <T> the value type
      */
     static final class SerializedEmitter<T>
-    extends AtomicInteger
-    implements ObservableEmitter<T> {
+            extends AtomicInteger
+            implements ObservableEmitter<T> {
 
         private static final long serialVersionUID = 4883307006032401862L;
 
@@ -222,9 +222,9 @@ public final class ObservableCreate<T> extends Observable<T> {
             SpscLinkedArrayQueue<T> q = queue;
             AtomicThrowable error = this.error;
             int missed = 1;
-            for (;;) {
+            for (; ; ) {
 
-                for (;;) {
+                for (; ; ) {
                     if (e.isDisposed()) {
                         q.clear();
                         return;

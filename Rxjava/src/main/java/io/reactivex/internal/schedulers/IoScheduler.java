@@ -60,8 +60,112 @@ public final class IoScheduler extends Scheduler {
         NONE.shutdown();
     }
 
+
+
+    public IoScheduler() {
+        this(WORKER_THREAD_FACTORY);
+    }
+
+    /**
+     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
+     *                      system properties for configuring new thread creation. Cannot be null.
+     */
+    public IoScheduler(ThreadFactory threadFactory) {
+        this.threadFactory = threadFactory;
+        this.pool = new AtomicReference<CachedWorkerPool>(NONE);
+        start();
+    }
+
+    public int size() {
+        return pool.get().allWorkers.size();
+    }
+
+    @Override
+    public void start() {
+        CachedWorkerPool update = new CachedWorkerPool(KEEP_ALIVE_TIME, KEEP_ALIVE_UNIT, threadFactory);
+        if (!pool.compareAndSet(NONE, update)) {
+            update.shutdown();
+        }
+    }
+    @Override
+    public void shutdown() {
+        for (;;) {
+            CachedWorkerPool curr = pool.get();
+            if (curr == NONE) {
+                return;
+            }
+            if (pool.compareAndSet(curr, NONE)) {
+                curr.shutdown();
+                return;
+            }
+        }
+    }
+
+    @NonNull
+    @Override
+    public Worker createWorker() {
+        return new EventLoopWorker(pool.get());
+    }
+
+
+    /**类似manager的角色*/
+    static final class EventLoopWorker extends Scheduler.Worker {
+        private final CompositeDisposable tasks;
+        private final CachedWorkerPool pool;
+        private final ThreadWorker threadWorker;
+
+        final AtomicBoolean once = new AtomicBoolean();
+
+        EventLoopWorker(CachedWorkerPool pool) {
+            this.pool = pool;
+            this.tasks = new CompositeDisposable();
+            this.threadWorker = pool.get();
+        }
+
+        @Override
+        public void dispose() {
+            if (once.compareAndSet(false, true)) {
+                tasks.dispose();
+
+                // releasing the pool should be the last action
+                pool.release(threadWorker);
+            }
+        }
+
+        @Override
+        public boolean isDisposed() {
+            return once.get();
+        }
+
+        /**
+         * 在 scheduleDirect 方法中调用。最终调用到ThreadWorker的scheduleActual方法
+         * @param action
+         * @param delayTime
+         * @param unit
+         *            the time unit of {@code delayTime}
+         * @return
+         */
+        @NonNull
+        @Override
+        public Disposable schedule(@NonNull Runnable action, long delayTime, @NonNull TimeUnit unit) {
+            if (tasks.isDisposed()) {
+                // don't schedule, we are unsubscribed
+                return EmptyDisposable.INSTANCE;
+            }
+            //action为一级一级封装的runnable对象，
+            //这里的action为scheduler 的DisposeTask对象。
+            // 而DisposeTask又是ObservableSubscribeOn的SubscribeTask的封装。
+            //DisposeTask的run就是调用SubscribeTask的run方法
+            //而SubscribeTask的run方法就是调用source.subscribe();也就是核心的业务方法，这个方法就是需要我们加入子线程中执行的
+            //因此推断这个方法就是执行线程的方法。
+            return threadWorker.scheduleActual(action, delayTime, unit, tasks);
+        }
+    }
+
+    /**缓存管理ThreadWorker*/
     static final class CachedWorkerPool implements Runnable {
         private final long keepAliveTime;
+        //并发队列，保证线程安全
         private final ConcurrentLinkedQueue<ThreadWorker> expiringWorkerQueue;
         final CompositeDisposable allWorkers;
         private final ScheduledExecutorService evictorService;
@@ -77,7 +181,9 @@ public final class IoScheduler extends Scheduler {
             ScheduledExecutorService evictor = null;
             Future<?> task = null;
             if (unit != null) {
+                //corePoolSize =1;表示线程按顺序执行
                 evictor = Executors.newScheduledThreadPool(1, EVICTOR_THREAD_FACTORY);
+                //添加线程，并不马上执行
                 task = evictor.scheduleWithFixedDelay(this, this.keepAliveTime, this.keepAliveTime, TimeUnit.NANOSECONDS);
             }
             evictorService = evictor;
@@ -110,7 +216,7 @@ public final class IoScheduler extends Scheduler {
             // Refresh expire time before putting worker back in pool
             threadWorker.setExpirationTime(now() + keepAliveTime);
 
-            expiringWorkerQueue.offer(threadWorker);
+            expiringWorkerQueue.offer(threadWorker);//数据插入队列尾部
         }
 
         void evictExpiredWorkers() {
@@ -146,91 +252,7 @@ public final class IoScheduler extends Scheduler {
         }
     }
 
-    public IoScheduler() {
-        this(WORKER_THREAD_FACTORY);
-    }
-
-    /**
-     * @param threadFactory thread javapattern.factory to use for creating worker threads. Note that this takes precedence over any
-     *                      system properties for configuring new thread creation. Cannot be null.
-     */
-    public IoScheduler(ThreadFactory threadFactory) {
-        this.threadFactory = threadFactory;
-        this.pool = new AtomicReference<CachedWorkerPool>(NONE);
-        start();
-    }
-
-    @Override
-    public void start() {
-        CachedWorkerPool update = new CachedWorkerPool(KEEP_ALIVE_TIME, KEEP_ALIVE_UNIT, threadFactory);
-        if (!pool.compareAndSet(NONE, update)) {
-            update.shutdown();
-        }
-    }
-    @Override
-    public void shutdown() {
-        for (;;) {
-            CachedWorkerPool curr = pool.get();
-            if (curr == NONE) {
-                return;
-            }
-            if (pool.compareAndSet(curr, NONE)) {
-                curr.shutdown();
-                return;
-            }
-        }
-    }
-
-    @NonNull
-    @Override
-    public Worker createWorker() {
-        return new EventLoopWorker(pool.get());
-    }
-
-    public int size() {
-        return pool.get().allWorkers.size();
-    }
-
-    static final class EventLoopWorker extends Scheduler.Worker {
-        private final CompositeDisposable tasks;
-        private final CachedWorkerPool pool;
-        private final ThreadWorker threadWorker;
-
-        final AtomicBoolean once = new AtomicBoolean();
-
-        EventLoopWorker(CachedWorkerPool pool) {
-            this.pool = pool;
-            this.tasks = new CompositeDisposable();
-            this.threadWorker = pool.get();
-        }
-
-        @Override
-        public void dispose() {
-            if (once.compareAndSet(false, true)) {
-                tasks.dispose();
-
-                // releasing the pool should be the last action
-                pool.release(threadWorker);
-            }
-        }
-
-        @Override
-        public boolean isDisposed() {
-            return once.get();
-        }
-
-        @NonNull
-        @Override
-        public Disposable schedule(@NonNull Runnable action, long delayTime, @NonNull TimeUnit unit) {
-            if (tasks.isDisposed()) {
-                // don't schedule, we are unsubscribed
-                return EmptyDisposable.INSTANCE;
-            }
-
-            return threadWorker.scheduleActual(action, delayTime, unit, tasks);
-        }
-    }
-
+    /**实际业务执行者*/
     static final class ThreadWorker extends NewThreadWorker {
         private long expirationTime;
 

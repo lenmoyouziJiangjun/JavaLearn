@@ -59,10 +59,12 @@ public final class Schedulers {
     }
 
     static final class ComputationHolder {
+        //固定为CPU大小的数组缓冲，
         static final Scheduler DEFAULT = new ComputationScheduler();
     }
 
     static final class IoHolder {
+        //单个阻塞线程，
         static final Scheduler DEFAULT = new IoScheduler();
     }
 

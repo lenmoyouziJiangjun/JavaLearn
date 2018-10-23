@@ -10900,7 +10900,7 @@ public abstract class Observable<T> implements ObservableSource<T> {
 
             ObjectHelper.requireNonNull(observer, "Plugin returned null Observer");
 
-            subscribeActual(observer);
+            subscribeActual(observer);//抽象方法，需要子类重写
         } catch (NullPointerException e) { // NOPMD
             throw e;
         } catch (Throwable e) {

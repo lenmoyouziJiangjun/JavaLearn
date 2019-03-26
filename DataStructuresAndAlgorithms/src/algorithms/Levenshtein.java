@@ -21,7 +21,7 @@ package algorithms;
  */
 public class Levenshtein {
 
-    public void getResult(String A, String B) {
+    public static void getResult(String A, String B) {
         if (A.equals(B)) {
             System.out.println(0);
             return;
@@ -48,5 +48,47 @@ public class Levenshtein {
         return;
     }
 
+    /**
+     * 编辑距离的状态转移方程为：d[i,j] = min(d[i-1,j]+1,d[i,j+1]+1,d[i-1,j-1]+r[i,j])
+     *
+     * @param a
+     * @param b
+     */
+    public static void getStrDistance(String a, String b) {
+        if (a == null || b == null) {
+            return;
+        }
+        //dp[i][j]表示源串A位置i到目标串B位置j处最低需要操作的次数
+        int[][] dp = new int[a.length() + 1][b.length() + 1];
+        for (int i = 1; i <= a.length(); i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 1; j <= b.length(); j++) {
+            dp[0][j] = j;
+        }
+
+        for (int i = 0; i < a.length(); i++) {
+            for (int j = 0; j < b.length(); j++) {
+                int r = 0;
+                if (a.charAt(i) != b.charAt(j)) {
+                    r = 1;
+                }
+                int first_append = dp[i][j + 1] + 1;
+                int second_append = dp[i + 1][j] + 1;
+                int replace = dp[i][j] + r;
+                int min = Math.min(first_append, second_append);
+                min = Math.min(min, replace);
+                dp[i + 1][j + 1] = min;
+            }
+        }
+        System.out.println(dp[a.length()][b.length()]);
+    }
+
+
+    public static void main(String[] args) {
+        Levenshtein.getResult("mouse", "moaaase");
+        System.out.println("--------------------------");
+        Levenshtein.getStrDistance("mous", "oaasemu");
+    }
 
 }

@@ -37,8 +37,10 @@ public class MathLearn {
         MathLearn.print("~0=====",b);
         MathLearn.print("~0=====",c);
 
-
-
+        MathLearn.print("90转16进制",Integer.toHexString(((int)(255*0.9))));
+        MathLearn.print("60转16进制",Integer.toHexString(((int)(255*0.6))));
+        MathLearn.print("60转16进制",Integer.toHexString(((int)(255*0.2))));
+        MathLearn.print("FF转10进制",Integer.parseInt("FF",16));
     }
 
 

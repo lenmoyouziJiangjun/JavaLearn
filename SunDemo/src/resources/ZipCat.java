@@ -49,35 +49,35 @@ import java.nio.file.Paths;
  */
 public class ZipCat {
 
-    /**
-     * The main method for the ZipCat program. Run the program with an empty
-     * argument list to see possible arguments.
-     *
-     * @param args the argument list for ZipCat
-     */
-    public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Usage: ZipCat zipfile fileToPrint");
-        }
-        /*
-         * Creates AutoCloseable FileSystem and BufferedReader.
-         * They will be closed automatically after the try block.
-         * If reader initialization fails, then zipFileSystem will be closed
-         * automatically.
-         */
-        try (FileSystem zipFileSystem
-                = FileSystems.newFileSystem(Paths.get(args[0]),null);
-                InputStream input
-                = Files.newInputStream(zipFileSystem.getPath(args[1]))) {
-                    byte[] buffer = new byte[1024];
-                    int len;
-                    while ((len = input.read(buffer)) != -1) {
-                        System.out.write(buffer, 0, len);
-                    }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+  /**
+   * The main method for the ZipCat program. Run the program with an empty
+   * argument list to see possible arguments.
+   *
+   * @param args the argument list for ZipCat
+   */
+  public static void main(String[] args) {
+    if (args.length != 2) {
+      System.out.println("Usage: ZipCat zipfile fileToPrint");
     }
+    /*
+     * Creates AutoCloseable FileSystem and BufferedReader.
+     * They will be closed automatically after the try block.
+     * If reader initialization fails, then zipFileSystem will be closed
+     * automatically.
+     */
+    try (FileSystem zipFileSystem
+                 = FileSystems.newFileSystem(Paths.get(args[0]), null);
+         InputStream input
+                 = Files.newInputStream(zipFileSystem.getPath(args[1]))) {
+      byte[] buffer = new byte[1024];
+      int len;
+      while ((len = input.read(buffer)) != -1) {
+        System.out.write(buffer, 0, len);
+      }
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.exit(1);
+    }
+  }
 }

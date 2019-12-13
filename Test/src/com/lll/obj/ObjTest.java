@@ -8,19 +8,19 @@ package com.lll.obj;
  */
 public class ObjTest {
 
-    public static void main(String[] args){
-        P p1 = new P();
-        P p2 = p1;//引用类型，指向同一份内存地址。
-        p1.name = "p1";
-        p1.age =11;
-        System.out.println(p2.name+"---------"+p2.age);
-    }
+  public static void main(String[] args) {
+    P p1 = new P();
+    P p2 = p1;//引用类型，指向同一份内存地址。
+    p1.name = "p1";
+    p1.age = 11;
+    System.out.println(p2.name + "---------" + p2.age);
+  }
 
 
-    public static class P{
-        String name;
-        int age;
-    }
+  public static class P {
+    String name;
+    int age;
+  }
 
 
 }

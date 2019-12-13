@@ -39,12 +39,14 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
+
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -69,8 +71,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>For media types that take a charset the predefined constants default to UTF-8 and have a
  * "_UTF_8" suffix. To get a version without a character set, use {@link #withoutParameters}.
  *
- * @since 12.0
  * @author Gregory Kick
+ * @since 12.0
  */
 @Beta
 @GwtCompatible
@@ -78,14 +80,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class MediaType {
   private static final String CHARSET_ATTRIBUTE = "charset";
   private static final ImmutableListMultimap<String, String> UTF_8_CONSTANT_PARAMETERS =
-      ImmutableListMultimap.of(CHARSET_ATTRIBUTE, Ascii.toLowerCase(UTF_8.name()));
+          ImmutableListMultimap.of(CHARSET_ATTRIBUTE, Ascii.toLowerCase(UTF_8.name()));
 
-  /** Matcher for type, subtype and attributes. */
+  /**
+   * Matcher for type, subtype and attributes.
+   */
   private static final CharMatcher TOKEN_MATCHER =
-      ascii()
-          .and(javaIsoControl().negate())
-          .and(CharMatcher.isNot(' '))
-          .and(CharMatcher.noneOf("()<>@,;:\\\"/[]?="));
+          ascii()
+                  .and(javaIsoControl().negate())
+                  .and(CharMatcher.isNot(' '))
+                  .and(CharMatcher.noneOf("()<>@,;:\\\"/[]?="));
 
   private static final CharMatcher QUOTED_TEXT_MATCHER = ascii().and(CharMatcher.noneOf("\"\\\r"));
 
@@ -108,7 +112,7 @@ public final class MediaType {
 
   private static MediaType createConstant(String type, String subtype) {
     MediaType mediaType =
-        addKnownType(new MediaType(type, subtype, ImmutableListMultimap.<String, String>of()));
+            addKnownType(new MediaType(type, subtype, ImmutableListMultimap.<String, String>of()));
     mediaType.parsedCharset = Optional.absent();
     return mediaType;
   }
@@ -143,7 +147,7 @@ public final class MediaType {
 
   /* text types */
   public static final MediaType CACHE_MANIFEST_UTF_8 =
-      createConstantUtf8(TEXT_TYPE, "cache-manifest");
+          createConstantUtf8(TEXT_TYPE, "cache-manifest");
   public static final MediaType CSS_UTF_8 = createConstantUtf8(TEXT_TYPE, "css");
   public static final MediaType CSV_UTF_8 = createConstantUtf8(TEXT_TYPE, "csv");
   public static final MediaType HTML_UTF_8 = createConstantUtf8(TEXT_TYPE, "html");
@@ -380,7 +384,7 @@ public final class MediaType {
    * @since 19.0
    */
   public static final MediaType APPLE_PASSBOOK =
-      createConstant(APPLICATION_TYPE, "vnd.apple.pkpass");
+          createConstant(APPLICATION_TYPE, "vnd.apple.pkpass");
 
   /**
    * <a href="http://en.wikipedia.org/wiki/Embedded_OpenType">Embedded OpenType</a> fonts. This is
@@ -403,7 +407,7 @@ public final class MediaType {
   public static final MediaType EPUB = createConstant(APPLICATION_TYPE, "epub+zip");
 
   public static final MediaType FORM_DATA =
-      createConstant(APPLICATION_TYPE, "x-www-form-urlencoded");
+          createConstant(APPLICATION_TYPE, "x-www-form-urlencoded");
 
   /**
    * As described in <a href="https://www.rsa.com/rsalabs/node.asp?id=2138">PKCS #12: Personal
@@ -442,7 +446,7 @@ public final class MediaType {
    * necessary in certain situations for compatibility.
    */
   public static final MediaType JAVASCRIPT_UTF_8 =
-      createConstantUtf8(APPLICATION_TYPE, "javascript");
+          createConstantUtf8(APPLICATION_TYPE, "javascript");
 
   /**
    * For <a href="https://tools.ietf.org/html/rfc7515">JWS or JWE objects using the Compact
@@ -468,7 +472,7 @@ public final class MediaType {
    * @since 19.0
    */
   public static final MediaType MANIFEST_JSON_UTF_8 =
-      createConstantUtf8(APPLICATION_TYPE, "manifest+json");
+          createConstantUtf8(APPLICATION_TYPE, "manifest+json");
 
   /**
    * <a href="http://www.opengeospatial.org/standards/kml/">OGC KML (Keyhole Markup Language)</a>.
@@ -494,9 +498,11 @@ public final class MediaType {
    * @since 18.0
    */
   public static final MediaType APPLE_MOBILE_CONFIG =
-      createConstant(APPLICATION_TYPE, "x-apple-aspen-config");
+          createConstant(APPLICATION_TYPE, "x-apple-aspen-config");
 
-  /** <a href="http://goo.gl/XDQ1h2">Microsoft Excel</a> spreadsheets. */
+  /**
+   * <a href="http://goo.gl/XDQ1h2">Microsoft Excel</a> spreadsheets.
+   */
   public static final MediaType MICROSOFT_EXCEL = createConstant(APPLICATION_TYPE, "vnd.ms-excel");
 
   /**
@@ -505,13 +511,17 @@ public final class MediaType {
    * @since NEXT
    */
   public static final MediaType MICROSOFT_OUTLOOK =
-      createConstant(APPLICATION_TYPE, "vnd.ms-outlook");
+          createConstant(APPLICATION_TYPE, "vnd.ms-outlook");
 
-  /** <a href="http://goo.gl/XDQ1h2">Microsoft Powerpoint</a> presentations. */
+  /**
+   * <a href="http://goo.gl/XDQ1h2">Microsoft Powerpoint</a> presentations.
+   */
   public static final MediaType MICROSOFT_POWERPOINT =
-      createConstant(APPLICATION_TYPE, "vnd.ms-powerpoint");
+          createConstant(APPLICATION_TYPE, "vnd.ms-powerpoint");
 
-  /** <a href="http://goo.gl/XDQ1h2">Microsoft Word</a> documents. */
+  /**
+   * <a href="http://goo.gl/XDQ1h2">Microsoft Word</a> documents.
+   */
   public static final MediaType MICROSOFT_WORD = createConstant(APPLICATION_TYPE, "msword");
 
   /**
@@ -539,27 +549,27 @@ public final class MediaType {
    * @since 20.0
    */
   public static final MediaType NACL_PORTABLE_APPLICATION =
-      createConstant(APPLICATION_TYPE, "x-pnacl");
+          createConstant(APPLICATION_TYPE, "x-pnacl");
 
   public static final MediaType OCTET_STREAM = createConstant(APPLICATION_TYPE, "octet-stream");
 
   public static final MediaType OGG_CONTAINER = createConstant(APPLICATION_TYPE, "ogg");
   public static final MediaType OOXML_DOCUMENT =
-      createConstant(
-          APPLICATION_TYPE, "vnd.openxmlformats-officedocument.wordprocessingml.document");
+          createConstant(
+                  APPLICATION_TYPE, "vnd.openxmlformats-officedocument.wordprocessingml.document");
   public static final MediaType OOXML_PRESENTATION =
-      createConstant(
-          APPLICATION_TYPE, "vnd.openxmlformats-officedocument.presentationml.presentation");
+          createConstant(
+                  APPLICATION_TYPE, "vnd.openxmlformats-officedocument.presentationml.presentation");
   public static final MediaType OOXML_SHEET =
-      createConstant(APPLICATION_TYPE, "vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+          createConstant(APPLICATION_TYPE, "vnd.openxmlformats-officedocument.spreadsheetml.sheet");
   public static final MediaType OPENDOCUMENT_GRAPHICS =
-      createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.graphics");
+          createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.graphics");
   public static final MediaType OPENDOCUMENT_PRESENTATION =
-      createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.presentation");
+          createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.presentation");
   public static final MediaType OPENDOCUMENT_SPREADSHEET =
-      createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.spreadsheet");
+          createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.spreadsheet");
   public static final MediaType OPENDOCUMENT_TEXT =
-      createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.text");
+          createConstant(APPLICATION_TYPE, "vnd.oasis.opendocument.text");
   public static final MediaType PDF = createConstant(APPLICATION_TYPE, "pdf");
   public static final MediaType POSTSCRIPT = createConstant(APPLICATION_TYPE, "postscript");
 
@@ -593,7 +603,7 @@ public final class MediaType {
   public static final MediaType SFNT = createConstant(APPLICATION_TYPE, "font-sfnt");
 
   public static final MediaType SHOCKWAVE_FLASH =
-      createConstant(APPLICATION_TYPE, "x-shockwave-flash");
+          createConstant(APPLICATION_TYPE, "x-shockwave-flash");
 
   /**
    * {@code skp} files produced by the 3D Modeling software <a
@@ -654,11 +664,14 @@ public final class MediaType {
   private final String subtype;
   private final ImmutableListMultimap<String, String> parameters;
 
-  @LazyInit private String toString;
+  @LazyInit
+  private String toString;
 
-  @LazyInit private int hashCode;
+  @LazyInit
+  private int hashCode;
 
-  @LazyInit private Optional<Charset> parsedCharset;
+  @LazyInit
+  private Optional<Charset> parsedCharset;
 
   private MediaType(String type, String subtype, ImmutableListMultimap<String, String> parameters) {
     this.type = type;
@@ -666,39 +679,45 @@ public final class MediaType {
     this.parameters = parameters;
   }
 
-  /** Returns the top-level media type. For example, {@code "text"} in {@code "text/plain"}. */
+  /**
+   * Returns the top-level media type. For example, {@code "text"} in {@code "text/plain"}.
+   */
   public String type() {
     return type;
   }
 
-  /** Returns the media subtype. For example, {@code "plain"} in {@code "text/plain"}. */
+  /**
+   * Returns the media subtype. For example, {@code "plain"} in {@code "text/plain"}.
+   */
   public String subtype() {
     return subtype;
   }
 
-  /** Returns a multimap containing the parameters of this media type. */
+  /**
+   * Returns a multimap containing the parameters of this media type.
+   */
   public ImmutableListMultimap<String, String> parameters() {
     return parameters;
   }
 
   private Map<String, ImmutableMultiset<String>> parametersAsMap() {
     return Maps.transformValues(
-        parameters.asMap(),
-        new Function<Collection<String>, ImmutableMultiset<String>>() {
-          @Override
-          public ImmutableMultiset<String> apply(Collection<String> input) {
-            return ImmutableMultiset.copyOf(input);
-          }
-        });
+            parameters.asMap(),
+            new Function<Collection<String>, ImmutableMultiset<String>>() {
+              @Override
+              public ImmutableMultiset<String> apply(Collection<String> input) {
+                return ImmutableMultiset.copyOf(input);
+              }
+            });
   }
 
   /**
    * Returns an optional charset for the value of the charset parameter if it is specified.
    *
-   * @throws IllegalStateException if multiple charset values have been set for this media type
+   * @throws IllegalStateException       if multiple charset values have been set for this media type
    * @throws IllegalCharsetNameException if a charset value is present, but illegal
    * @throws UnsupportedCharsetException if a charset value is present, but no support is available
-   *     in this instance of the Java virtual machine
+   *                                     in this instance of the Java virtual machine
    */
   public Optional<Charset> charset() {
     // racy single-check idiom, this is safe because Optional is immutable.
@@ -712,7 +731,7 @@ public final class MediaType {
           local = Optional.of(Charset.forName(value));
         } else if (!value.equals(currentValue)) {
           throw new IllegalStateException(
-              "Multiple charset values defined: " + value + ", " + currentValue);
+                  "Multiple charset values defined: " + value + ", " + currentValue);
         }
       }
       parsedCharset = local;
@@ -796,7 +815,9 @@ public final class MediaType {
     return withCharset;
   }
 
-  /** Returns true if either the type or subtype is the wildcard. */
+  /**
+   * Returns true if either the type or subtype is the wildcard.
+   */
   public boolean hasWildcard() {
     return WILDCARD.equals(type) || WILDCARD.equals(subtype);
   }
@@ -807,9 +828,9 @@ public final class MediaType {
    * by the argument according to three criteria:
    *
    * <ol>
-   *   <li>The type of the argument is the wildcard or equal to the type of this instance.
-   *   <li>The subtype of the argument is the wildcard or equal to the subtype of this instance.
-   *   <li>All of the parameters present in the argument are present in this instance.
+   * <li>The type of the argument is the wildcard or equal to the type of this instance.
+   * <li>The subtype of the argument is the wildcard or equal to the subtype of this instance.
+   * <li>All of the parameters present in the argument are present in this instance.
    * </ol>
    *
    * <p>For example:
@@ -832,15 +853,15 @@ public final class MediaType {
    */
   public boolean is(MediaType mediaTypeRange) {
     return (mediaTypeRange.type.equals(WILDCARD) || mediaTypeRange.type.equals(this.type))
-        && (mediaTypeRange.subtype.equals(WILDCARD) || mediaTypeRange.subtype.equals(this.subtype))
-        && this.parameters.entries().containsAll(mediaTypeRange.parameters.entries());
+            && (mediaTypeRange.subtype.equals(WILDCARD) || mediaTypeRange.subtype.equals(this.subtype))
+            && this.parameters.entries().containsAll(mediaTypeRange.parameters.entries());
   }
 
   /**
    * Creates a new media type with the given type and subtype.
    *
    * @throws IllegalArgumentException if type or subtype is invalid or if a wildcard is used for the
-   *     type, but not the subtype.
+   *                                  type, but not the subtype.
    */
   public static MediaType create(String type, String subtype) {
     MediaType mediaType = create(type, subtype, ImmutableListMultimap.<String, String>of());
@@ -849,15 +870,15 @@ public final class MediaType {
   }
 
   private static MediaType create(
-      String type, String subtype, Multimap<String, String> parameters) {
+          String type, String subtype, Multimap<String, String> parameters) {
     checkNotNull(type);
     checkNotNull(subtype);
     checkNotNull(parameters);
     String normalizedType = normalizeToken(type);
     String normalizedSubtype = normalizeToken(subtype);
     checkArgument(
-        !WILDCARD.equals(normalizedType) || WILDCARD.equals(normalizedSubtype),
-        "A wildcard type cannot be used with a non-wildcard subtype");
+            !WILDCARD.equals(normalizedType) || WILDCARD.equals(normalizedSubtype),
+            "A wildcard type cannot be used with a non-wildcard subtype");
     ImmutableListMultimap.Builder<String, String> builder = ImmutableListMultimap.builder();
     for (Entry<String, String> entry : parameters.entries()) {
       String attribute = normalizeToken(entry.getKey());
@@ -1020,9 +1041,9 @@ public final class MediaType {
     } else if (obj instanceof MediaType) {
       MediaType that = (MediaType) obj;
       return this.type.equals(that.type)
-          && this.subtype.equals(that.subtype)
-          // compare parameters regardless of order
-          && this.parametersAsMap().equals(that.parametersAsMap());
+              && this.subtype.equals(that.subtype)
+              // compare parameters regardless of order
+              && this.parametersAsMap().equals(that.parametersAsMap());
     } else {
       return false;
     }
@@ -1061,14 +1082,14 @@ public final class MediaType {
     if (!parameters.isEmpty()) {
       builder.append("; ");
       Multimap<String, String> quotedParameters =
-          Multimaps.transformValues(
-              parameters,
-              new Function<String, String>() {
-                @Override
-                public String apply(String value) {
-                  return TOKEN_MATCHER.matchesAllOf(value) ? value : escapeAndQuote(value);
-                }
-              });
+              Multimaps.transformValues(
+                      parameters,
+                      new Function<String, String>() {
+                        @Override
+                        public String apply(String value) {
+                          return TOKEN_MATCHER.matchesAllOf(value) ? value : escapeAndQuote(value);
+                        }
+                      });
       PARAMETER_JOINER.appendTo(builder, quotedParameters.entries());
     }
     return builder.toString();

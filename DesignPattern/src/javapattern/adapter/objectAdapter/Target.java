@@ -5,13 +5,13 @@ package javapattern.adapter.objectAdapter;
  * 现有的Adaptee 无法满足，所以提供一个Adapter,
  */
 public interface Target {
-    /**
-     * Class Adaptee contains operation sampleOperation1. 
-     */
-    void sampleOperation1();
+  /**
+   * Class Adaptee contains operation sampleOperation1.
+   */
+  void sampleOperation1();
 
-    /**
-     * Class Adaptee doesn't contain operation sampleOperation2. 
-     */
-    void sampleOperation2();
+  /**
+   * Class Adaptee doesn't contain operation sampleOperation2.
+   */
+  void sampleOperation2();
 }

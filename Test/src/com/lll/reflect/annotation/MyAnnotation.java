@@ -35,9 +35,9 @@ import java.lang.annotation.*;
  　　　　6.PARAMETER:用于描述参数
  　　　　7.TYPE:用于描述类、接口(包括注解类型) 或enum声明
  */
-@Target({ElementType.TYPE,ElementType.METHOD})
+@Target({ElementType.TYPE, ElementType.METHOD})
 
 public @interface MyAnnotation {
 
-    String value() default "";
+  String value() default "";
 }

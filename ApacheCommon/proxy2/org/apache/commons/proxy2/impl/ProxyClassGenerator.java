@@ -14,12 +14,12 @@ import org.apache.commons.proxy2.ProxyFactory;
  */
 public interface ProxyClassGenerator {
 
-    /**
-     * Generates a javapattern.proxy class for the supplied {@link ClassLoader} and javapattern.proxy classes.
-     *
-     * @param classLoader
-     * @param proxyClasses
-     * @return
-     */
-    Class<?> generateProxyClass(ClassLoader classLoader, Class<?>... proxyClasses);
+  /**
+   * Generates a javapattern.proxy class for the supplied {@link ClassLoader} and javapattern.proxy classes.
+   *
+   * @param classLoader
+   * @param proxyClasses
+   * @return
+   */
+  Class<?> generateProxyClass(ClassLoader classLoader, Class<?>... proxyClasses);
 }

@@ -17,28 +17,27 @@ package org.reactivestreams;
  * It can only be used once by a single {@link Subscriber}.
  * <p>
  * It is used to both signal desire for data and cancel demand (and allow resource cleanup).
- *
  */
 public interface Subscription {
-    /**
-     * No events will be sent by a {@link Publisher} until demand is signaled via this method.
-     * <p>
-     * It can be called however often and whenever needed—but the outstanding cumulative demand must never exceed Long.MAX_VALUE.
-     * An outstanding cumulative demand of Long.MAX_VALUE may be treated by the {@link Publisher} as "effectively unbounded".
-     * <p>
-     * Whatever has been requested can be sent by the {@link Publisher} so only signal demand for what can be safely handled.
-     * <p>
-     * A {@link Publisher} can send less than is requested if the stream ends but
-     * then must emit either {@link Subscriber#onError(Throwable)} or {@link Subscriber#onComplete()}.
-     * 
-     * @param n the strictly positive number of elements to requests to the upstream {@link Publisher}
-     */
-    public void request(long n);
+  /**
+   * No events will be sent by a {@link Publisher} until demand is signaled via this method.
+   * <p>
+   * It can be called however often and whenever needed—but the outstanding cumulative demand must never exceed Long.MAX_VALUE.
+   * An outstanding cumulative demand of Long.MAX_VALUE may be treated by the {@link Publisher} as "effectively unbounded".
+   * <p>
+   * Whatever has been requested can be sent by the {@link Publisher} so only signal demand for what can be safely handled.
+   * <p>
+   * A {@link Publisher} can send less than is requested if the stream ends but
+   * then must emit either {@link Subscriber#onError(Throwable)} or {@link Subscriber#onComplete()}.
+   *
+   * @param n the strictly positive number of elements to requests to the upstream {@link Publisher}
+   */
+  public void request(long n);
 
-    /**
-     * Request the {@link Publisher} to stop sending data and clean up resources.
-     * <p>
-     * Data may still be sent to meet previously signalled demand after calling cancel.
-     */
-    public void cancel();
+  /**
+   * Request the {@link Publisher} to stop sending data and clean up resources.
+   * <p>
+   * Data may still be sent to meet previously signalled demand after calling cancel.
+   */
+  public void cancel();
 }

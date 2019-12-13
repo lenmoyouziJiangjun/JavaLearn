@@ -15,23 +15,23 @@ import java.util.TreeSet;
  */
 public class SetTest {
 
-    /**
-     * hashSet集合 是不重复的数据集合。底层采用一个hashMap来实现
-     */
-    public HashSet hashSet = new HashSet();
+  /**
+   * hashSet集合 是不重复的数据集合。底层采用一个hashMap来实现
+   */
+  public HashSet hashSet = new HashSet();
 
-    /**
-     * TreeSet 底层采用TreeMap实现
-     */
-    public TreeSet treeSet = new TreeSet();
+  /**
+   * TreeSet 底层采用TreeMap实现
+   */
+  public TreeSet treeSet = new TreeSet();
 
-    /**
-     *
-     */
-    public LinkedHashSet linkedHashSet = new LinkedHashSet();
+  /**
+   *
+   */
+  public LinkedHashSet linkedHashSet = new LinkedHashSet();
 
 
-    public void add(){
+  public void add() {
 //        linkedHashSet.
-    }
+  }
 }

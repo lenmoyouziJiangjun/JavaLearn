@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -31,169 +31,170 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <T> the value type
  */
 public final class SerializedSubscriber<T> implements FlowableSubscriber<T>, Subscription {
-    final Subscriber<? super T> actual;
-    final boolean delayError;
+  final Subscriber<? super T> actual;
+  final boolean delayError;
 
-    static final int QUEUE_LINK_SIZE = 4;
+  static final int QUEUE_LINK_SIZE = 4;
 
-    Subscription subscription;
+  Subscription subscription;
 
-    boolean emitting;
-    AppendOnlyLinkedArrayList<Object> queue;
+  boolean emitting;
+  AppendOnlyLinkedArrayList<Object> queue;
 
-    volatile boolean done;
+  volatile boolean done;
 
-    /**
-     * Construct a SerializedSubscriber by wrapping the given actual Subscriber.
-     * @param actual the actual Subscriber, not null (not verified)
-     */
-    public SerializedSubscriber(Subscriber<? super T> actual) {
-        this(actual, false);
+  /**
+   * Construct a SerializedSubscriber by wrapping the given actual Subscriber.
+   *
+   * @param actual the actual Subscriber, not null (not verified)
+   */
+  public SerializedSubscriber(Subscriber<? super T> actual) {
+    this(actual, false);
+  }
+
+  /**
+   * Construct a SerializedSubscriber by wrapping the given actual Observer and
+   * optionally delaying the errors till all regular values have been emitted
+   * from the internal buffer.
+   *
+   * @param actual     the actual Subscriber, not null (not verified)
+   * @param delayError if true, errors are emitted after regular values have been emitted
+   */
+  public SerializedSubscriber(Subscriber<? super T> actual, boolean delayError) {
+    this.actual = actual;
+    this.delayError = delayError;
+  }
+
+  @Override
+  public void onSubscribe(Subscription s) {
+    if (SubscriptionHelper.validate(this.subscription, s)) {
+      this.subscription = s;
+      actual.onSubscribe(this);
+    }
+  }
+
+  @Override
+  public void onNext(T t) {
+    if (done) {
+      return;
+    }
+    if (t == null) {
+      subscription.cancel();
+      onError(new NullPointerException("onNext called with null. Null values are generally not allowed in 2.x operators and sources."));
+      return;
+    }
+    synchronized (this) {
+      if (done) {
+        return;
+      }
+      if (emitting) {
+        AppendOnlyLinkedArrayList<Object> q = queue;
+        if (q == null) {
+          q = new AppendOnlyLinkedArrayList<Object>(QUEUE_LINK_SIZE);
+          queue = q;
+        }
+        q.add(NotificationLite.next(t));
+        return;
+      }
+      emitting = true;
     }
 
-    /**
-     * Construct a SerializedSubscriber by wrapping the given actual Observer and
-     * optionally delaying the errors till all regular values have been emitted
-     * from the internal buffer.
-     * @param actual the actual Subscriber, not null (not verified)
-     * @param delayError if true, errors are emitted after regular values have been emitted
-     */
-    public SerializedSubscriber(Subscriber<? super T> actual, boolean delayError) {
-        this.actual = actual;
-        this.delayError = delayError;
+    actual.onNext(t);
+
+    emitLoop();
+  }
+
+  @Override
+  public void onError(Throwable t) {
+    if (done) {
+      RxJavaPlugins.onError(t);
+      return;
+    }
+    boolean reportError;
+    synchronized (this) {
+      if (done) {
+        reportError = true;
+      } else if (emitting) {
+        done = true;
+        AppendOnlyLinkedArrayList<Object> q = queue;
+        if (q == null) {
+          q = new AppendOnlyLinkedArrayList<Object>(QUEUE_LINK_SIZE);
+          queue = q;
+        }
+        Object err = NotificationLite.error(t);
+        if (delayError) {
+          q.add(err);
+        } else {
+          q.setFirst(err);
+        }
+        return;
+      } else {
+        done = true;
+        emitting = true;
+        reportError = false;
+      }
     }
 
-    @Override
-    public void onSubscribe(Subscription s) {
-        if (SubscriptionHelper.validate(this.subscription, s)) {
-            this.subscription = s;
-            actual.onSubscribe(this);
-        }
+    if (reportError) {
+      RxJavaPlugins.onError(t);
+      return;
     }
 
-    @Override
-    public void onNext(T t) {
-        if (done) {
-            return;
-        }
-        if (t == null) {
-            subscription.cancel();
-            onError(new NullPointerException("onNext called with null. Null values are generally not allowed in 2.x operators and sources."));
-            return;
-        }
-        synchronized (this) {
-            if (done) {
-                return;
-            }
-            if (emitting) {
-                AppendOnlyLinkedArrayList<Object> q = queue;
-                if (q == null) {
-                    q = new AppendOnlyLinkedArrayList<Object>(QUEUE_LINK_SIZE);
-                    queue = q;
-                }
-                q.add(NotificationLite.next(t));
-                return;
-            }
-            emitting = true;
-        }
+    actual.onError(t);
+    // no need to loop because this onError is the last event
+  }
 
-        actual.onNext(t);
-
-        emitLoop();
+  @Override
+  public void onComplete() {
+    if (done) {
+      return;
+    }
+    synchronized (this) {
+      if (done) {
+        return;
+      }
+      if (emitting) {
+        AppendOnlyLinkedArrayList<Object> q = queue;
+        if (q == null) {
+          q = new AppendOnlyLinkedArrayList<Object>(QUEUE_LINK_SIZE);
+          queue = q;
+        }
+        q.add(NotificationLite.complete());
+        return;
+      }
+      done = true;
+      emitting = true;
     }
 
-    @Override
-    public void onError(Throwable t) {
-        if (done) {
-            RxJavaPlugins.onError(t);
-            return;
-        }
-        boolean reportError;
-        synchronized (this) {
-            if (done) {
-                reportError = true;
-            } else
-            if (emitting) {
-                done = true;
-                AppendOnlyLinkedArrayList<Object> q = queue;
-                if (q == null) {
-                    q = new AppendOnlyLinkedArrayList<Object>(QUEUE_LINK_SIZE);
-                    queue = q;
-                }
-                Object err = NotificationLite.error(t);
-                if (delayError) {
-                    q.add(err);
-                } else {
-                    q.setFirst(err);
-                }
-                return;
-            } else {
-                done = true;
-                emitting = true;
-                reportError = false;
-            }
-        }
+    actual.onComplete();
+    // no need to loop because this onComplete is the last event
+  }
 
-        if (reportError) {
-            RxJavaPlugins.onError(t);
-            return;
+  void emitLoop() {
+    for (; ; ) {
+      AppendOnlyLinkedArrayList<Object> q;
+      synchronized (this) {
+        q = queue;
+        if (q == null) {
+          emitting = false;
+          return;
         }
+        queue = null;
+      }
 
-        actual.onError(t);
-        // no need to loop because this onError is the last event
+      if (q.accept(actual)) {
+        return;
+      }
     }
+  }
 
-    @Override
-    public void onComplete() {
-        if (done) {
-            return;
-        }
-        synchronized (this) {
-            if (done) {
-                return;
-            }
-            if (emitting) {
-                AppendOnlyLinkedArrayList<Object> q = queue;
-                if (q == null) {
-                    q = new AppendOnlyLinkedArrayList<Object>(QUEUE_LINK_SIZE);
-                    queue = q;
-                }
-                q.add(NotificationLite.complete());
-                return;
-            }
-            done = true;
-            emitting = true;
-        }
+  @Override
+  public void request(long n) {
+    subscription.request(n);
+  }
 
-        actual.onComplete();
-        // no need to loop because this onComplete is the last event
-    }
-
-    void emitLoop() {
-        for (;;) {
-            AppendOnlyLinkedArrayList<Object> q;
-            synchronized (this) {
-                q = queue;
-                if (q == null) {
-                    emitting = false;
-                    return;
-                }
-                queue = null;
-            }
-
-            if (q.accept(actual)) {
-                return;
-            }
-        }
-    }
-
-    @Override
-    public void request(long n) {
-        subscription.request(n);
-    }
-
-    @Override
-    public void cancel() {
-        subscription.cancel();
-    }
+  @Override
+  public void cancel() {
+    subscription.cancel();
+  }
 }

@@ -13,21 +13,21 @@ import java.lang.reflect.Method;
  */
 public class InvocationHandlerAdapter implements Invoker {
 
-    /**
-     * Serialization version
-     */
-    private static final long serialVersionUID = 1L;
+  /**
+   * Serialization version
+   */
+  private static final long serialVersionUID = 1L;
 
-    private final InvocationHandler invocationHandler;
-
-
-    public InvocationHandlerAdapter(InvocationHandler invocationHandler) {
-        this.invocationHandler = invocationHandler;
-    }
+  private final InvocationHandler invocationHandler;
 
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
-        return invocationHandler.invoke(proxy, method, arguments);
-    }
+  public InvocationHandlerAdapter(InvocationHandler invocationHandler) {
+    this.invocationHandler = invocationHandler;
+  }
+
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
+    return invocationHandler.invoke(proxy, method, arguments);
+  }
 }

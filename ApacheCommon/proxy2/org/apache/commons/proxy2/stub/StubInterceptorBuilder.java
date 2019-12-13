@@ -12,27 +12,27 @@ import org.apache.commons.proxy2.interceptor.SwitchInterceptor;
  */
 public class StubInterceptorBuilder {
 
-    private final ProxyFactory proxyFactory;
-    private final SwitchInterceptor interceptor = new SwitchInterceptor();
+  private final ProxyFactory proxyFactory;
+  private final SwitchInterceptor interceptor = new SwitchInterceptor();
 
-    public StubInterceptorBuilder(ProxyFactory factory) {
-        this.proxyFactory = factory;
-    }
+  public StubInterceptorBuilder(ProxyFactory factory) {
+    this.proxyFactory = factory;
+  }
 
-    public Interceptor build() {
-        return interceptor;
-    }
+  public Interceptor build() {
+    return interceptor;
+  }
 
-    public <T> StubInterceptorBuilder train(Trainer<T> trainer) {
-        final TrainingContext trainingContext = TrainingContext.join(proxyFactory);
-        try {
-            final T stub = trainingContext.push(trainer.traineeType, interceptor);
-            trainer.train(stub);
-        } finally {
-            trainingContext.part();
-        }
-        return this;
+  public <T> StubInterceptorBuilder train(Trainer<T> trainer) {
+    final TrainingContext trainingContext = TrainingContext.join(proxyFactory);
+    try {
+      final T stub = trainingContext.push(trainer.traineeType, interceptor);
+      trainer.train(stub);
+    } finally {
+      trainingContext.part();
     }
+    return this;
+  }
 
 
 }

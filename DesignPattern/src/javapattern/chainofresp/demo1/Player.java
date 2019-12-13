@@ -8,32 +8,32 @@ package javapattern.chainofresp.demo1;
  */
 public abstract class Player {
 
-    abstract public boolean handle();
+  abstract public boolean handle();
 
-    abstract public boolean doAfter();
+  abstract public boolean doAfter();
 
-    private Player nextPlayer;
+  private Player nextPlayer;
 
-    public Player() {
-        nextPlayer = null;
+  public Player() {
+    nextPlayer = null;
+  }
+
+  protected void setNextPlayer(Player player) {
+    this.nextPlayer = player;
+  }
+
+  /**
+   * 执行逻辑。判断是否继续往下执行，
+   */
+  public void next() {
+    if (nextPlayer != null) {
+      if (!nextPlayer.handle()) {
+        nextPlayer.next();
+      } else {
+        nextPlayer.doAfter();
+      }
+    } else {
+      System.out.println("Program terminated.");
     }
-
-    protected void setNextPlayer(Player player) {
-        this.nextPlayer = player;
-    }
-
-    /**
-     * 执行逻辑。判断是否继续往下执行，
-     */
-    public void next() {
-        if (nextPlayer != null) {
-            if(!nextPlayer.handle()){
-                nextPlayer.next();
-            }else{
-                nextPlayer.doAfter();
-            }
-        } else {
-            System.out.println("Program terminated.");
-        }
-    }
+  }
 }

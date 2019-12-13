@@ -50,29 +50,29 @@ import java.util.concurrent.*;
  */
 public class BP extends Server {
 
-    private static final int POOL_MULTIPLE = 4;
+  private static final int POOL_MULTIPLE = 4;
 
-    BP(int port, int backlog, boolean secure) throws Exception {
-        super(port, backlog, secure);
-    }
+  BP(int port, int backlog, boolean secure) throws Exception {
+    super(port, backlog, secure);
+  }
 
-    void runServer() throws Exception {
+  void runServer() throws Exception {
 
-        ExecutorService xec = Executors.newFixedThreadPool(
+    ExecutorService xec = Executors.newFixedThreadPool(
             Runtime.getRuntime().availableProcessors() * POOL_MULTIPLE);
 
-        for (;;) {
+    for (; ; ) {
 
-            SocketChannel sc = ssc.accept();
+      SocketChannel sc = ssc.accept();
 
-            ChannelIO cio = (sslContext != null ?
-                ChannelIOSecure.getInstance(
-                    sc, true /* blocking */, sslContext) :
-                ChannelIO.getInstance(
-                    sc, true /* blocking */));
+      ChannelIO cio = (sslContext != null ?
+              ChannelIOSecure.getInstance(
+                      sc, true /* blocking */, sslContext) :
+              ChannelIO.getInstance(
+                      sc, true /* blocking */));
 
-            RequestServicer svc = new RequestServicer(cio);
-            xec.execute(svc);
-        }
+      RequestServicer svc = new RequestServicer(cio);
+      xec.execute(svc);
     }
+  }
 }

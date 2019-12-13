@@ -24,14 +24,14 @@ import com.google.common.escape.Escaper;
  * escaping with {@link com.google.common.html.HtmlEscapers} or {@link
  * com.google.common.xml.XmlEscapers}.
  *
- *
  * @author David Beaumont
  * @author Chris Povirk
  * @since 15.0
  */
 @GwtCompatible
 public final class UrlEscapers {
-  private UrlEscapers() {}
+  private UrlEscapers() {
+  }
 
   // For each xxxEscaper() method, please add links to external reference pages
   // that are considered authoritative for the behavior of that escaper.
@@ -39,9 +39,9 @@ public final class UrlEscapers {
   static final String URL_FORM_PARAMETER_OTHER_SAFE_CHARS = "-_.*";
 
   static final String URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS =
-      "-._~" // Unreserved characters.
-          + "!$'()*,;&=" // The subdelim characters (excluding '+').
-          + "@:"; // The gendelim characters permitted in paths.
+          "-._~" // Unreserved characters.
+                  + "!$'()*,;&=" // The subdelim characters (excluding '+').
+                  + "@:"; // The gendelim characters permitted in paths.
 
   /**
    * Returns an {@link Escaper} instance that escapes strings so they can be safely included in <a
@@ -53,13 +53,13 @@ public final class UrlEscapers {
    * <p>When escaping a String, the following rules apply:
    *
    * <ul>
-   *   <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain
-   *       the same.
-   *   <li>The special characters ".", "-", "*", and "_" remain the same.
-   *   <li>The space character " " is converted into a plus sign "+".
-   *   <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
-   *       byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
-   *       uppercase, hexadecimal representation of the byte value.
+   * <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain
+   * the same.
+   * <li>The special characters ".", "-", "*", and "_" remain the same.
+   * <li>The space character " " is converted into a plus sign "+".
+   * <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
+   * byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
+   * uppercase, hexadecimal representation of the byte value.
    * </ul>
    *
    * <p>This escaper is suitable for escaping parameter names and values even when <a
@@ -69,14 +69,13 @@ public final class UrlEscapers {
    *
    * <p><b>Note:</b> Unlike other escapers, URL escapers produce <a
    * href="https://url.spec.whatwg.org/#percent-encode">uppercase</a> hexadecimal sequences.
-   *
    */
   public static Escaper urlFormParameterEscaper() {
     return URL_FORM_PARAMETER_ESCAPER;
   }
 
   private static final Escaper URL_FORM_PARAMETER_ESCAPER =
-      new PercentEscaper(URL_FORM_PARAMETER_OTHER_SAFE_CHARS, true);
+          new PercentEscaper(URL_FORM_PARAMETER_OTHER_SAFE_CHARS, true);
 
   /**
    * Returns an {@link Escaper} instance that escapes strings so they can be safely included in <a
@@ -92,16 +91,16 @@ public final class UrlEscapers {
    * <p>When escaping a String, the following rules apply:
    *
    * <ul>
-   *   <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain
-   *       the same.
-   *   <li>The unreserved characters ".", "-", "~", and "_" remain the same.
-   *   <li>The general delimiters "@" and ":" remain the same.
-   *   <li>The subdelimiters "!", "$", "&amp;", "'", "(", ")", "*", "+", ",", ";", and "=" remain
-   *       the same.
-   *   <li>The space character " " is converted into %20.
-   *   <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
-   *       byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
-   *       uppercase, hexadecimal representation of the byte value.
+   * <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain
+   * the same.
+   * <li>The unreserved characters ".", "-", "~", and "_" remain the same.
+   * <li>The general delimiters "@" and ":" remain the same.
+   * <li>The subdelimiters "!", "$", "&amp;", "'", "(", ")", "*", "+", ",", ";", and "=" remain
+   * the same.
+   * <li>The space character " " is converted into %20.
+   * <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
+   * byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
+   * uppercase, hexadecimal representation of the byte value.
    * </ul>
    *
    * <p><b>Note:</b> Unlike other escapers, URL escapers produce <a
@@ -112,7 +111,7 @@ public final class UrlEscapers {
   }
 
   private static final Escaper URL_PATH_SEGMENT_ESCAPER =
-      new PercentEscaper(URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS + "+", false);
+          new PercentEscaper(URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS + "+", false);
 
   /**
    * Returns an {@link Escaper} instance that escapes strings so they can be safely included in a <a
@@ -123,17 +122,17 @@ public final class UrlEscapers {
    * <p>When escaping a String, the following rules apply:
    *
    * <ul>
-   *   <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain
-   *       the same.
-   *   <li>The unreserved characters ".", "-", "~", and "_" remain the same.
-   *   <li>The general delimiters "@" and ":" remain the same.
-   *   <li>The subdelimiters "!", "$", "&amp;", "'", "(", ")", "*", "+", ",", ";", and "=" remain
-   *       the same.
-   *   <li>The space character " " is converted into %20.
-   *   <li>Fragments allow unescaped "/" and "?", so they remain the same.
-   *   <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
-   *       byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
-   *       uppercase, hexadecimal representation of the byte value.
+   * <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain
+   * the same.
+   * <li>The unreserved characters ".", "-", "~", and "_" remain the same.
+   * <li>The general delimiters "@" and ":" remain the same.
+   * <li>The subdelimiters "!", "$", "&amp;", "'", "(", ")", "*", "+", ",", ";", and "=" remain
+   * the same.
+   * <li>The space character " " is converted into %20.
+   * <li>Fragments allow unescaped "/" and "?", so they remain the same.
+   * <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
+   * byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
+   * uppercase, hexadecimal representation of the byte value.
    * </ul>
    *
    * <p><b>Note:</b> Unlike other escapers, URL escapers produce <a
@@ -144,5 +143,5 @@ public final class UrlEscapers {
   }
 
   private static final Escaper URL_FRAGMENT_ESCAPER =
-      new PercentEscaper(URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS + "+/?", false);
+          new PercentEscaper(URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS + "+/?", false);
 }

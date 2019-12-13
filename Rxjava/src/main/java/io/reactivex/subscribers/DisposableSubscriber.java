@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -71,53 +71,55 @@ import io.reactivex.internal.util.EndConsumerHelper;
  * // ...
  * d.dispose();
  * </code></pre>
+ *
  * @param <T> the received value type.
  */
 public abstract class DisposableSubscriber<T> implements FlowableSubscriber<T>, Disposable {
-    final AtomicReference<Subscription> s = new AtomicReference<Subscription>();
+  final AtomicReference<Subscription> s = new AtomicReference<Subscription>();
 
-    @Override
-    public final void onSubscribe(Subscription s) {
-        if (EndConsumerHelper.setOnce(this.s, s, getClass())) {
-            onStart();
-        }
+  @Override
+  public final void onSubscribe(Subscription s) {
+    if (EndConsumerHelper.setOnce(this.s, s, getClass())) {
+      onStart();
     }
+  }
 
-    /**
-     * Called once the javapattern.single upstream Subscription is set via onSubscribe.
-     */
-    protected void onStart() {
-        s.get().request(Long.MAX_VALUE);
-    }
+  /**
+   * Called once the javapattern.single upstream Subscription is set via onSubscribe.
+   */
+  protected void onStart() {
+    s.get().request(Long.MAX_VALUE);
+  }
 
-    /**
-     * Requests the specified amount from the upstream if its Subscription is set via
-     * onSubscribe already.
-     * <p>Note that calling this method before a Subscription is set via onSubscribe
-     * leads to NullPointerException and meant to be called from inside onStart or
-     * onNext.
-     * @param n the request amount, positive
-     */
-    protected final void request(long n) {
-        s.get().request(n);
-    }
+  /**
+   * Requests the specified amount from the upstream if its Subscription is set via
+   * onSubscribe already.
+   * <p>Note that calling this method before a Subscription is set via onSubscribe
+   * leads to NullPointerException and meant to be called from inside onStart or
+   * onNext.
+   *
+   * @param n the request amount, positive
+   */
+  protected final void request(long n) {
+    s.get().request(n);
+  }
 
-    /**
-     * Cancels the Subscription set via onSubscribe or makes sure a
-     * Subscription set asynchronously (later) is cancelled immediately.
-     * <p>This method is thread-safe and can be exposed as a public API.
-     */
-    protected final void cancel() {
-        dispose();
-    }
+  /**
+   * Cancels the Subscription set via onSubscribe or makes sure a
+   * Subscription set asynchronously (later) is cancelled immediately.
+   * <p>This method is thread-safe and can be exposed as a public API.
+   */
+  protected final void cancel() {
+    dispose();
+  }
 
-    @Override
-    public final boolean isDisposed() {
-        return s.get() == SubscriptionHelper.CANCELLED;
-    }
+  @Override
+  public final boolean isDisposed() {
+    return s.get() == SubscriptionHelper.CANCELLED;
+  }
 
-    @Override
-    public final void dispose() {
-        SubscriptionHelper.cancel(s);
-    }
+  @Override
+  public final void dispose() {
+    SubscriptionHelper.cancel(s);
+  }
 }

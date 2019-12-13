@@ -1,8 +1,7 @@
 package javapattern.factory.abs;
 
-public interface ComputerProducer
-{
-    Cpu createCpu();
+public interface ComputerProducer {
+  Cpu createCpu();
 
-    Ram createRam();
+  Ram createRam();
 }

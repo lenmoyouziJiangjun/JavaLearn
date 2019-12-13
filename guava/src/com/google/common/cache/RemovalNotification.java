@@ -23,45 +23,45 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @GwtCompatible
 public final class RemovalNotification<K, V> extends AbstractMap.SimpleImmutableEntry<K, V> {
 
-    private static final long serialVersionUID = 0;
+  private static final long serialVersionUID = 0;
 
-    private final RemovalCause cause;
+  private final RemovalCause cause;
 
-    /**
-     * Creates a new {@code RemovalNotification} for the given {@code key}/{@code value} pair, with
-     * the given {@code cause} for the removal. The {@code key} and/or {@code value} may be {@code
-     * null} if they were already garbage collected.
-     *
-     * @param key
-     * @param value
-     * @param cause
-     * @param <K>
-     * @param <V>
-     * @return
-     */
-    public static <K, V> RemovalNotification<K, V> create(@Nullable K key, @Nullable V value, RemovalCause cause) {
-        return new RemovalNotification(key, value, cause);
-    }
+  /**
+   * Creates a new {@code RemovalNotification} for the given {@code key}/{@code value} pair, with
+   * the given {@code cause} for the removal. The {@code key} and/or {@code value} may be {@code
+   * null} if they were already garbage collected.
+   *
+   * @param key
+   * @param value
+   * @param cause
+   * @param <K>
+   * @param <V>
+   * @return
+   */
+  public static <K, V> RemovalNotification<K, V> create(@Nullable K key, @Nullable V value, RemovalCause cause) {
+    return new RemovalNotification(key, value, cause);
+  }
 
-    private RemovalNotification(@Nullable K key, @Nullable V value, RemovalCause cause) {
-        super(key, value);
-        this.cause = checkNotNull(cause);
-    }
+  private RemovalNotification(@Nullable K key, @Nullable V value, RemovalCause cause) {
+    super(key, value);
+    this.cause = checkNotNull(cause);
+  }
 
-    /**
-     * Returns the cause for which the entry was removed.
-     */
-    public RemovalCause getCause() {
-        return cause;
-    }
+  /**
+   * Returns the cause for which the entry was removed.
+   */
+  public RemovalCause getCause() {
+    return cause;
+  }
 
-    /**
-     * Returns {@code true} if there was an automatic removal due to eviction (the cause is neither
-     * {@link RemovalCause#EXPLICIT} nor {@link RemovalCause#REPLACED}).
-     */
-    public boolean wasEvicted() {
-        return cause.wasEvicted();
-    }
+  /**
+   * Returns {@code true} if there was an automatic removal due to eviction (the cause is neither
+   * {@link RemovalCause#EXPLICIT} nor {@link RemovalCause#REPLACED}).
+   */
+  public boolean wasEvicted() {
+    return cause.wasEvicted();
+  }
 
 
 }

@@ -24,44 +24,43 @@ import java.io.Serializable;
 
 /**
  * Always returns the same object.
- * 
+ *
  * @since 1.0
  */
-public class ConstantProvider<T> implements ObjectProvider<T>, Serializable
-{
-    /** Serialization version */
-    private static final long serialVersionUID = 1L;
+public class ConstantProvider<T> implements ObjectProvider<T>, Serializable {
+  /**
+   * Serialization version
+   */
+  private static final long serialVersionUID = 1L;
 
-    //******************************************************************************************************************
-    // Fields
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // Fields
+  //******************************************************************************************************************
 
-    private final T constant;
+  private final T constant;
 
-    //******************************************************************************************************************
-    // Constructors
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // Constructors
+  //******************************************************************************************************************
 
-    /**
-     * Create a new ConstantProvider instance.
-     * 
-     * @param constant
-     */
-    public ConstantProvider(T constant)
-    {
-        this.constant = constant;
-    }
+  /**
+   * Create a new ConstantProvider instance.
+   *
+   * @param constant
+   */
+  public ConstantProvider(T constant) {
+    this.constant = constant;
+  }
 
-    //******************************************************************************************************************
-    // ObjectProvider Implementation
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // ObjectProvider Implementation
+  //******************************************************************************************************************
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public T getObject()
-    {
-        return constant;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public T getObject() {
+    return constant;
+  }
 }   

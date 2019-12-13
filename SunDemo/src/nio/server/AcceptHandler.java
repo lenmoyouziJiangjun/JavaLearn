@@ -51,35 +51,35 @@ import javax.net.ssl.*;
  */
 class AcceptHandler implements Handler {
 
-    private ServerSocketChannel channel;
-    private Dispatcher dsp;
+  private ServerSocketChannel channel;
+  private Dispatcher dsp;
 
-    private SSLContext sslContext;
+  private SSLContext sslContext;
 
-    AcceptHandler(ServerSocketChannel ssc, Dispatcher dsp,
-            SSLContext sslContext) {
-        channel = ssc;
-        this.dsp = dsp;
-        this.sslContext = sslContext;
+  AcceptHandler(ServerSocketChannel ssc, Dispatcher dsp,
+                SSLContext sslContext) {
+    channel = ssc;
+    this.dsp = dsp;
+    this.sslContext = sslContext;
+  }
+
+  public void handle(SelectionKey sk) throws IOException {
+
+    if (!sk.isAcceptable())
+      return;
+
+    SocketChannel sc = channel.accept();
+    if (sc == null) {
+      return;
     }
 
-    public void handle(SelectionKey sk) throws IOException {
-
-        if (!sk.isAcceptable())
-            return;
-
-        SocketChannel sc = channel.accept();
-        if (sc == null) {
-            return;
-        }
-
-        ChannelIO cio = (sslContext != null ?
+    ChannelIO cio = (sslContext != null ?
             ChannelIOSecure.getInstance(
-                sc, false /* non-blocking */, sslContext) :
+                    sc, false /* non-blocking */, sslContext) :
             ChannelIO.getInstance(
-                sc, false /* non-blocking */));
+                    sc, false /* non-blocking */));
 
-        RequestHandler rh = new RequestHandler(cio);
-        dsp.register(cio.getSocketChannel(), SelectionKey.OP_READ, rh);
-    }
+    RequestHandler rh = new RequestHandler(cio);
+    dsp.register(cio.getSocketChannel(), SelectionKey.OP_READ, rh);
+  }
 }

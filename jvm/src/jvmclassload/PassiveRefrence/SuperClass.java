@@ -8,11 +8,11 @@ package jvmclassload.PassiveRefrence;
  */
 public class SuperClass {
 
-    static{
-        System.out.println("super class");
-    }
+  static {
+    System.out.println("super class");
+  }
 
-    public static int value = 127;
+  public static int value = 127;
 
-    public static final String HELLWORLD="hello world";
+  public static final String HELLWORLD = "hello world";
 }

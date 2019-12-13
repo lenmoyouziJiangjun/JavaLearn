@@ -12,8 +12,8 @@ import java.util.Set;
  * copyright generalray4239@gmail.com
  */
 public class AnnotationProcess extends AbstractProcessor {
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        return false;
-    }
+  @Override
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    return false;
+  }
 }

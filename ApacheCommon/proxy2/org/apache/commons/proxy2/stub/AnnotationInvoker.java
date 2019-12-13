@@ -22,18 +22,16 @@ import org.apache.commons.proxy2.ProxyUtils;
 
 import java.lang.reflect.Method;
 
-public final class AnnotationInvoker implements Invoker
-{
-    private static final long serialVersionUID = 1L;
+public final class AnnotationInvoker implements Invoker {
+  private static final long serialVersionUID = 1L;
 
-    public static final AnnotationInvoker INSTANCE = new AnnotationInvoker();
+  public static final AnnotationInvoker INSTANCE = new AnnotationInvoker();
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable
-    {
-        final Object result = method.getDefaultValue();
-        return result == null && method.getReturnType().isPrimitive() ? ProxyUtils.nullValue(method.getReturnType())
-                : result;
-    }
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
+    final Object result = method.getDefaultValue();
+    return result == null && method.getReturnType().isPrimitive() ? ProxyUtils.nullValue(method.getReturnType())
+            : result;
+  }
 
 }

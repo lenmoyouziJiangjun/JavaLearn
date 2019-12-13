@@ -1,17 +1,17 @@
 package javapattern.Decorator.simplified2;
 
 public class ConcreteDecorator implements Component {
-public ConcreteDecorator(Component component){
-        super();
-        this.component = component;
-    }
+  public ConcreteDecorator(Component component) {
+    super();
+    this.component = component;
+  }
 
-    public void sampleOperation(){
-        component.sampleOperation();
-    }
+  public void sampleOperation() {
+    component.sampleOperation();
+  }
 
-    /**
-     * @link aggregation 
-     */
-    private Component component;
+  /**
+   * @link aggregation
+   */
+  private Component component;
 }

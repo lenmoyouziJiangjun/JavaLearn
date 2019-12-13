@@ -14,21 +14,21 @@ import java.io.Serializable;
  */
 public class BeanProvider<T> implements ObjectProvider<T>, Serializable {
 
-    private final Class<? extends T> beanClass;
+  private final Class<? extends T> beanClass;
 
-    public BeanProvider(@NotNull Class<? extends T> beanClass) {
-        this.beanClass = beanClass;
+  public BeanProvider(@NotNull Class<? extends T> beanClass) {
+    this.beanClass = beanClass;
+  }
+
+
+  @Override
+  public T getObject() {
+    try {
+      return beanClass.newInstance();
+    } catch (InstantiationException e) {
+      throw new ObjectProviderException(e, "%s is not concrete.", beanClass);
+    } catch (IllegalAccessException e) {
+      throw new ObjectProviderException(e, "Constructor for %s is not accessible.", beanClass);
     }
-
-
-    @Override
-    public T getObject() {
-        try {
-            return beanClass.newInstance();
-        } catch (InstantiationException e) {
-            throw new ObjectProviderException(e, "%s is not concrete.", beanClass);
-        } catch (IllegalAccessException e) {
-            throw new ObjectProviderException(e, "Constructor for %s is not accessible.", beanClass);
-        }
-    }
+  }
 }

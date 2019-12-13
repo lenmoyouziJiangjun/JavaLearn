@@ -2,16 +2,14 @@ package javapattern.Decorator.grepr;
 
 import java.io.PrintStream;
 
-public class GrepView
-{
-    PrintStream out ;
- 	public GrepView()
- 	{
-		out = System.out;
-	}
+public class GrepView {
+  PrintStream out;
 
-	public void println(String line)
-    {
-     	out.println(line);
-    }
+  public GrepView() {
+    out = System.out;
+  }
+
+  public void println(String line) {
+    out.println(line);
+  }
 }

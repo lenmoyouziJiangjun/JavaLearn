@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -29,88 +29,88 @@ import io.reactivex.functions.Function;
 @Fork(value = 1)
 @State(Scope.Thread)
 public class RxVsStreamPerf {
-    @Param({ "1", "1000", "1000000" })
-    public int times;
+  @Param({"1", "1000", "1000000"})
+  public int times;
 
-    Flowable<Integer> range;
+  Flowable<Integer> range;
 
-    Observable<Integer> rangeObservable;
+  Observable<Integer> rangeObservable;
 
-    Flowable<Integer> rangeFlatMap;
+  Flowable<Integer> rangeFlatMap;
 
-    Observable<Integer> rangeObservableFlatMap;
+  Observable<Integer> rangeObservableFlatMap;
 
-    Flowable<Integer> rangeFlatMapJust;
+  Flowable<Integer> rangeFlatMapJust;
 
-    Observable<Integer> rangeObservableFlatMapJust;
+  Observable<Integer> rangeObservableFlatMapJust;
 
-    List<Integer> values;
+  List<Integer> values;
 
-    @Setup
-    public void setup() {
-        range = Flowable.range(1, times);
+  @Setup
+  public void setup() {
+    range = Flowable.range(1, times);
 
-        rangeFlatMapJust = range.flatMap(new Function<Integer, Publisher<Integer>>() {
-            @Override
-            public Publisher<Integer> apply(Integer v) {
-                return Flowable.just(v);
-            }
-        });
+    rangeFlatMapJust = range.flatMap(new Function<Integer, Publisher<Integer>>() {
+      @Override
+      public Publisher<Integer> apply(Integer v) {
+        return Flowable.just(v);
+      }
+    });
 
-        rangeFlatMap = range.flatMap(new Function<Integer, Publisher<Integer>>() {
-            @Override
-            public Publisher<Integer> apply(Integer v) {
-                return Flowable.range(v, 2);
-            }
-        });
+    rangeFlatMap = range.flatMap(new Function<Integer, Publisher<Integer>>() {
+      @Override
+      public Publisher<Integer> apply(Integer v) {
+        return Flowable.range(v, 2);
+      }
+    });
 
-        rangeObservable = Observable.range(1, times);
+    rangeObservable = Observable.range(1, times);
 
-        rangeObservableFlatMapJust = rangeObservable.flatMap(new Function<Integer, Observable<Integer>>() {
-            @Override
-            public Observable<Integer> apply(Integer v) {
-                return Observable.just(v);
-            }
-        });
+    rangeObservableFlatMapJust = rangeObservable.flatMap(new Function<Integer, Observable<Integer>>() {
+      @Override
+      public Observable<Integer> apply(Integer v) {
+        return Observable.just(v);
+      }
+    });
 
-        rangeObservableFlatMap = rangeObservable.flatMap(new Function<Integer, Observable<Integer>>() {
-            @Override
-            public Observable<Integer> apply(Integer v) {
-                return Observable.range(v, 2);
-            }
-        });
+    rangeObservableFlatMap = rangeObservable.flatMap(new Function<Integer, Observable<Integer>>() {
+      @Override
+      public Observable<Integer> apply(Integer v) {
+        return Observable.range(v, 2);
+      }
+    });
 
-        values = range.toList().blockingGet();
-    }
+    values = range.toList().blockingGet();
+  }
 
-    @Benchmark
-    public void range(Blackhole bh) {
-        range.subscribe(new PerfSubscriber(bh));
-    }
+  @Benchmark
+  public void range(Blackhole bh) {
+    range.subscribe(new PerfSubscriber(bh));
+  }
 
-    @Benchmark
-    public void rangeObservable(Blackhole bh) {
-        rangeObservable.subscribe(new PerfObserver(bh));
-    }
+  @Benchmark
+  public void rangeObservable(Blackhole bh) {
+    rangeObservable.subscribe(new PerfObserver(bh));
+  }
 
-    @Benchmark
-    public void rangeFlatMap(Blackhole bh) {
-        rangeFlatMap.subscribe(new PerfSubscriber(bh));
-    }
+  @Benchmark
+  public void rangeFlatMap(Blackhole bh) {
+    rangeFlatMap.subscribe(new PerfSubscriber(bh));
+  }
 
-    @Benchmark
-    public void rangeObservableFlatMap(Blackhole bh) {
-        rangeObservableFlatMap.subscribe(new PerfObserver(bh));
-    }
+  @Benchmark
+  public void rangeObservableFlatMap(Blackhole bh) {
+    rangeObservableFlatMap.subscribe(new PerfObserver(bh));
+  }
 
-    @Benchmark
-    public void rangeFlatMapJust(Blackhole bh) {
-        rangeFlatMapJust.subscribe(new PerfSubscriber(bh));
-    }
+  @Benchmark
+  public void rangeFlatMapJust(Blackhole bh) {
+    rangeFlatMapJust.subscribe(new PerfSubscriber(bh));
+  }
 
-    @Benchmark
-    public void rangeObservableFlatMapJust(Blackhole bh) {
-        rangeObservableFlatMapJust.subscribe(new PerfObserver(bh));
-    }
+  @Benchmark
+  public void rangeObservableFlatMapJust(Blackhole bh) {
+    rangeObservableFlatMapJust.subscribe(new PerfObserver(bh));
+  }
 
 }

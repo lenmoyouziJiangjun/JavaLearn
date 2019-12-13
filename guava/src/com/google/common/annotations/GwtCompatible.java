@@ -54,7 +54,6 @@ import java.lang.annotation.Target;
  *
  * <p>Note that a {@code GwtCompatible} type may have some {@link GwtIncompatible} methods.
  *
- *
  * @author Charles Fry
  * @author Hayward Chan
  */
@@ -69,8 +68,8 @@ public @interface GwtCompatible {
    * serializable.
    *
    * @see <a href=
-   *     "http://code.google.com/webtoolkit/doc/latest/DevGuideServerCommunication.html#DevGuideSerializableTypes">
-   *     Documentation about GWT serialization</a>
+   * "http://code.google.com/webtoolkit/doc/latest/DevGuideServerCommunication.html#DevGuideSerializableTypes">
+   * Documentation about GWT serialization</a>
    */
   boolean serializable() default false;
 
@@ -79,8 +78,8 @@ public @interface GwtCompatible {
    * super-source) is different from the implementation used by the JVM.
    *
    * @see <a href=
-   *     "http://code.google.com/webtoolkit/doc/latest/DevGuideOrganizingProjects.html#DevGuideModules">
-   *     Documentation about GWT emulated source</a>
+   * "http://code.google.com/webtoolkit/doc/latest/DevGuideOrganizingProjects.html#DevGuideModules">
+   * Documentation about GWT emulated source</a>
    */
   boolean emulated() default false;
 }

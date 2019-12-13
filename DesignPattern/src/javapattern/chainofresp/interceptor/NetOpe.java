@@ -10,19 +10,20 @@ package javapattern.chainofresp.interceptor;/**
  */
 public class NetOpe {
 
-    Request mRequest;
+  Request mRequest;
 
-    public NetOpe(){}
+  public NetOpe() {
+  }
 
-    public void setRequest(Request request){
+  public void setRequest(Request request) {
 
-    }
+  }
 
-    public Request getRequest(){
-       return mRequest;
-    }
+  public Request getRequest() {
+    return mRequest;
+  }
 
-    public Response doHttpRequest(){
-        return new Response();//测试代码
-    }
+  public Response doHttpRequest() {
+    return new Response();//测试代码
+  }
 }

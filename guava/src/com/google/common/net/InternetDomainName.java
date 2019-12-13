@@ -29,7 +29,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.Immutable;
 import com.google.thirdparty.publicsuffix.PublicSuffixPatterns;
 import com.google.thirdparty.publicsuffix.PublicSuffixType;
+
 import java.util.List;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -55,9 +57,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>During construction, names are normalized in two ways:
  *
  * <ol>
- *   <li>ASCII uppercase characters are converted to lowercase.
- *   <li>Unicode dot separators other than the ASCII period ({@code '.'}) are converted to the ASCII
- *       period.
+ * <li>ASCII uppercase characters are converted to lowercase.
+ * <li>Unicode dot separators other than the ASCII period ({@code '.'}) are converted to the ASCII
+ * period.
  * </ol>
  *
  * <p>The normalized values will be returned from {@link #toString()} and {@link #parts()}, and will
@@ -106,10 +108,14 @@ public final class InternetDomainName {
    */
   private static final int MAX_DOMAIN_PART_LENGTH = 63;
 
-  /** The full domain name, converted to lower case. */
+  /**
+   * The full domain name, converted to lower case.
+   */
   private final String name;
 
-  /** The parts of the domain name, converted to lower case. */
+  /**
+   * The parts of the domain name, converted to lower case.
+   */
   private final ImmutableList<String> parts;
 
   /**
@@ -128,7 +134,9 @@ public final class InternetDomainName {
    */
   private final int registrySuffixIndex;
 
-  /** Constructor used to implement {@link #from(String)}, and from subclasses. */
+  /**
+   * Constructor used to implement {@link #from(String)}, and from subclasses.
+   */
   InternetDomainName(String name) {
     // Normalize:
     // * ASCII characters to lowercase
@@ -168,7 +176,7 @@ public final class InternetDomainName {
       String ancestorName = DOT_JOINER.join(parts.subList(i, partsSize));
 
       if (matchesType(
-          desiredType, Optional.fromNullable(PublicSuffixPatterns.EXACT.get(ancestorName)))) {
+              desiredType, Optional.fromNullable(PublicSuffixPatterns.EXACT.get(ancestorName)))) {
         return i;
       }
 
@@ -194,16 +202,15 @@ public final class InternetDomainName {
    * href="http://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a> is relaxed in the following ways:
    *
    * <ul>
-   *   <li>Any part containing non-ASCII characters is considered valid.
-   *   <li>Underscores ('_') are permitted wherever dashes ('-') are permitted.
-   *   <li>Parts other than the final part may start with a digit, as mandated by <a
-   *       href="https://tools.ietf.org/html/rfc1123#section-2">RFC 1123</a>.
+   * <li>Any part containing non-ASCII characters is considered valid.
+   * <li>Underscores ('_') are permitted wherever dashes ('-') are permitted.
+   * <li>Parts other than the final part may start with a digit, as mandated by <a
+   * href="https://tools.ietf.org/html/rfc1123#section-2">RFC 1123</a>.
    * </ul>
-   *
    *
    * @param domain A domain name (not IP address)
    * @throws IllegalArgumentException if {@code domain} is not syntactically valid according to
-   *     {@link #isValid}
+   *                                  {@link #isValid}
    * @since 10.0 (previously named {@code fromLenient})
    */
   public static InternetDomainName from(String domain) {
@@ -238,13 +245,13 @@ public final class InternetDomainName {
   private static final CharMatcher DASH_MATCHER = CharMatcher.anyOf("-_");
 
   private static final CharMatcher PART_CHAR_MATCHER =
-      CharMatcher.javaLetterOrDigit().or(DASH_MATCHER);
+          CharMatcher.javaLetterOrDigit().or(DASH_MATCHER);
 
   /**
    * Helper method for {@link #validateSyntax(List)}. Validates that one part of a domain name is
    * valid.
    *
-   * @param part The domain name part to be validated
+   * @param part        The domain name part to be validated
    * @param isFinalPart Is this the final (rightmost) domain part?
    * @return Whether the part is valid
    */
@@ -276,7 +283,7 @@ public final class InternetDomainName {
     // No initial or final dashes or underscores.
 
     if (DASH_MATCHER.matches(part.charAt(0))
-        || DASH_MATCHER.matches(part.charAt(part.length() - 1))) {
+            || DASH_MATCHER.matches(part.charAt(part.length() - 1))) {
       return false;
     }
 
@@ -429,7 +436,7 @@ public final class InternetDomainName {
    * href="https://github.com/google/guava/wiki/InternetDomainNameExplained">this article</a>.
    *
    * @return {@code true} if this domain name appears exactly on the public suffix list as part of
-   *     the registry suffix section (labelled "ICANN").
+   * the registry suffix section (labelled "ICANN").
    * @since 23.3
    */
   public boolean isRegistrySuffix() {
@@ -511,7 +518,9 @@ public final class InternetDomainName {
     return ancestor(registrySuffixIndex - 1);
   }
 
-  /** Indicates whether this domain is composed of two or more parts. */
+  /**
+   * Indicates whether this domain is composed of two or more parts.
+   */
   public boolean hasParent() {
     return parts.size() > 1;
   }
@@ -545,7 +554,7 @@ public final class InternetDomainName {
    * returns a new {@code InternetDomainName} with the value {@code www.bar.foo.com}. Only lenient
    * validation is performed, as described {@link #from(String) here}.
    *
-   * @throws NullPointerException if leftParts is null
+   * @throws NullPointerException     if leftParts is null
    * @throws IllegalArgumentException if the resulting name is not valid
    */
   public InternetDomainName child(String leftParts) {
@@ -589,10 +598,10 @@ public final class InternetDomainName {
    * desiredType} is specified, the wildcard pattern must also match that type.
    */
   private static boolean matchesWildcardSuffixType(
-      Optional<PublicSuffixType> desiredType, String domain) {
+          Optional<PublicSuffixType> desiredType, String domain) {
     List<String> pieces = DOT_SPLITTER.limit(2).splitToList(domain);
     return pieces.size() == 2
-        && matchesType(
+            && matchesType(
             desiredType, Optional.fromNullable(PublicSuffixPatterns.UNDER.get(pieces.get(1))));
   }
 
@@ -601,11 +610,13 @@ public final class InternetDomainName {
    * identical. Otherwise, returns true as long as {@code actualType} is present.
    */
   private static boolean matchesType(
-      Optional<PublicSuffixType> desiredType, Optional<PublicSuffixType> actualType) {
+          Optional<PublicSuffixType> desiredType, Optional<PublicSuffixType> actualType) {
     return desiredType.isPresent() ? desiredType.equals(actualType) : actualType.isPresent();
   }
 
-  /** Returns the domain name, normalized to all lower case. */
+  /**
+   * Returns the domain name, normalized to all lower case.
+   */
   @Override
   public String toString() {
     return name;

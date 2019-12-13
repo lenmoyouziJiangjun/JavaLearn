@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -31,151 +31,151 @@ import io.reactivex.subjects.*;
  */
 public final class ObservableRepeatWhen<T> extends AbstractObservableWithUpstream<T, T> {
 
-    final Function<? super Observable<Object>, ? extends ObservableSource<?>> handler;
+  final Function<? super Observable<Object>, ? extends ObservableSource<?>> handler;
 
-    public ObservableRepeatWhen(ObservableSource<T> source, Function<? super Observable<Object>, ? extends ObservableSource<?>> handler) {
-        super(source);
-        this.handler = handler;
+  public ObservableRepeatWhen(ObservableSource<T> source, Function<? super Observable<Object>, ? extends ObservableSource<?>> handler) {
+    super(source);
+    this.handler = handler;
+  }
+
+  @Override
+  protected void subscribeActual(Observer<? super T> observer) {
+    Subject<Object> signaller = PublishSubject.create().toSerialized();
+
+    ObservableSource<?> other;
+
+    try {
+      other = ObjectHelper.requireNonNull(handler.apply(signaller), "The handler returned a null ObservableSource");
+    } catch (Throwable ex) {
+      Exceptions.throwIfFatal(ex);
+      EmptyDisposable.error(ex, observer);
+      return;
+    }
+
+    RepeatWhenObserver<T> parent = new RepeatWhenObserver<T>(observer, signaller, source);
+    observer.onSubscribe(parent);
+
+    other.subscribe(parent.inner);
+
+    parent.subscribeNext();
+  }
+
+  static final class RepeatWhenObserver<T> extends AtomicInteger implements Observer<T>, Disposable {
+
+    private static final long serialVersionUID = 802743776666017014L;
+
+    final Observer<? super T> actual;
+
+    final AtomicInteger wip;
+
+    final AtomicThrowable error;
+
+    final Subject<Object> signaller;
+
+    final InnerRepeatObserver inner;
+
+    final AtomicReference<Disposable> d;
+
+    final ObservableSource<T> source;
+
+    volatile boolean active;
+
+    RepeatWhenObserver(Observer<? super T> actual, Subject<Object> signaller, ObservableSource<T> source) {
+      this.actual = actual;
+      this.signaller = signaller;
+      this.source = source;
+      this.wip = new AtomicInteger();
+      this.error = new AtomicThrowable();
+      this.inner = new InnerRepeatObserver();
+      this.d = new AtomicReference<Disposable>();
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> observer) {
-        Subject<Object> signaller = PublishSubject.create().toSerialized();
+    public void onSubscribe(Disposable d) {
+      DisposableHelper.replace(this.d, d);
+    }
 
-        ObservableSource<?> other;
+    @Override
+    public void onNext(T t) {
+      HalfSerializer.onNext(actual, t, this, error);
+    }
 
-        try {
-            other = ObjectHelper.requireNonNull(handler.apply(signaller), "The handler returned a null ObservableSource");
-        } catch (Throwable ex) {
-            Exceptions.throwIfFatal(ex);
-            EmptyDisposable.error(ex, observer);
+    @Override
+    public void onError(Throwable e) {
+      DisposableHelper.dispose(inner);
+      HalfSerializer.onError(actual, e, this, error);
+    }
+
+    @Override
+    public void onComplete() {
+      active = false;
+      signaller.onNext(0);
+    }
+
+    @Override
+    public boolean isDisposed() {
+      return DisposableHelper.isDisposed(d.get());
+    }
+
+    @Override
+    public void dispose() {
+      DisposableHelper.dispose(d);
+      DisposableHelper.dispose(inner);
+    }
+
+    void innerNext() {
+      subscribeNext();
+    }
+
+    void innerError(Throwable ex) {
+      DisposableHelper.dispose(d);
+      HalfSerializer.onError(actual, ex, this, error);
+    }
+
+    void innerComplete() {
+      DisposableHelper.dispose(d);
+      HalfSerializer.onComplete(actual, this, error);
+    }
+
+    void subscribeNext() {
+      if (wip.getAndIncrement() == 0) {
+
+        do {
+          if (isDisposed()) {
             return;
-        }
+          }
 
-        RepeatWhenObserver<T> parent = new RepeatWhenObserver<T>(observer, signaller, source);
-        observer.onSubscribe(parent);
-
-        other.subscribe(parent.inner);
-
-        parent.subscribeNext();
+          if (!active) {
+            active = true;
+            source.subscribe(this);
+          }
+        } while (wip.decrementAndGet() != 0);
+      }
     }
 
-    static final class RepeatWhenObserver<T> extends AtomicInteger implements Observer<T>, Disposable {
+    final class InnerRepeatObserver extends AtomicReference<Disposable> implements Observer<Object> {
 
-        private static final long serialVersionUID = 802743776666017014L;
+      private static final long serialVersionUID = 3254781284376480842L;
 
-        final Observer<? super T> actual;
+      @Override
+      public void onSubscribe(Disposable d) {
+        DisposableHelper.setOnce(this, d);
+      }
 
-        final AtomicInteger wip;
+      @Override
+      public void onNext(Object t) {
+        innerNext();
+      }
 
-        final AtomicThrowable error;
+      @Override
+      public void onError(Throwable e) {
+        innerError(e);
+      }
 
-        final Subject<Object> signaller;
-
-        final InnerRepeatObserver inner;
-
-        final AtomicReference<Disposable> d;
-
-        final ObservableSource<T> source;
-
-        volatile boolean active;
-
-        RepeatWhenObserver(Observer<? super T> actual, Subject<Object> signaller, ObservableSource<T> source) {
-            this.actual = actual;
-            this.signaller = signaller;
-            this.source = source;
-            this.wip = new AtomicInteger();
-            this.error = new AtomicThrowable();
-            this.inner = new InnerRepeatObserver();
-            this.d = new AtomicReference<Disposable>();
-        }
-
-        @Override
-        public void onSubscribe(Disposable d) {
-            DisposableHelper.replace(this.d, d);
-        }
-
-        @Override
-        public void onNext(T t) {
-            HalfSerializer.onNext(actual, t, this, error);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            DisposableHelper.dispose(inner);
-            HalfSerializer.onError(actual, e, this, error);
-        }
-
-        @Override
-        public void onComplete() {
-            active = false;
-            signaller.onNext(0);
-        }
-
-        @Override
-        public boolean isDisposed() {
-            return DisposableHelper.isDisposed(d.get());
-        }
-
-        @Override
-        public void dispose() {
-            DisposableHelper.dispose(d);
-            DisposableHelper.dispose(inner);
-        }
-
-        void innerNext() {
-            subscribeNext();
-        }
-
-        void innerError(Throwable ex) {
-            DisposableHelper.dispose(d);
-            HalfSerializer.onError(actual, ex, this, error);
-        }
-
-        void innerComplete() {
-            DisposableHelper.dispose(d);
-            HalfSerializer.onComplete(actual, this, error);
-        }
-
-        void subscribeNext() {
-            if (wip.getAndIncrement() == 0) {
-
-                do {
-                    if (isDisposed()) {
-                        return;
-                    }
-
-                    if (!active) {
-                        active = true;
-                        source.subscribe(this);
-                    }
-                } while (wip.decrementAndGet() != 0);
-            }
-        }
-
-        final class InnerRepeatObserver extends AtomicReference<Disposable> implements Observer<Object> {
-
-            private static final long serialVersionUID = 3254781284376480842L;
-
-            @Override
-            public void onSubscribe(Disposable d) {
-                DisposableHelper.setOnce(this, d);
-            }
-
-            @Override
-            public void onNext(Object t) {
-                innerNext();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                innerError(e);
-            }
-
-            @Override
-            public void onComplete() {
-                innerComplete();
-            }
-        }
+      @Override
+      public void onComplete() {
+        innerComplete();
+      }
     }
+  }
 }

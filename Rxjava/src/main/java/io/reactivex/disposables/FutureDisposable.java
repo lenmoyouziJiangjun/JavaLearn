@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -20,26 +20,26 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 final class FutureDisposable extends AtomicReference<Future<?>> implements Disposable {
 
-    private static final long serialVersionUID = 6545242830671168775L;
+  private static final long serialVersionUID = 6545242830671168775L;
 
-    private final boolean allowInterrupt;
+  private final boolean allowInterrupt;
 
-    FutureDisposable(Future<?> run, boolean allowInterrupt) {
-        super(run);
-        this.allowInterrupt = allowInterrupt;
+  FutureDisposable(Future<?> run, boolean allowInterrupt) {
+    super(run);
+    this.allowInterrupt = allowInterrupt;
+  }
+
+  @Override
+  public boolean isDisposed() {
+    Future<?> f = get();
+    return f == null || f.isDone();
+  }
+
+  @Override
+  public void dispose() {
+    Future<?> f = getAndSet(null);
+    if (f != null) {
+      f.cancel(allowInterrupt);
     }
-
-    @Override
-    public boolean isDisposed() {
-        Future<?> f = get();
-        return f == null || f.isDone();
-    }
-
-    @Override
-    public void dispose() {
-        Future<?> f = getAndSet(null);
-        if (f != null) {
-            f.cancel(allowInterrupt);
-        }
-    }
+  }
 }

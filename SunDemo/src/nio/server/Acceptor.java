@@ -51,36 +51,36 @@ import javax.net.ssl.*;
  */
 class Acceptor implements Runnable {
 
-    private ServerSocketChannel ssc;
-    private Dispatcher d;
+  private ServerSocketChannel ssc;
+  private Dispatcher d;
 
-    private SSLContext sslContext;
+  private SSLContext sslContext;
 
-    Acceptor(ServerSocketChannel ssc, Dispatcher d, SSLContext sslContext) {
-        this.ssc = ssc;
-        this.d = d;
-        this.sslContext = sslContext;
-    }
+  Acceptor(ServerSocketChannel ssc, Dispatcher d, SSLContext sslContext) {
+    this.ssc = ssc;
+    this.d = d;
+    this.sslContext = sslContext;
+  }
 
-    public void run() {
-        for (;;) {
-            try {
-                SocketChannel sc = ssc.accept();
+  public void run() {
+    for (; ; ) {
+      try {
+        SocketChannel sc = ssc.accept();
 
-                ChannelIO cio = (sslContext != null ?
-                    ChannelIOSecure.getInstance(
+        ChannelIO cio = (sslContext != null ?
+                ChannelIOSecure.getInstance(
                         sc, false /* non-blocking */, sslContext) :
-                    ChannelIO.getInstance(
+                ChannelIO.getInstance(
                         sc, false /* non-blocking */));
 
-                RequestHandler rh = new RequestHandler(cio);
+        RequestHandler rh = new RequestHandler(cio);
 
-                d.register(cio.getSocketChannel(), SelectionKey.OP_READ, rh);
+        d.register(cio.getSocketChannel(), SelectionKey.OP_READ, rh);
 
-            } catch (IOException x) {
-                x.printStackTrace();
-                break;
-            }
-        }
+      } catch (IOException x) {
+        x.printStackTrace();
+        break;
+      }
     }
+  }
 }

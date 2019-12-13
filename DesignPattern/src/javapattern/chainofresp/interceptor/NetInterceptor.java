@@ -10,5 +10,5 @@ package javapattern.chainofresp.interceptor;/**
  */
 public interface NetInterceptor {
 
-    NetOpe intercept(NetInterceptor interceptor);
+  NetOpe intercept(NetInterceptor interceptor);
 }

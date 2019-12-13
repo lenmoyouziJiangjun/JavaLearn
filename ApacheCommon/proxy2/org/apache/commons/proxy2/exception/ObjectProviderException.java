@@ -22,76 +22,71 @@ import org.apache.commons.proxy2.ObjectProvider;
 /**
  * {@link ObjectProvider} implementations should throw this exception type to indicate that
  * there was a problem creating/finding the object.
- * 
+ *
  * @since 1.0
  */
-public class ObjectProviderException extends RuntimeException
-{
-    /** Serialization version */
-    private static final long serialVersionUID = -1L;
+public class ObjectProviderException extends RuntimeException {
+  /**
+   * Serialization version
+   */
+  private static final long serialVersionUID = -1L;
 
-    //******************************************************************************************************************
-    // Constructors
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // Constructors
+  //******************************************************************************************************************
 
-    /**
-     * Create a new ObjectProviderException instance.
-     */
-    public ObjectProviderException()
-    {
-    }
+  /**
+   * Create a new ObjectProviderException instance.
+   */
+  public ObjectProviderException() {
+  }
 
-    /**
-     * Create a new ObjectProviderException instance.
-     * 
-     * @param message
-     */
-    public ObjectProviderException(String message)
-    {
-        super(message);
-    }
+  /**
+   * Create a new ObjectProviderException instance.
+   *
+   * @param message
+   */
+  public ObjectProviderException(String message) {
+    super(message);
+  }
 
-    /**
-     * Create a new ObjectProviderException instance using {@link String#format(String, Object...)} for the message.
-     * 
-     * @param message
-     * @param arguments
-     */
-    public ObjectProviderException(String message, Object... arguments)
-    {
-        super(String.format(message, arguments));
-    }
+  /**
+   * Create a new ObjectProviderException instance using {@link String#format(String, Object...)} for the message.
+   *
+   * @param message
+   * @param arguments
+   */
+  public ObjectProviderException(String message, Object... arguments) {
+    super(String.format(message, arguments));
+  }
 
-    /**
-     * Create a new ObjectProviderException instance.
-     * 
-     * @param cause
-     */
-    public ObjectProviderException(Throwable cause)
-    {
-        super(cause);
-    }
+  /**
+   * Create a new ObjectProviderException instance.
+   *
+   * @param cause
+   */
+  public ObjectProviderException(Throwable cause) {
+    super(cause);
+  }
 
-    /**
-     * Create a new ObjectProviderException instance.
-     * 
-     * @param message
-     * @param cause
-     */
-    public ObjectProviderException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+  /**
+   * Create a new ObjectProviderException instance.
+   *
+   * @param message
+   * @param cause
+   */
+  public ObjectProviderException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    /**
-     * Create a new ObjectProviderException instance using {@link String#format(String, Object...)} for the message.
-     * 
-     * @param cause
-     * @param message
-     * @param arguments
-     */
-    public ObjectProviderException(Throwable cause, String message, Object... arguments)
-    {
-        super(String.format(message, arguments), cause);
-    }
+  /**
+   * Create a new ObjectProviderException instance using {@link String#format(String, Object...)} for the message.
+   *
+   * @param cause
+   * @param message
+   * @param arguments
+   */
+  public ObjectProviderException(Throwable cause, String message, Object... arguments) {
+    super(String.format(message, arguments), cause);
+  }
 }

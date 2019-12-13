@@ -20,15 +20,14 @@ import java.io.Serializable;
 
 /**
  * Defines a contract around the {@code Object readResolve()} method used by Java deserialization.
- * 
+ *
  * @since 2.0
  */
-public interface ReadResolve extends Serializable
-{
-    /**
-     * Get the deserialized version of this {@link Serializable}.
-     * 
-     * @return Object
-     */
-    Object readResolve();
+public interface ReadResolve extends Serializable {
+  /**
+   * Get the deserialized version of this {@link Serializable}.
+   *
+   * @return Object
+   */
+  Object readResolve();
 }

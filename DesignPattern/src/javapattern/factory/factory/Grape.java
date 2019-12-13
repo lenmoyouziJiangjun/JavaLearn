@@ -1,31 +1,25 @@
 package javapattern.factory.factory;
 
-public class Grape implements Fruit
-{
-    public void grow()
-    {
-    	System.out.println("Grape is growing...");
-    }
+public class Grape implements Fruit {
+  public void grow() {
+    System.out.println("Grape is growing...");
+  }
 
-    public void harvest()
-    {
-    	System.out.println("Grape has been harvested.");
-    }
+  public void harvest() {
+    System.out.println("Grape has been harvested.");
+  }
 
-    public void plant()
-    {
-        System.out.println("Grape has been planted.");
-    }
+  public void plant() {
+    System.out.println("Grape has been planted.");
+  }
 
-    public boolean getSeedless()
-    {
-        return seedless;
-    }
+  public boolean getSeedless() {
+    return seedless;
+  }
 
-    public void setSeedless(boolean seedless)
-    {
-        this.seedless = seedless;
-    }
+  public void setSeedless(boolean seedless) {
+    this.seedless = seedless;
+  }
 
-    private boolean seedless;
+  private boolean seedless;
 }

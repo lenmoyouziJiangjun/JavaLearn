@@ -12,7 +12,9 @@
 package com.google.common.cache;
 
 import com.google.common.annotations.GwtIncompatible;
+
 import java.util.Random;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -127,13 +129,19 @@ abstract class Striped64 extends Number {
    */
   static final ThreadLocal<int[]> threadHashCode = new ThreadLocal<>();
 
-  /** Generator of new random hash codes */
+  /**
+   * Generator of new random hash codes
+   */
   static final Random rng = new Random();
 
-  /** Number of CPUS, to place bound on table size */
+  /**
+   * Number of CPUS, to place bound on table size
+   */
   static final int NCPU = Runtime.getRuntime().availableProcessors();
 
-  /** Table of cells. When non-null, size is a power of 2. */
+  /**
+   * Table of cells. When non-null, size is a power of 2.
+   */
   transient volatile Cell @Nullable [] cells;
 
   /**
@@ -142,18 +150,27 @@ abstract class Striped64 extends Number {
    */
   transient volatile long base;
 
-  /** Spinlock (locked via CAS) used when resizing and/or creating Cells. */
+  /**
+   * Spinlock (locked via CAS) used when resizing and/or creating Cells.
+   */
   transient volatile int busy;
 
-  /** Package-private default constructor */
-  Striped64() {}
+  /**
+   * Package-private default constructor
+   */
+  Striped64() {
+  }
 
-  /** CASes the base field. */
+  /**
+   * CASes the base field.
+   */
   final boolean casBase(long cmp, long val) {
     return UNSAFE.compareAndSwapLong(this, baseOffset, cmp, val);
   }
 
-  /** CASes the busy field from 0 to 1 to acquire lock. */
+  /**
+   * CASes the busy field from 0 to 1 to acquire lock.
+   */
   final boolean casBusy() {
     return UNSAFE.compareAndSwapInt(this, busyOffset, 0, 1);
   }
@@ -163,7 +180,7 @@ abstract class Striped64 extends Number {
    * function for most uses, but the virtualized form is needed within retryUpdate.
    *
    * @param currentValue the current value (of either base or a cell)
-   * @param newValue the argument from a user update call
+   * @param newValue     the argument from a user update call
    * @return result of the update function
    */
   abstract long fn(long currentValue, long newValue);
@@ -173,8 +190,8 @@ abstract class Striped64 extends Number {
    * contention. See above for explanation. This method suffers the usual non-modularity problems of
    * optimistic retry code, relying on rechecked sets of reads.
    *
-   * @param x the value
-   * @param hc the hash code holder
+   * @param x              the value
+   * @param hc             the hash code holder
    * @param wasUncontended false if CAS failed before call
    */
   final void retryUpdate(long x, int[] hc, boolean wasUncontended) {
@@ -212,7 +229,7 @@ abstract class Striped64 extends Number {
           }
           collide = false;
         } else if (!wasUncontended) // CAS already known to fail
-        wasUncontended = true; // Continue after rehash
+          wasUncontended = true; // Continue after rehash
         else if (a.cas(v = a.value, fn(v, x))) break;
         else if (n >= NCPU || cells != as) collide = false; // At max size or stale
         else if (!collide) collide = true;
@@ -250,7 +267,9 @@ abstract class Striped64 extends Number {
     }
   }
 
-  /** Sets base and all cells to the given value. */
+  /**
+   * Sets base and all cells to the given value.
+   */
   final void internalReset(long initialValue) {
     Cell[] as = cells;
     base = initialValue;
@@ -292,17 +311,17 @@ abstract class Striped64 extends Number {
     }
     try {
       return java.security.AccessController.doPrivileged(
-          new java.security.PrivilegedExceptionAction<sun.misc.Unsafe>() {
-            public sun.misc.Unsafe run() throws Exception {
-              Class<sun.misc.Unsafe> k = sun.misc.Unsafe.class;
-              for (java.lang.reflect.Field f : k.getDeclaredFields()) {
-                f.setAccessible(true);
-                Object x = f.get(null);
-                if (k.isInstance(x)) return k.cast(x);
-              }
-              throw new NoSuchFieldError("the Unsafe");
-            }
-          });
+              new java.security.PrivilegedExceptionAction<sun.misc.Unsafe>() {
+                public sun.misc.Unsafe run() throws Exception {
+                  Class<sun.misc.Unsafe> k = sun.misc.Unsafe.class;
+                  for (java.lang.reflect.Field f : k.getDeclaredFields()) {
+                    f.setAccessible(true);
+                    Object x = f.get(null);
+                    if (k.isInstance(x)) return k.cast(x);
+                  }
+                  throw new NoSuchFieldError("the Unsafe");
+                }
+              });
     } catch (java.security.PrivilegedActionException e) {
       throw new RuntimeException("Could not initialize intrinsics", e.getCause());
     }

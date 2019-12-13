@@ -49,6 +49,6 @@ import java.nio.channels.*;
  */
 interface Handler {
 
-    void handle(SelectionKey sk) throws IOException;
+  void handle(SelectionKey sk) throws IOException;
 
 }

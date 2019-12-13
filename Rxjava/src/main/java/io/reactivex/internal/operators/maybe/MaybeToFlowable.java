@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -29,61 +29,61 @@ import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
  */
 public final class MaybeToFlowable<T> extends Flowable<T> implements HasUpstreamMaybeSource<T> {
 
-    final MaybeSource<T> source;
+  final MaybeSource<T> source;
 
-    public MaybeToFlowable(MaybeSource<T> source) {
-        this.source = source;
+  public MaybeToFlowable(MaybeSource<T> source) {
+    this.source = source;
+  }
+
+  @Override
+  public MaybeSource<T> source() {
+    return source;
+  }
+
+  @Override
+  protected void subscribeActual(Subscriber<? super T> s) {
+    source.subscribe(new MaybeToFlowableSubscriber<T>(s));
+  }
+
+  static final class MaybeToFlowableSubscriber<T> extends DeferredScalarSubscription<T>
+          implements MaybeObserver<T> {
+
+    private static final long serialVersionUID = 7603343402964826922L;
+
+    Disposable d;
+
+    MaybeToFlowableSubscriber(Subscriber<? super T> actual) {
+      super(actual);
     }
 
     @Override
-    public MaybeSource<T> source() {
-        return source;
+    public void onSubscribe(Disposable d) {
+      if (DisposableHelper.validate(this.d, d)) {
+        this.d = d;
+
+        actual.onSubscribe(this);
+      }
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new MaybeToFlowableSubscriber<T>(s));
+    public void onSuccess(T value) {
+      complete(value);
     }
 
-    static final class MaybeToFlowableSubscriber<T> extends DeferredScalarSubscription<T>
-    implements MaybeObserver<T> {
-
-        private static final long serialVersionUID = 7603343402964826922L;
-
-        Disposable d;
-
-        MaybeToFlowableSubscriber(Subscriber<? super T> actual) {
-            super(actual);
-        }
-
-        @Override
-        public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
-
-                actual.onSubscribe(this);
-            }
-        }
-
-        @Override
-        public void onSuccess(T value) {
-            complete(value);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            actual.onError(e);
-        }
-
-        @Override
-        public void onComplete() {
-            actual.onComplete();
-        }
-
-        @Override
-        public void cancel() {
-            super.cancel();
-            d.dispose();
-        }
+    @Override
+    public void onError(Throwable e) {
+      actual.onError(e);
     }
+
+    @Override
+    public void onComplete() {
+      actual.onComplete();
+    }
+
+    @Override
+    public void cancel() {
+      super.cancel();
+      d.dispose();
+    }
+  }
 }

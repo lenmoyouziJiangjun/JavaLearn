@@ -16,6 +16,7 @@ package com.google.common.cache;
 
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Supplier;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -32,20 +33,20 @@ final class LongAddables {
     try {
       new LongAdder(); // trigger static initialization of the LongAdder class, which may fail
       supplier =
-          new Supplier<LongAddable>() {
-            @Override
-            public LongAddable get() {
-              return new LongAdder();
-            }
-          };
+              new Supplier<LongAddable>() {
+                @Override
+                public LongAddable get() {
+                  return new LongAdder();
+                }
+              };
     } catch (Throwable t) { // we really want to catch *everything*
       supplier =
-          new Supplier<LongAddable>() {
-            @Override
-            public LongAddable get() {
-              return new PureJavaLongAddable();
-            }
-          };
+              new Supplier<LongAddable>() {
+                @Override
+                public LongAddable get() {
+                  return new PureJavaLongAddable();
+                }
+              };
     }
     SUPPLIER = supplier;
   }

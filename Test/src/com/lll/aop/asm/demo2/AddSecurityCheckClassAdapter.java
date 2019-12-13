@@ -16,27 +16,28 @@ import com.sun.xml.internal.ws.org.objectweb.asm.MethodVisitor;
  * copyright generalray4239@gmail.com
  */
 public class AddSecurityCheckClassAdapter extends ClassAdapter {
-    public AddSecurityCheckClassAdapter(ClassVisitor cv) {
-        super(cv);
-    }
+  public AddSecurityCheckClassAdapter(ClassVisitor cv) {
+    super(cv);
+  }
 
-    /**
-     * 重写visitMethod.访问到"operation"方法时，给出自定义 MethodVisitor，实际改写方法内容
-     * @param access
-     * @param name
-     * @param desc
-     * @param signature
-     * @param exceptions
-     * @return
-     */
-    @Override
-    public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-        MethodVisitor mv = cv.visitMethod(access,name,desc,signature,exceptions);
-        MethodVisitor wrapperMV =mv;
-        if(mv!=null && name.equals("operation")){//operation 方法
-            // 使用自定义 MethodVisitor，实际改写方法内容
-            wrapperMV = new AddSecurityCheckMethodAdapter(mv);
-        }
-        return wrapperMV;
+  /**
+   * 重写visitMethod.访问到"operation"方法时，给出自定义 MethodVisitor，实际改写方法内容
+   *
+   * @param access
+   * @param name
+   * @param desc
+   * @param signature
+   * @param exceptions
+   * @return
+   */
+  @Override
+  public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+    MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
+    MethodVisitor wrapperMV = mv;
+    if (mv != null && name.equals("operation")) {//operation 方法
+      // 使用自定义 MethodVisitor，实际改写方法内容
+      wrapperMV = new AddSecurityCheckMethodAdapter(mv);
     }
+    return wrapperMV;
+  }
 }

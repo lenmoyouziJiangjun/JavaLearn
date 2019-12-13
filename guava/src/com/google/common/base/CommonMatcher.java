@@ -7,15 +7,15 @@ package com.google.common.base;
  * copyright generalray4239@gmail.com
  */
 public abstract class CommonMatcher {
-    abstract boolean matches();
+  abstract boolean matches();
 
-    abstract boolean find();
+  abstract boolean find();
 
-    abstract boolean find(int index);
+  abstract boolean find(int index);
 
-    abstract String replaceAll(String replacement);
+  abstract String replaceAll(String replacement);
 
-    abstract int end();
+  abstract int end();
 
-    abstract int start();
+  abstract int start();
 }

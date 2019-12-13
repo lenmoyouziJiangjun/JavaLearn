@@ -25,290 +25,290 @@ import io.reactivex.internal.schedulers.TrampolineScheduler;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public final class ObservableObserveOn<T> extends AbstractObservableWithUpstream<T, T> {
-    final Scheduler scheduler;
+  final Scheduler scheduler;
+  final boolean delayError;
+  final int bufferSize;
+
+  public ObservableObserveOn(ObservableSource<T> source, Scheduler scheduler, boolean delayError, int bufferSize) {
+    super(source);
+    this.scheduler = scheduler;
+    this.delayError = delayError;
+    this.bufferSize = bufferSize;
+  }
+
+  @Override
+  protected void subscribeActual(Observer<? super T> observer) {
+    if (scheduler instanceof TrampolineScheduler) {
+      source.subscribe(observer);
+    } else {
+      Scheduler.Worker w = scheduler.createWorker();
+      //父亲调用subscribe方法，按照一般流程，应该是ObservableSubscribeOn 的subscribeActual 方法执行ObserveOnObserver的onSubscribe
+      source.subscribe(new ObserveOnObserver<T>(observer, w, delayError, bufferSize));
+    }
+  }
+
+  static final class ObserveOnObserver<T> extends BasicIntQueueDisposable<T> implements Observer<T>, Runnable {
+
+    private static final long serialVersionUID = 6576896619930983584L;
+    final Observer<? super T> actual;
+    final Scheduler.Worker worker;
     final boolean delayError;
     final int bufferSize;
 
-    public ObservableObserveOn(ObservableSource<T> source, Scheduler scheduler, boolean delayError, int bufferSize) {
-        super(source);
-        this.scheduler = scheduler;
-        this.delayError = delayError;
-        this.bufferSize = bufferSize;
+    SimpleQueue<T> queue;
+
+    Disposable s;
+
+    Throwable error;
+    volatile boolean done;
+
+    volatile boolean cancelled;
+
+    int sourceMode;
+
+    boolean outputFused;
+
+    ObserveOnObserver(Observer<? super T> actual, Scheduler.Worker worker, boolean delayError, int bufferSize) {
+      this.actual = actual;
+      this.worker = worker;
+      this.delayError = delayError;
+      this.bufferSize = bufferSize;
     }
 
     @Override
-    protected void subscribeActual(Observer<? super T> observer) {
-        if (scheduler instanceof TrampolineScheduler) {
-            source.subscribe(observer);
-        } else {
-            Scheduler.Worker w = scheduler.createWorker();
-            //父亲调用subscribe方法，按照一般流程，应该是ObservableSubscribeOn 的subscribeActual 方法执行ObserveOnObserver的onSubscribe
-            source.subscribe(new ObserveOnObserver<T>(observer, w, delayError, bufferSize));
+    public void onSubscribe(Disposable s) {//按照正常流程，这个s为ObservableSubscribeOn 的SubscribeOnObserver
+      if (DisposableHelper.validate(this.s, s)) {
+        this.s = s;
+        if (s instanceof QueueDisposable) {
+          @SuppressWarnings("unchecked")
+          QueueDisposable<T> qd = (QueueDisposable<T>) s;
+
+          int m = qd.requestFusion(QueueDisposable.ANY | QueueDisposable.BOUNDARY);
+
+          if (m == QueueDisposable.SYNC) {
+            sourceMode = m;
+            queue = qd;
+            done = true;
+            actual.onSubscribe(this);
+            schedule();
+            return;
+          }
+          if (m == QueueDisposable.ASYNC) {
+            sourceMode = m;
+            queue = qd;
+            actual.onSubscribe(this);
+            return;
+          }
         }
+
+        queue = new SpscLinkedArrayQueue<T>(bufferSize);//初始一个队列
+        //是我们在使用的时候，自定义的那个observer
+        actual.onSubscribe(this);
+      }
     }
 
-    static final class ObserveOnObserver<T> extends BasicIntQueueDisposable<T> implements Observer<T>, Runnable {
+    @Override
+    public void onNext(T t) {
+      if (done) {
+        return;
+      }
 
-        private static final long serialVersionUID = 6576896619930983584L;
-        final Observer<? super T> actual;
-        final Scheduler.Worker worker;
-        final boolean delayError;
-        final int bufferSize;
+      if (sourceMode != QueueDisposable.ASYNC) {
+        queue.offer(t);//队列添加数据
+      }
+      schedule();
+    }
 
-        SimpleQueue<T> queue;
+    @Override
+    public void onError(Throwable t) {
+      if (done) {
+        RxJavaPlugins.onError(t);
+        return;
+      }
+      error = t;
+      done = true;
+      schedule();
+    }
 
-        Disposable s;
+    @Override
+    public void onComplete() {
+      if (done) {
+        return;
+      }
+      done = true;
+      schedule();
+    }
 
-        Throwable error;
-        volatile boolean done;
+    @Override
+    public void dispose() {
+      if (!cancelled) {
+        cancelled = true;
+        s.dispose();
+        worker.dispose();
+        if (getAndIncrement() == 0) {
+          queue.clear();
+        }
+      }
+    }
 
-        volatile boolean cancelled;
+    @Override
+    public boolean isDisposed() {
+      return cancelled;
+    }
 
-        int sourceMode;
+    void schedule() {
+      if (getAndIncrement() == 0) {
+        worker.schedule(this);//线程的schedule方法
+      }
+    }
 
-        boolean outputFused;
+    void drainNormal() {
+      int missed = 1;
 
-        ObserveOnObserver(Observer<? super T> actual, Scheduler.Worker worker, boolean delayError, int bufferSize) {
-            this.actual = actual;
-            this.worker = worker;
-            this.delayError = delayError;
-            this.bufferSize = bufferSize;
+      final SimpleQueue<T> q = queue;
+      final Observer<? super T> a = actual;
+
+      for (; ; ) {
+        if (checkTerminated(done, q.isEmpty(), a)) {
+          return;
         }
 
-        @Override
-        public void onSubscribe(Disposable s) {//按照正常流程，这个s为ObservableSubscribeOn 的SubscribeOnObserver
-            if (DisposableHelper.validate(this.s, s)) {
-                this.s = s;
-                if (s instanceof QueueDisposable) {
-                    @SuppressWarnings("unchecked")
-                    QueueDisposable<T> qd = (QueueDisposable<T>) s;
+        for (; ; ) {
+          boolean d = done;
+          T v;
 
-                    int m = qd.requestFusion(QueueDisposable.ANY | QueueDisposable.BOUNDARY);
+          try {
+            v = q.poll();
+          } catch (Throwable ex) {
+            Exceptions.throwIfFatal(ex);
+            s.dispose();
+            q.clear();
+            a.onError(ex);
+            worker.dispose();
+            return;
+          }
+          boolean empty = v == null;
 
-                    if (m == QueueDisposable.SYNC) {
-                        sourceMode = m;
-                        queue = qd;
-                        done = true;
-                        actual.onSubscribe(this);
-                        schedule();
-                        return;
-                    }
-                    if (m == QueueDisposable.ASYNC) {
-                        sourceMode = m;
-                        queue = qd;
-                        actual.onSubscribe(this);
-                        return;
-                    }
-                }
+          if (checkTerminated(d, empty, a)) {
+            return;
+          }
 
-                queue = new SpscLinkedArrayQueue<T>(bufferSize);//初始一个队列
-                //是我们在使用的时候，自定义的那个observer
-                actual.onSubscribe(this);
-            }
+          if (empty) {
+            break;
+          }
+
+          a.onNext(v);
         }
 
-        @Override
-        public void onNext(T t) {
-            if (done) {
-                return;
-            }
+        missed = addAndGet(-missed);
+        if (missed == 0) {
+          break;
+        }
+      }
+    }
 
-            if (sourceMode != QueueDisposable.ASYNC) {
-                queue.offer(t);//队列添加数据
-            }
-            schedule();
+    void drainFused() {
+      int missed = 1;
+
+      for (; ; ) {
+        if (cancelled) {
+          return;
         }
 
-        @Override
-        public void onError(Throwable t) {
-            if (done) {
-                RxJavaPlugins.onError(t);
-                return;
-            }
-            error = t;
-            done = true;
-            schedule();
+        boolean d = done;
+        Throwable ex = error;
+
+        if (!delayError && d && ex != null) {
+          actual.onError(error);
+          worker.dispose();
+          return;
         }
 
-        @Override
-        public void onComplete() {
-            if (done) {
-                return;
-            }
-            done = true;
-            schedule();
+        actual.onNext(null);
+
+        if (d) {
+          ex = error;
+          if (ex != null) {
+            actual.onError(ex);
+          } else {
+            actual.onComplete();
+          }
+          worker.dispose();
+          return;
         }
 
-        @Override
-        public void dispose() {
-            if (!cancelled) {
-                cancelled = true;
-                s.dispose();
-                worker.dispose();
-                if (getAndIncrement() == 0) {
-                    queue.clear();
-                }
-            }
+        missed = addAndGet(-missed);
+        if (missed == 0) {
+          break;
         }
+      }
+    }
 
-        @Override
-        public boolean isDisposed() {
-            return cancelled;
-        }
+    @Override
+    public void run() {//RxAndroid会的schedule方法会回调这个，来执行next的调用
+      if (outputFused) {
+        drainFused();
+      } else {
+        drainNormal();
+      }
+    }
 
-        void schedule() {
-            if (getAndIncrement() == 0) {
-                worker.schedule(this);//线程的schedule方法
-            }
-        }
-
-        void drainNormal() {
-            int missed = 1;
-
-            final SimpleQueue<T> q = queue;
-            final Observer<? super T> a = actual;
-
-            for (; ; ) {
-                if (checkTerminated(done, q.isEmpty(), a)) {
-                    return;
-                }
-
-                for (; ; ) {
-                    boolean d = done;
-                    T v;
-
-                    try {
-                        v = q.poll();
-                    } catch (Throwable ex) {
-                        Exceptions.throwIfFatal(ex);
-                        s.dispose();
-                        q.clear();
-                        a.onError(ex);
-                        worker.dispose();
-                        return;
-                    }
-                    boolean empty = v == null;
-
-                    if (checkTerminated(d, empty, a)) {
-                        return;
-                    }
-
-                    if (empty) {
-                        break;
-                    }
-
-                    a.onNext(v);
-                }
-
-                missed = addAndGet(-missed);
-                if (missed == 0) {
-                    break;
-                }
-            }
-        }
-
-        void drainFused() {
-            int missed = 1;
-
-            for (; ; ) {
-                if (cancelled) {
-                    return;
-                }
-
-                boolean d = done;
-                Throwable ex = error;
-
-                if (!delayError && d && ex != null) {
-                    actual.onError(error);
-                    worker.dispose();
-                    return;
-                }
-
-                actual.onNext(null);
-
-                if (d) {
-                    ex = error;
-                    if (ex != null) {
-                        actual.onError(ex);
-                    } else {
-                        actual.onComplete();
-                    }
-                    worker.dispose();
-                    return;
-                }
-
-                missed = addAndGet(-missed);
-                if (missed == 0) {
-                    break;
-                }
-            }
-        }
-
-        @Override
-        public void run() {//RxAndroid会的schedule方法会回调这个，来执行next的调用
-            if (outputFused) {
-                drainFused();
+    boolean checkTerminated(boolean d, boolean empty, Observer<? super T> a) {
+      if (cancelled) {
+        queue.clear();
+        return true;
+      }
+      if (d) {
+        Throwable e = error;
+        if (delayError) {
+          if (empty) {
+            if (e != null) {
+              a.onError(e);
             } else {
-                drainNormal();
+              a.onComplete();
             }
-        }
-
-        boolean checkTerminated(boolean d, boolean empty, Observer<? super T> a) {
-            if (cancelled) {
-                queue.clear();
-                return true;
-            }
-            if (d) {
-                Throwable e = error;
-                if (delayError) {
-                    if (empty) {
-                        if (e != null) {
-                            a.onError(e);
-                        } else {
-                            a.onComplete();
-                        }
-                        worker.dispose();
-                        return true;
-                    }
-                } else {
-                    if (e != null) {
-                        queue.clear();
-                        a.onError(e);
-                        worker.dispose();
-                        return true;
-                    } else if (empty) {
-                        a.onComplete();
-                        worker.dispose();
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public int requestFusion(int mode) {
-            if ((mode & ASYNC) != 0) {
-                outputFused = true;
-                return ASYNC;
-            }
-            return NONE;
-        }
-
-        @Nullable
-        @Override
-        public T poll() throws Exception {
-            return queue.poll();
-        }
-
-        @Override
-        public void clear() {
+            worker.dispose();
+            return true;
+          }
+        } else {
+          if (e != null) {
             queue.clear();
+            a.onError(e);
+            worker.dispose();
+            return true;
+          } else if (empty) {
+            a.onComplete();
+            worker.dispose();
+            return true;
+          }
         }
-
-        @Override
-        public boolean isEmpty() {
-            return queue.isEmpty();
-        }
+      }
+      return false;
     }
+
+    @Override
+    public int requestFusion(int mode) {
+      if ((mode & ASYNC) != 0) {
+        outputFused = true;
+        return ASYNC;
+      }
+      return NONE;
+    }
+
+    @Nullable
+    @Override
+    public T poll() throws Exception {
+      return queue.poll();
+    }
+
+    @Override
+    public void clear() {
+      queue.clear();
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return queue.isEmpty();
+    }
+  }
 }

@@ -51,48 +51,47 @@ import java.util.stream.IntStream;
  * chars, limited by desired length and printed in standard output as password
  * string.</li>
  * </ul>
- *
  */
 public class PasswordGenerator {
 
-    private static void usage() {
-        System.out.println("Usage: PasswordGenerator LENGTH");
-        System.out.println(
-                "Password Generator produces password of desired LENGTH.");
-    }
+  private static void usage() {
+    System.out.println("Usage: PasswordGenerator LENGTH");
+    System.out.println(
+            "Password Generator produces password of desired LENGTH.");
+  }
 
-    private static final List<Integer> PASSWORD_CHARS = new ArrayList<>();
+  private static final List<Integer> PASSWORD_CHARS = new ArrayList<>();
 
-    //Valid symbols.
-    static {
-        IntStream.rangeClosed('0', '9').forEach(PASSWORD_CHARS::add);    // 0-9
-        IntStream.rangeClosed('A', 'Z').forEach(PASSWORD_CHARS::add);    // A-Z
-        IntStream.rangeClosed('a', 'z').forEach(PASSWORD_CHARS::add);    // a-z
-    }
+  //Valid symbols.
+  static {
+    IntStream.rangeClosed('0', '9').forEach(PASSWORD_CHARS::add);    // 0-9
+    IntStream.rangeClosed('A', 'Z').forEach(PASSWORD_CHARS::add);    // A-Z
+    IntStream.rangeClosed('a', 'z').forEach(PASSWORD_CHARS::add);    // a-z
+  }
 
-    /**
-     * The main method for the PasswordGenerator program. Run program with empty
-     * argument list to see possible arguments.
-     *
-     * @param args the argument list for PasswordGenerator.
+  /**
+   * The main method for the PasswordGenerator program. Run program with empty
+   * argument list to see possible arguments.
+   *
+   * @param args the argument list for PasswordGenerator.
+   */
+  public static void main(String[] args) {
+
+    long passwordLength = 10;
+    /*
+     * Stream of random integers is created containing Integer values
+     * in range from 0 to PASSWORD_CHARS.size().
+     * The stream is limited by passwordLength.
+     * Valid chars are selected by generated index.
      */
-    public static void main(String[] args) {
+    new SecureRandom().ints(passwordLength, 0, PASSWORD_CHARS.size())
+            .map(PASSWORD_CHARS::get)
+            .forEach(i -> System.out.print((char) i));
+  }
 
-        long passwordLength =10;
-        /*
-         * Stream of random integers is created containing Integer values
-         * in range from 0 to PASSWORD_CHARS.size().
-         * The stream is limited by passwordLength.
-         * Valid chars are selected by generated index.
-         */
-        new SecureRandom().ints(passwordLength, 0, PASSWORD_CHARS.size())
-                .map(PASSWORD_CHARS::get)
-                .forEach(i -> System.out.print((char) i));
-    }
-
-    private static void printMessageAndUsage(String message) {
-        System.err.println(message);
-        usage();
-    }
+  private static void printMessageAndUsage(String message) {
+    System.err.println(message);
+    usage();
+  }
 
 }

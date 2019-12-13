@@ -7,18 +7,18 @@ package datasturctures.heap;
  * copyright generalray4239@gmail.com
  */
 public class Node {
-    //节点数据
-    private int iData;
+  //节点数据
+  private int iData;
 
-    public Node(int var1) {
-        this.iData = var1;
-    }
+  public Node(int var1) {
+    this.iData = var1;
+  }
 
-    public int getKey() {
-        return this.iData;
-    }
+  public int getKey() {
+    return this.iData;
+  }
 
-    public void setKey(int var1) {
-        this.iData = var1;
-    }
+  public void setKey(int var1) {
+    this.iData = var1;
+  }
 }

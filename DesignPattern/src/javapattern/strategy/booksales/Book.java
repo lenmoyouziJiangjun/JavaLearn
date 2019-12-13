@@ -9,12 +9,12 @@ import java.math.BigDecimal;
  * copyright generalray4239@gmail.com
  */
 public class Book {
-    /**
-     * 书价格
-     */
-    public BigDecimal price;
+  /**
+   * 书价格
+   */
+  public BigDecimal price;
 
-    public String name;
+  public String name;
 
-    public String author;
+  public String author;
 }

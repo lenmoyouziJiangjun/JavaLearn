@@ -10,27 +10,27 @@ import java.util.HashMap;
  */
 public class KeyGenerator {
 
-    private static final HashMap<String, KeyGenerator> keyCache = new HashMap(10);
-    private static final int POOL_SIZE = 20;
-    private KeyInfo mKeyInfo;
+  private static final HashMap<String, KeyGenerator> keyCache = new HashMap(10);
+  private static final int POOL_SIZE = 20;
+  private KeyInfo mKeyInfo;
 
 
-    private KeyGenerator() {
+  private KeyGenerator() {
 
+  }
+
+  private KeyGenerator(String keyName) {
+    mKeyInfo = new KeyInfo(POOL_SIZE, keyName);
+  }
+
+  public static synchronized KeyGenerator getInstance(String keyName) {
+    KeyGenerator keyGenerator;
+    if (!keyCache.containsKey(keyName)) {
+      keyGenerator = new KeyGenerator(keyName);
+      keyCache.put(keyName, keyGenerator);
+    } else {
+      keyGenerator = keyCache.get(keyName);
     }
-
-    private KeyGenerator(String keyName) {
-        mKeyInfo = new KeyInfo(POOL_SIZE, keyName);
-    }
-
-    public static synchronized KeyGenerator getInstance(String keyName) {
-        KeyGenerator keyGenerator;
-        if (!keyCache.containsKey(keyName)) {
-            keyGenerator = new KeyGenerator(keyName);
-            keyCache.put(keyName, keyGenerator);
-        } else {
-            keyGenerator = keyCache.get(keyName);
-        }
-        return keyGenerator;
-    }
+    return keyGenerator;
+  }
 }

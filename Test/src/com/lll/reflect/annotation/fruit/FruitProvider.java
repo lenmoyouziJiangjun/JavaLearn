@@ -17,9 +17,9 @@ import java.lang.annotation.*;
 public @interface FruitProvider {
 
 
-    int id() default -1;
+  int id() default -1;
 
-    String name() default "";
+  String name() default "";
 
-    String address() default "";
+  String address() default "";
 }

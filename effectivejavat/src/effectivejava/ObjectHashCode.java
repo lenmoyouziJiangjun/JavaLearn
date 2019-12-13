@@ -18,48 +18,47 @@ import java.util.Map;
 public class ObjectHashCode {
 
 
+  /**
+   *
+   */
+  public static class PhoneNumber {
+
+    private final short areaCode;
+    private final short prefix;
+    private final short lineNumber;
+
+    public PhoneNumber(short areaCode, short prefix, short lineNumber) {
+      this.areaCode = areaCode;
+      this.prefix = prefix;
+      this.lineNumber = lineNumber;
+    }
+
     /**
-     *
+     * @param obj
+     * @return
      */
-    public static class PhoneNumber {
-
-        private final short areaCode;
-        private final short prefix;
-        private final short lineNumber;
-
-        public PhoneNumber(short areaCode, short prefix, short lineNumber) {
-            this.areaCode = areaCode;
-            this.prefix = prefix;
-            this.lineNumber = lineNumber;
-        }
-
-        /**
-         * @param obj
-         * @return
-         */
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof PhoneNumber)) {
-                return false;
-            }
-            PhoneNumber number = (PhoneNumber) obj;
-            return number.prefix == this.prefix && number.areaCode == number.areaCode
-                    && number.lineNumber == this.lineNumber;
-        }
+    @Override
+    public boolean equals(Object obj) {
+      if (obj == this) {
+        return true;
+      }
+      if (!(obj instanceof PhoneNumber)) {
+        return false;
+      }
+      PhoneNumber number = (PhoneNumber) obj;
+      return number.prefix == this.prefix && number.areaCode == number.areaCode
+              && number.lineNumber == this.lineNumber;
     }
+  }
 
 
-    public static void main(String[] args) {
-        Map<PhoneNumber, String> map = new HashMap<>();
-        //我们把一个对象作为key存储在数据库，必须重写对象的hashCode方法。
-        map.put(new PhoneNumber((short) 909, (short) 22, (short) 12121), "Jenny");
+  public static void main(String[] args) {
+    Map<PhoneNumber, String> map = new HashMap<>();
+    //我们把一个对象作为key存储在数据库，必须重写对象的hashCode方法。
+    map.put(new PhoneNumber((short) 909, (short) 22, (short) 12121), "Jenny");
 
 
-
-    }
+  }
 
 
 }

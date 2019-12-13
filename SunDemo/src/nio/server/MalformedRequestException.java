@@ -46,13 +46,14 @@ package nio.server;/*
  */
 class MalformedRequestException extends Exception {
 
-    MalformedRequestException() { }
+  MalformedRequestException() {
+  }
 
-    MalformedRequestException(String msg) {
-        super(msg);
-    }
+  MalformedRequestException(String msg) {
+    super(msg);
+  }
 
-    MalformedRequestException(Exception x) {
-        super(x);
-    }
+  MalformedRequestException(Exception x) {
+    super(x);
+  }
 }

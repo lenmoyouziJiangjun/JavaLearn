@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,28 +21,29 @@ import io.reactivex.plugins.RxJavaPlugins;
 /**
  * A Callable to be submitted to an ExecutorService that runs a Runnable
  * action periodically and manages completion/cancellation.
+ *
  * @since 2.0.8
  */
 public final class ScheduledDirectPeriodicTask extends AbstractDirectTask implements Runnable {
 
-    private static final long serialVersionUID = 1811839108042568751L;
+  private static final long serialVersionUID = 1811839108042568751L;
 
-    public ScheduledDirectPeriodicTask(Runnable runnable) {
-        super(runnable);
-    }
+  public ScheduledDirectPeriodicTask(Runnable runnable) {
+    super(runnable);
+  }
 
-    @Override
-    public void run() {
-        runner = Thread.currentThread();
-        try {
-            try {
-                runnable.run();
-            } catch (Throwable ex) {
-                lazySet(FINISHED);
-                RxJavaPlugins.onError(ex);
-            }
-        } finally {
-            runner = null;
-        }
+  @Override
+  public void run() {
+    runner = Thread.currentThread();
+    try {
+      try {
+        runnable.run();
+      } catch (Throwable ex) {
+        lazySet(FINISHED);
+        RxJavaPlugins.onError(ex);
+      }
+    } finally {
+      runner = null;
     }
+  }
 }

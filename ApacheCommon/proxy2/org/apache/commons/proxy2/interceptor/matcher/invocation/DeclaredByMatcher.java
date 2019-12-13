@@ -23,52 +23,46 @@ import org.apache.commons.proxy2.interceptor.matcher.InvocationMatcher;
 /**
  * InvocationMatcher based on declaring class of the method invoked.
  */
-public class DeclaredByMatcher implements InvocationMatcher
-{
-    //******************************************************************************************************************
-    // Fields
-    //******************************************************************************************************************
+public class DeclaredByMatcher implements InvocationMatcher {
+  //******************************************************************************************************************
+  // Fields
+  //******************************************************************************************************************
 
-    private final boolean exactMatch;
-    private final Class<?> declaredByType;
+  private final boolean exactMatch;
+  private final Class<?> declaredByType;
 
-    //******************************************************************************************************************
-    // Constructors
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // Constructors
+  //******************************************************************************************************************
 
-    /**
-     * Equivalent to {@link #DeclaredByMatcher(Class, boolean)}{@code (declaredByType, false)}
-     * 
-     * @param declaredByType
-     */
-    public DeclaredByMatcher(Class<?> declaredByType)
-    {
-        this(declaredByType, false);
-    }
+  /**
+   * Equivalent to {@link #DeclaredByMatcher(Class, boolean)}{@code (declaredByType, false)}
+   *
+   * @param declaredByType
+   */
+  public DeclaredByMatcher(Class<?> declaredByType) {
+    this(declaredByType, false);
+  }
 
-    /**
-     * Create a {@link DeclaredByMatcher} instance.
-     * 
-     * @param declaredByType
-     *            type by which method must be declared
-     * @param exactMatch
-     *            if {@code false}, {@code declaredByType} may be a subclass of the actual declaring class of the
-     *            invocation method.
-     */
-    public DeclaredByMatcher(Class<?> declaredByType, boolean exactMatch)
-    {
-        this.declaredByType = declaredByType;
-        this.exactMatch = exactMatch;
-    }
+  /**
+   * Create a {@link DeclaredByMatcher} instance.
+   *
+   * @param declaredByType type by which method must be declared
+   * @param exactMatch     if {@code false}, {@code declaredByType} may be a subclass of the actual declaring class of the
+   *                       invocation method.
+   */
+  public DeclaredByMatcher(Class<?> declaredByType, boolean exactMatch) {
+    this.declaredByType = declaredByType;
+    this.exactMatch = exactMatch;
+  }
 
-    //******************************************************************************************************************
-    // InvocationMatcher Implementation
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // InvocationMatcher Implementation
+  //******************************************************************************************************************
 
-    @Override
-    public boolean matches(Invocation invocation)
-    {
-        final Class<?> owner = invocation.getMethod().getDeclaringClass();
-        return exactMatch ? declaredByType.equals(owner) : owner.isAssignableFrom(declaredByType);
-    }
+  @Override
+  public boolean matches(Invocation invocation) {
+    final Class<?> owner = invocation.getMethod().getDeclaringClass();
+    return exactMatch ? declaredByType.equals(owner) : owner.isAssignableFrom(declaredByType);
+  }
 }

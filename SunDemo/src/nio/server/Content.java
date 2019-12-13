@@ -48,9 +48,9 @@ package nio.server;/*
  */
 interface Content extends Sendable {
 
-    String type();
+  String type();
 
-    // Returns -1 until prepare() invoked
-    long length();
+  // Returns -1 until prepare() invoked
+  long length();
 
 }

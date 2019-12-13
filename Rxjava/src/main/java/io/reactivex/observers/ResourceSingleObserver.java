@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -76,60 +76,64 @@ import io.reactivex.internal.util.EndConsumerHelper;
  * @param <T> the value type
  */
 public abstract class ResourceSingleObserver<T> implements SingleObserver<T>, Disposable {
-    /** The active subscription. */
-    private final AtomicReference<Disposable> s = new AtomicReference<Disposable>();
+  /**
+   * The active subscription.
+   */
+  private final AtomicReference<Disposable> s = new AtomicReference<Disposable>();
 
-    /** The resource composite, can never be null. */
-    private final ListCompositeDisposable resources = new ListCompositeDisposable();
+  /**
+   * The resource composite, can never be null.
+   */
+  private final ListCompositeDisposable resources = new ListCompositeDisposable();
 
-    /**
-     * Adds a resource to this ResourceObserver.
-     *
-     * @param resource the resource to add
-     *
-     * @throws NullPointerException if resource is null
-     */
-    public final void add(@NonNull Disposable resource) {
-        ObjectHelper.requireNonNull(resource, "resource is null");
-        resources.add(resource);
+  /**
+   * Adds a resource to this ResourceObserver.
+   *
+   * @param resource the resource to add
+   * @throws NullPointerException if resource is null
+   */
+  public final void add(@NonNull Disposable resource) {
+    ObjectHelper.requireNonNull(resource, "resource is null");
+    resources.add(resource);
+  }
+
+  @Override
+  public final void onSubscribe(@NonNull Disposable s) {
+    if (EndConsumerHelper.setOnce(this.s, s, getClass())) {
+      onStart();
     }
+  }
 
-    @Override
-    public final void onSubscribe(@NonNull Disposable s) {
-        if (EndConsumerHelper.setOnce(this.s, s, getClass())) {
-            onStart();
-        }
-    }
+  /**
+   * Called once the upstream sets a Subscription on this ResourceObserver.
+   *
+   * <p>You can perform initialization at this moment. The default
+   * implementation does nothing.
+   */
+  protected void onStart() {
+  }
 
-    /**
-     * Called once the upstream sets a Subscription on this ResourceObserver.
-     *
-     * <p>You can perform initialization at this moment. The default
-     * implementation does nothing.
-     */
-    protected void onStart() {
+  /**
+   * Cancels the main disposable (if any) and disposes the resources associated with
+   * this ResourceObserver (if any).
+   *
+   * <p>This method can be called before the upstream calls onSubscribe at which
+   * case the main Disposable will be immediately disposed.
+   */
+  @Override
+  public final void dispose() {
+    if (DisposableHelper.dispose(s)) {
+      resources.dispose();
     }
+  }
 
-    /**
-     * Cancels the main disposable (if any) and disposes the resources associated with
-     * this ResourceObserver (if any).
-     *
-     * <p>This method can be called before the upstream calls onSubscribe at which
-     * case the main Disposable will be immediately disposed.
-     */
-    @Override
-    public final void dispose() {
-        if (DisposableHelper.dispose(s)) {
-            resources.dispose();
-        }
-    }
-
-    /**
-     * Returns true if this ResourceObserver has been disposed/cancelled.
-     * @return true if this ResourceObserver has been disposed/cancelled
-     */
-    @Override
-    public final boolean isDisposed() {
-        return DisposableHelper.isDisposed(s.get());
-    }
+  /**
+   * Returns true if this ResourceObserver has been disposed/cancelled.
+   *
+   * @return true if this ResourceObserver has been disposed/cancelled
+   */
+  @Override
+  public final boolean isDisposed() {
+    return DisposableHelper.isDisposed(s.get());
+  }
 }

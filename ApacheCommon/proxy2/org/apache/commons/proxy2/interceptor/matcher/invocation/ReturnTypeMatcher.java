@@ -20,38 +20,34 @@ package org.apache.commons.proxy2.interceptor.matcher.invocation;
 import org.apache.commons.proxy2.Invocation;
 import org.apache.commons.proxy2.interceptor.matcher.InvocationMatcher;
 
-public class ReturnTypeMatcher implements InvocationMatcher
-{
-    //******************************************************************************************************************
-    // Fields
-    //******************************************************************************************************************
+public class ReturnTypeMatcher implements InvocationMatcher {
+  //******************************************************************************************************************
+  // Fields
+  //******************************************************************************************************************
 
-    private final boolean exactMatch;
-    private final Class<?> returnType;
+  private final boolean exactMatch;
+  private final Class<?> returnType;
 
-    //******************************************************************************************************************
-    // Constructors
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // Constructors
+  //******************************************************************************************************************
 
-    public ReturnTypeMatcher(Class<?> returnType)
-    {
-        this(returnType, false);
-    }
+  public ReturnTypeMatcher(Class<?> returnType) {
+    this(returnType, false);
+  }
 
-    public ReturnTypeMatcher(Class<?> returnType, boolean exactMatch)
-    {
-        this.returnType = returnType;
-        this.exactMatch = exactMatch;
-    }
+  public ReturnTypeMatcher(Class<?> returnType, boolean exactMatch) {
+    this.returnType = returnType;
+    this.exactMatch = exactMatch;
+  }
 
-    //******************************************************************************************************************
-    // InvocationMatcher Implementation
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // InvocationMatcher Implementation
+  //******************************************************************************************************************
 
-    @Override
-    public boolean matches(Invocation invocation)
-    {
-        return exactMatch ? returnType.equals(invocation.getMethod().getReturnType()) : returnType
-                .isAssignableFrom(invocation.getMethod().getReturnType());
-    }
+  @Override
+  public boolean matches(Invocation invocation) {
+    return exactMatch ? returnType.equals(invocation.getMethod().getReturnType()) : returnType
+            .isAssignableFrom(invocation.getMethod().getReturnType());
+  }
 }

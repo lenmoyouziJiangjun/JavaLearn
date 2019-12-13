@@ -43,7 +43,7 @@ import java.nio.channels.*;
 
 /**
  * Base class for the Dispatchers.
- * <P>
+ * <p>
  * Servers use these to obtain ready status, and then to dispatch jobs.
  *
  * @author Mark Reinhold
@@ -51,7 +51,7 @@ import java.nio.channels.*;
  */
 interface Dispatcher extends Runnable {
 
-    void register(SelectableChannel ch, int ops, Handler h)
-        throws IOException;
+  void register(SelectableChannel ch, int ops, Handler h)
+          throws IOException;
 
 }

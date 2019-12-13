@@ -9,12 +9,12 @@ package org.apache.commons.proxy2.stub;
 
 public abstract class Trainer<T> extends BaseTrainer<Trainer<T>, T> {
 
-    protected Trainer() {
-        super();
-    }
+  protected Trainer() {
+    super();
+  }
 
-    protected Trainer(Class<T> traineeType) {
-        super(traineeType);
-    }
+  protected Trainer(Class<T> traineeType) {
+    super(traineeType);
+  }
 
 }

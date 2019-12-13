@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -26,96 +26,101 @@ import io.reactivex.internal.disposables.DisposableHelper;
  */
 public final class MaybeSwitchIfEmpty<T> extends AbstractMaybeWithUpstream<T, T> {
 
+  final MaybeSource<? extends T> other;
+
+  public MaybeSwitchIfEmpty(MaybeSource<T> source, MaybeSource<? extends T> other) {
+    super(source);
+    this.other = other;
+  }
+
+  @Override
+  protected void subscribeActual(MaybeObserver<? super T> observer) {
+    source.subscribe(new SwitchIfEmptyMaybeObserver<T>(observer, other));
+  }
+
+  static final class SwitchIfEmptyMaybeObserver<T>
+          extends AtomicReference<Disposable>
+          implements MaybeObserver<T>, Disposable {
+
+    private static final long serialVersionUID = -2223459372976438024L;
+
+    final MaybeObserver<? super T> actual;
+
     final MaybeSource<? extends T> other;
 
-    public MaybeSwitchIfEmpty(MaybeSource<T> source, MaybeSource<? extends T> other) {
-        super(source);
-        this.other = other;
+    SwitchIfEmptyMaybeObserver(MaybeObserver<? super T> actual, MaybeSource<? extends T> other) {
+      this.actual = actual;
+      this.other = other;
     }
 
     @Override
-    protected void subscribeActual(MaybeObserver<? super T> observer) {
-        source.subscribe(new SwitchIfEmptyMaybeObserver<T>(observer, other));
+    public void dispose() {
+      DisposableHelper.dispose(this);
     }
 
-    static final class SwitchIfEmptyMaybeObserver<T>
-    extends AtomicReference<Disposable>
-    implements MaybeObserver<T>, Disposable {
-
-        private static final long serialVersionUID = -2223459372976438024L;
-
-        final MaybeObserver<? super T> actual;
-
-        final MaybeSource<? extends T> other;
-
-        SwitchIfEmptyMaybeObserver(MaybeObserver<? super T> actual, MaybeSource<? extends T> other) {
-            this.actual = actual;
-            this.other = other;
-        }
-
-        @Override
-        public void dispose() {
-            DisposableHelper.dispose(this);
-        }
-
-        @Override
-        public boolean isDisposed() {
-            return DisposableHelper.isDisposed(get());
-        }
-
-        @Override
-        public void onSubscribe(Disposable d) {
-            if (DisposableHelper.setOnce(this, d)) {
-                actual.onSubscribe(this);
-            }
-        }
-
-        @Override
-        public void onSuccess(T value) {
-            actual.onSuccess(value);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            actual.onError(e);
-        }
-
-        @Override
-        public void onComplete() {
-            Disposable d = get();
-            if (d != DisposableHelper.DISPOSED) {
-                if (compareAndSet(d, null)) {
-                    other.subscribe(new OtherMaybeObserver<T>(actual, this));
-                }
-            }
-        }
-
-        static final class OtherMaybeObserver<T> implements MaybeObserver<T> {
-
-            final MaybeObserver<? super T> actual;
-
-            final AtomicReference<Disposable> parent;
-            OtherMaybeObserver(MaybeObserver<? super T> actual, AtomicReference<Disposable> parent) {
-                this.actual = actual;
-                this.parent = parent;
-            }
-            @Override
-            public void onSubscribe(Disposable d) {
-                DisposableHelper.setOnce(parent, d);
-            }
-            @Override
-            public void onSuccess(T value) {
-                actual.onSuccess(value);
-            }
-            @Override
-            public void onError(Throwable e) {
-                actual.onError(e);
-            }
-            @Override
-            public void onComplete() {
-                actual.onComplete();
-            }
-        }
-
+    @Override
+    public boolean isDisposed() {
+      return DisposableHelper.isDisposed(get());
     }
+
+    @Override
+    public void onSubscribe(Disposable d) {
+      if (DisposableHelper.setOnce(this, d)) {
+        actual.onSubscribe(this);
+      }
+    }
+
+    @Override
+    public void onSuccess(T value) {
+      actual.onSuccess(value);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+      actual.onError(e);
+    }
+
+    @Override
+    public void onComplete() {
+      Disposable d = get();
+      if (d != DisposableHelper.DISPOSED) {
+        if (compareAndSet(d, null)) {
+          other.subscribe(new OtherMaybeObserver<T>(actual, this));
+        }
+      }
+    }
+
+    static final class OtherMaybeObserver<T> implements MaybeObserver<T> {
+
+      final MaybeObserver<? super T> actual;
+
+      final AtomicReference<Disposable> parent;
+
+      OtherMaybeObserver(MaybeObserver<? super T> actual, AtomicReference<Disposable> parent) {
+        this.actual = actual;
+        this.parent = parent;
+      }
+
+      @Override
+      public void onSubscribe(Disposable d) {
+        DisposableHelper.setOnce(parent, d);
+      }
+
+      @Override
+      public void onSuccess(T value) {
+        actual.onSuccess(value);
+      }
+
+      @Override
+      public void onError(Throwable e) {
+        actual.onError(e);
+      }
+
+      @Override
+      public void onComplete() {
+        actual.onComplete();
+      }
+    }
+
+  }
 }

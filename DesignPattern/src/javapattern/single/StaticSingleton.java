@@ -11,14 +11,14 @@ package javapattern.single;
  */
 public class StaticSingleton {
 
-    private StaticSingleton() {
-    }
+  private StaticSingleton() {
+  }
 
-    private static class Holder {
-        private static StaticSingleton sInstance = new StaticSingleton();
-    }
+  private static class Holder {
+    private static StaticSingleton sInstance = new StaticSingleton();
+  }
 
-    public static StaticSingleton getInstance() {
-        return Holder.sInstance;
-    }
+  public static StaticSingleton getInstance() {
+    return Holder.sInstance;
+  }
 }

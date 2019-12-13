@@ -10,21 +10,23 @@ import java.util.RandomAccess;
  * copyright generalray4239@gmail.com
  */
 public class Options extends AbstractList<ByteString> implements RandomAccess {
-    final ByteString[] byteStrings;
+  final ByteString[] byteStrings;
 
-    private Options(ByteString[] byteStrings) {
-        this.byteStrings = byteStrings;
-    }
+  private Options(ByteString[] byteStrings) {
+    this.byteStrings = byteStrings;
+  }
 
-    public static Options of(ByteString... byteStrings) {
-        return new Options(byteStrings.clone()); // Defensive copy.
-    }
+  public static Options of(ByteString... byteStrings) {
+    return new Options(byteStrings.clone()); // Defensive copy.
+  }
 
-    @Override public ByteString get(int i) {
-        return byteStrings[i];
-    }
+  @Override
+  public ByteString get(int i) {
+    return byteStrings[i];
+  }
 
-    @Override public int size() {
-        return byteStrings.length;
-    }
+  @Override
+  public int size() {
+    return byteStrings.length;
+  }
 }

@@ -19,16 +19,13 @@ package org.apache.commons.proxy2.stub;
 
 import java.lang.annotation.Annotation;
 
-public abstract class AnnotationTrainer<A extends Annotation> extends BaseAnnotationTrainer<AnnotationTrainer<A>, A>
-{
-    protected AnnotationTrainer()
-    {
-        super();
-    }
+public abstract class AnnotationTrainer<A extends Annotation> extends BaseAnnotationTrainer<AnnotationTrainer<A>, A> {
+  protected AnnotationTrainer() {
+    super();
+  }
 
-    protected AnnotationTrainer(Class<A> traineeType)
-    {
-        super(traineeType);
-    }
+  protected AnnotationTrainer(Class<A> traineeType) {
+    super(traineeType);
+  }
 
 }

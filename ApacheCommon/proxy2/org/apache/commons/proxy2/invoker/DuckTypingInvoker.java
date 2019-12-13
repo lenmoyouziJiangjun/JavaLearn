@@ -41,29 +41,29 @@ import java.lang.reflect.Method;
  */
 public class DuckTypingInvoker implements Invoker {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private final ObjectProvider<?> targetProvider;
+  private final ObjectProvider<?> targetProvider;
 
-    public DuckTypingInvoker(ObjectProvider<?> targetProvider) {
-        this.targetProvider = targetProvider;
+  public DuckTypingInvoker(ObjectProvider<?> targetProvider) {
+    this.targetProvider = targetProvider;
+  }
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
+    final Object target = targetProvider.getObject();
+    final Class<?> targetClass = target.getClass();
+    try {
+      final Method targetMethod = targetClass.getMethod(method.getName(), method.getParameterTypes());
+      if (method.getReturnType().isAssignableFrom(targetMethod.getReturnType())) {
+        return targetMethod.invoke(target, arguments);
+      }
+      throw new UnsupportedOperationException("Target type " + targetClass.getName()
+              + " method has incompatible return type.");
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new UnsupportedOperationException("Target type " + targetClass.getName()
+              + " does not have a method matching " + method + "", e);
     }
-
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
-        final Object target = targetProvider.getObject();
-        final Class<?> targetClass = target.getClass();
-        try {
-            final Method targetMethod = targetClass.getMethod(method.getName(), method.getParameterTypes());
-            if (method.getReturnType().isAssignableFrom(targetMethod.getReturnType())) {
-                return targetMethod.invoke(target, arguments);
-            }
-            throw new UnsupportedOperationException("Target type " + targetClass.getName()
-                    + " method has incompatible return type.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new UnsupportedOperationException("Target type " + targetClass.getName()
-                    + " does not have a method matching " + method + "", e);
-        }
-    }
+  }
 }

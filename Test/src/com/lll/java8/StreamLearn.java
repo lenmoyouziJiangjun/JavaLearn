@@ -4,6 +4,7 @@ import com.lll.basic.CallByReference;
 import javafx.print.Collation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -46,126 +47,125 @@ import java.util.stream.IntStream;
 public class StreamLearn {
 
 
-    public static class Person {
-        public String name;
-        public int age;
+  public static class Person {
+    public String name;
+    public int age;
 
-        public Person() {
-        }
 
-        public Person(String name, int age) {
-            this.name = name;
-            this.age = age;
-        }
 
-        @Override
-        public String toString() {
-            return "[ name=" + this.name + ", age=" + this.age + "]";
-        }
+    public Person() {
     }
 
-    public static class Student{
-        public String name;
-        public int age;
-
-        public Student(Person p){
-            this.name = p.name;
-            this.age  = p.age;
-        }
+    public Person(String name, int age) {
+      this.name = name;
+      this.age = age;
     }
 
-    public static List<Person> persons = new ArrayList<>();
-
-
-    static {
-        for (int i = 0; i < 10; i++) {
-            Person person = new Person("张三" + i, (new Random().nextInt(100)) % 100);
-            persons.add(person);
-        }
+    @Override
+    public String toString() {
+      return "[ name=" + this.name + ", age=" + this.age + "]";
     }
+  }
 
+  public static class Student {
+    public String name;
+    public int age;
+
+    public Student(Person p) {
+      this.name = p.name;
+      this.age = p.age;
+    }
+  }
+
+  public static List<Person> persons = new ArrayList<>();
+
+
+  static {
+    for (int i = 0; i < 10; i++) {
+      Person person = new Person("张三" + i, (new Random().nextInt(100)) % 100);
+      persons.add(person);
+    }
+  }
+
+  /**
+   * 测试Stream的filter方法
+   */
+  public static void testStreamFilter() {
     /**
-     * 测试Stream的filter方法
-     */
-    public static void testStreamFilter() {
-        /**
-         * filter 表示过滤，里面传递一个过滤条件。filter 只是一个中间方法，
-         *
-         * collect：收集结果流。filter 只是一个中间方法，返回的还是stream，通过collect方法转为list集合返回
-         */
-        List<Person> personList = persons.stream().filter(p -> p.age > 10).collect(Collectors.toList());
-
-        printList(personList);
-    }
-
-    /**
-     * map 对元素进行转换操作
-     */
-    public static void testStreamMap() {
-        persons.stream().map(p -> {
-            return new Student(p);
-        });
-
-    }
-
-    /**
-     * 测试sort排序
-     */
-    public static void testStreamSorted() {
-        persons.stream().sorted((p1, p2) -> {
-            return p1.age - p2.age;
-        }).forEach(System.out::println);
-    }
-
-
-    /**
-     * 测试并行计算
-     */
-    public static void testParaller() {
-        long t0 = System.nanoTime();
-
-        //初始化一个范围100万整数流,求能被2整除的数字，toArray（）是终点方法
-
-        int a[] = IntStream.range(0, 1_000_000).filter(p -> p % 2 == 0).toArray();
-
-        long t1 = System.nanoTime();
-
-        //和上面功能一样，这里是用并行流来计算
-
-        int b[] = IntStream.range(0, 1_000_000).parallel().filter(p -> p % 2 == 0).toArray();
-
-        long t2 = System.nanoTime();
-
-        //我本机的结果是serial: 0.06s, parallel 0.02s，证明并行流确实比顺序流快
-
-        System.out.printf("serial: %.2fs, parallel %.2fs%n", (t1 - t0) * 1e-9, (t2 - t1) * 1e-9);
-
-    }
-
-    /**
-     * test forEach
+     * filter 表示过滤，里面传递一个过滤条件。filter 只是一个中间方法，
      *
-     * @param personList
+     * collect：收集结果流。filter 只是一个中间方法，返回的还是stream，通过collect方法转为list集合返回
      */
-    public static void printList(List<Person> personList) {
-        /**
-         *  forEach
-         * */
+    List<Person> personList = persons.stream().filter(p -> p.age > 10).collect(Collectors.toList());
+
+    printList(personList);
+  }
+
+  /**
+   * map 对元素进行转换操作
+   */
+  public static List testStreamMap() {
+    return Arrays.asList(persons.stream().map(p -> new Student(p)).toArray());
+  }
+
+  /**
+   * 测试sort排序
+   */
+  public static void testStreamSorted() {
+    persons.stream().sorted((p1, p2) -> {
+      return p1.age - p2.age;
+    }).forEach(System.out::println);
+  }
+
+
+  /**
+   * 测试并行计算
+   */
+  public static void testParaller() {
+    long t0 = System.nanoTime();
+
+    //初始化一个范围100万整数流,求能被2整除的数字，toArray（）是终点方法
+
+    int a[] = IntStream.range(0, 1_000_000).filter(p -> p % 2 == 0).toArray();
+
+    long t1 = System.nanoTime();
+
+    //和上面功能一样，这里是用并行流来计算
+
+    int b[] = IntStream.range(0, 1_000_000).parallel().filter(p -> p % 2 == 0).toArray();
+
+    long t2 = System.nanoTime();
+
+    //我本机的结果是serial: 0.06s, parallel 0.02s，证明并行流确实比顺序流快
+
+    System.out.printf("serial: %.2fs, parallel %.2fs%n", (t1 - t0) * 1e-9, (t2 - t1) * 1e-9);
+
+  }
+
+  /**
+   * test forEach
+   *
+   * @param personList
+   */
+  public static void printList(List<Person> personList) {
+    /**
+     *  forEach
+     * */
 //        personList.forEach(p -> {
 //            System.out.println(p.toString());
 //        });
-        //和上面一样，采用方法引用
-        personList.forEach(System.out::println);
-    }
+    //和上面一样，采用方法引用
+    personList.forEach(System.out::println);
+  }
 
 
-    public static void main(String args[]) {
+  public static void main(String args[]) {
 //        testStreamFilter();
 //        testStreamMap();
 //
 //        testParaller();
-        testStreamSorted();
-    }
+    testStreamSorted();
+  }
 
 
 }

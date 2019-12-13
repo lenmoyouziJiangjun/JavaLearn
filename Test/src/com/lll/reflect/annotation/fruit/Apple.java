@@ -8,10 +8,10 @@ package com.lll.reflect.annotation.fruit;
  */
 public class Apple {
 
-    @FruitName("apple") /*注解元素值必须要么在注解定义时指定，要么在使用是指定*/
-    private String name;
+  @FruitName("apple") /*注解元素值必须要么在注解定义时指定，要么在使用是指定*/
+  private String name;
 
-    @FruitColor(fruitColor = FruitColor.Color.BULE)
-    private String appleColor;
+  @FruitColor(fruitColor = FruitColor.Color.BULE)
+  private String appleColor;
 
 }

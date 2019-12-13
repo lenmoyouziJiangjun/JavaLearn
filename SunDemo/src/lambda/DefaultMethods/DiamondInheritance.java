@@ -40,11 +40,11 @@ package lambda.DefaultMethods;/*
  *                    \   /
  *                   Pegasus
  * </pre>
- *
+ * <p>
  * Both {@link Horse} and {@link Bird} interfaces implements the <code>go</code>
  * method. The {@link Pegasus} class have to overrides the
  * <code>go</code> method.
- *
+ * <p>
  * The new syntax of super-call is used here:
  * <pre>
  *     &lt;interface_name&gt;.super.&lt;method&gt;(...);
@@ -53,93 +53,93 @@ package lambda.DefaultMethods;/*
  */
 public class DiamondInheritance {
 
-    /**
-     * Base interface to illustrate the diamond inheritance.
-     *
-     * @see DiamondInheritance
-     */
-    public interface Animal {
+  /**
+   * Base interface to illustrate the diamond inheritance.
+   *
+   * @see DiamondInheritance
+   */
+  public interface Animal {
 
-        /**
-         * Return string representation of the "go" action for concrete animal
-         *
-         * @return string representation of the "go" action for concrete animal
-         */
-        String go();
+    /**
+     * Return string representation of the "go" action for concrete animal
+     *
+     * @return string representation of the "go" action for concrete animal
+     */
+    String go();
+  }
+
+  /**
+   * Interface to illustrate the diamond inheritance.
+   *
+   * @see DiamondInheritance
+   */
+  public interface Horse extends Animal {
+
+    /**
+     * Return string representation of the "go" action for horse
+     *
+     * @return string representation of the "go" action for horse
+     */
+    @Override
+    default String go() {
+      return this.getClass().getSimpleName() + " walks on four legs";
+    }
+  }
+
+  /**
+   * Interface to illustrate the diamond inheritance.
+   *
+   * @see DiamondInheritance
+   */
+  public interface Bird extends Animal {
+
+    /**
+     * Return string representation of the "go" action for bird
+     *
+     * @return string representation of the "go" action for bird
+     */
+    @Override
+    default String go() {
+      return this.getClass().getSimpleName() + " walks on two legs";
     }
 
     /**
-     * Interface to illustrate the diamond inheritance.
+     * Return string representation of the "fly" action for bird
      *
-     * @see DiamondInheritance
+     * @return string representation of the "fly" action for bird
      */
-    public interface Horse extends Animal {
-
-        /**
-         * Return string representation of the "go" action for horse
-         *
-         * @return string representation of the "go" action for horse
-         */
-        @Override
-        default String go() {
-            return this.getClass().getSimpleName() + " walks on four legs";
-        }
+    default String fly() {
+      return "I can fly";
     }
+  }
+
+  /**
+   * Class to illustrate the diamond inheritance. Pegasus must mix horse and
+   * bird behavior.
+   *
+   * @see DiamondInheritance
+   */
+  public static class Pegasus implements Horse, Bird {
 
     /**
-     * Interface to illustrate the diamond inheritance.
+     * Return string representation of the "go" action for the fictitious
+     * creature Pegasus
      *
-     * @see DiamondInheritance
+     * @return string representation of the "go" action for the fictitious
+     * creature Pegasus
      */
-    public interface Bird extends Animal {
-
-        /**
-         * Return string representation of the "go" action for bird
-         *
-         * @return string representation of the "go" action for bird
-         */
-        @Override
-        default String go() {
-            return this.getClass().getSimpleName() + " walks on two legs";
-        }
-
-        /**
-         * Return string representation of the "fly" action for bird
-         *
-         * @return string representation of the "fly" action for bird
-         */
-        default String fly() {
-            return "I can fly";
-        }
+    @Override
+    public String go() {
+      return Horse.super.go();
     }
+  }
 
-    /**
-     * Class to illustrate the diamond inheritance. Pegasus must mix horse and
-     * bird behavior.
-     *
-     * @see DiamondInheritance
-     */
-    public static class Pegasus implements Horse, Bird {
-
-        /**
-         * Return string representation of the "go" action for the fictitious
-         * creature Pegasus
-         *
-         * @return string representation of the "go" action for the fictitious
-         * creature Pegasus
-         */
-        @Override
-        public String go() {
-            return Horse.super.go();
-        }
-    }
-
-    /**
-     * Illustrate the behavior of the {@link Pegasus} class
-     *
-     * @param args command line arguments
-     */
-    public static void main(final String[] args) {
-        System.out.println(new Pegasus().go());
-    }
+  /**
+   * Illustrate the behavior of the {@link Pegasus} class
+   *
+   * @param args command line arguments
+   */
+  public static void main(final String[] args) {
+    System.out.println(new Pegasus().go());
+  }
 }

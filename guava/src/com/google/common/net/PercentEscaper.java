@@ -32,12 +32,12 @@ import com.google.common.escape.UnicodeEscaper;
  * <p>When escaping a String, the following rules apply:
  *
  * <ul>
- *   <li>All specified safe characters remain unchanged.
- *   <li>If {@code plusForSpace} was specified, the space character " " is converted into a plus
- *       sign {@code "+"}.
- *   <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
- *       byte is then represented by the 3-character string "%XX", where "XX" is the two-digit,
- *       uppercase, hexadecimal representation of the byte value.
+ * <li>All specified safe characters remain unchanged.
+ * <li>If {@code plusForSpace} was specified, the space character " " is converted into a plus
+ * sign {@code "+"}.
+ * <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
+ * byte is then represented by the 3-character string "%XX", where "XX" is the two-digit,
+ * uppercase, hexadecimal representation of the byte value.
  * </ul>
  *
  * <p>For performance reasons the only currently supported character encoding of this class is
@@ -59,7 +59,9 @@ public final class PercentEscaper extends UnicodeEscaper {
   // Percent escapers output upper case hex digits (uri escapers require this).
   private static final char[] UPPER_HEX_DIGITS = "0123456789ABCDEF".toCharArray();
 
-  /** If true we should convert space to the {@code +} character. */
+  /**
+   * If true we should convert space to the {@code +} character.
+   */
   private final boolean plusForSpace;
 
   /**
@@ -77,8 +79,8 @@ public final class PercentEscaper extends UnicodeEscaper {
    * character. This has the effect of creating an escaper which has no well defined inverse but it
    * can be useful when escaping additional characters.
    *
-   * @param safeChars a non null string specifying additional safe characters for this escaper (the
-   *     ranges 0..9, a..z and A..Z are always safe and should not be specified here)
+   * @param safeChars    a non null string specifying additional safe characters for this escaper (the
+   *                     ranges 0..9, a..z and A..Z are always safe and should not be specified here)
    * @param plusForSpace true if ASCII space should be escaped to {@code +} rather than {@code %20}
    * @throws IllegalArgumentException if any of the parameters were invalid
    */
@@ -89,14 +91,14 @@ public final class PercentEscaper extends UnicodeEscaper {
     // Avoid any misunderstandings about the behavior of this escaper
     if (safeChars.matches(".*[0-9A-Za-z].*")) {
       throw new IllegalArgumentException(
-          "Alphanumeric characters are always 'safe' and should not be explicitly specified");
+              "Alphanumeric characters are always 'safe' and should not be explicitly specified");
     }
     safeChars += "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     // Avoid ambiguous parameters. Safe characters are never modified so if
     // space is a safe character then setting plusForSpace is meaningless.
     if (plusForSpace && safeChars.contains(" ")) {
       throw new IllegalArgumentException(
-          "plusForSpace cannot be specified when space is a 'safe' character");
+              "plusForSpace cannot be specified when space is a 'safe' character");
     }
     this.plusForSpace = plusForSpace;
     this.safeOctets = createSafeOctets(safeChars);
@@ -153,7 +155,9 @@ public final class PercentEscaper extends UnicodeEscaper {
     return s;
   }
 
-  /** Escapes the given Unicode code point in UTF-8. */
+  /**
+   * Escapes the given Unicode code point in UTF-8.
+   */
   @Override
   protected char[] escape(int cp) {
     // We should never get negative values here but if we do it will throw an

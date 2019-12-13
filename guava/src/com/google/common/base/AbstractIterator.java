@@ -19,64 +19,66 @@ import static com.google.common.base.Preconditions.checkState;
  */
 @GwtCompatible
 abstract class AbstractIterator<T> implements Iterator<T> {
-    private State state = State.NOT_READY;
+  private State state = State.NOT_READY;
 
-    protected AbstractIterator() {
-    }
+  protected AbstractIterator() {
+  }
 
-    private enum State {
-        READY,
-        NOT_READY,
-        DONE,
-        FAILED,
-    }
+  private enum State
 
-    private T next;
+  {
+    READY,
+            NOT_READY,
+            DONE,
+            FAILED,
+  }
 
-    protected abstract T computeNext();
+  private T next;
 
-    @Nullable
-    protected final T endOfData() {
-        state = State.DONE;
-        return null;
-    }
+  protected abstract T computeNext();
 
-    @Override
-    public final boolean hasNext() {
-        checkState(state != State.FAILED);
-        switch (state) {
-            case READY:
-                return true;
-            case DONE:
-                return false;
-            default:
-        }
-        return tryToComputeNext();
-    }
+  @Nullable
+  protected final T endOfData() {
+    state = State.DONE;
+    return null;
+  }
 
-    private boolean tryToComputeNext() {
-        state = State.FAILED; // temporary pessimism
-        next = computeNext();
-        if (state != State.DONE) {
-            state = State.READY;
-            return true;
-        }
+  @Override
+  public final boolean hasNext() {
+    checkState(state != State.FAILED);
+    switch (state) {
+      case READY:
+        return true;
+      case DONE:
         return false;
+      default:
     }
+    return tryToComputeNext();
+  }
 
-    @Override
-    public final T next() {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
-        state = State.NOT_READY;
-        T result = next;
-        next = null;
-        return result;
+  private boolean tryToComputeNext() {
+    state = State.FAILED; // temporary pessimism
+    next = computeNext();
+    if (state != State.DONE) {
+      state = State.READY;
+      return true;
     }
+    return false;
+  }
 
-    @Override
-    public final void remove() {
-        throw new UnsupportedOperationException();
+  @Override
+  public final T next() {
+    if (!hasNext()) {
+      throw new NoSuchElementException();
     }
+    state = State.NOT_READY;
+    T result = next;
+    next = null;
+    return result;
+  }
+
+  @Override
+  public final void remove() {
+    throw new UnsupportedOperationException();
+  }
 }

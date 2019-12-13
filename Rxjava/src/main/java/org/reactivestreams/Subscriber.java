@@ -27,40 +27,39 @@ package org.reactivestreams;
  * @param <T> the type of element signaled.
  */
 public interface Subscriber<T> {
-    /**
-     * Invoked after calling {@link Publisher#subscribe(Subscriber)}.
-     * <p>
-     * No data will start flowing until {@link Subscription#request(long)} is invoked.
-     * <p>
-     * It is the responsibility of this {@link Subscriber} instance to call {@link Subscription#request(long)} whenever more data is wanted.
-     * <p>
-     * The {@link Publisher} will send notifications only in response to {@link Subscription#request(long)}.
-     * 
-     * @param s
-     *            {@link Subscription} that allows requesting data via {@link Subscription#request(long)}
-     */
-    public void onSubscribe(Subscription s);
+  /**
+   * Invoked after calling {@link Publisher#subscribe(Subscriber)}.
+   * <p>
+   * No data will start flowing until {@link Subscription#request(long)} is invoked.
+   * <p>
+   * It is the responsibility of this {@link Subscriber} instance to call {@link Subscription#request(long)} whenever more data is wanted.
+   * <p>
+   * The {@link Publisher} will send notifications only in response to {@link Subscription#request(long)}.
+   *
+   * @param s {@link Subscription} that allows requesting data via {@link Subscription#request(long)}
+   */
+  public void onSubscribe(Subscription s);
 
-    /**
-     * Data notification sent by the {@link Publisher} in response to requests to {@link Subscription#request(long)}.
-     * 
-     * @param t the element signaled
-     */
-    public void onNext(T t);
+  /**
+   * Data notification sent by the {@link Publisher} in response to requests to {@link Subscription#request(long)}.
+   *
+   * @param t the element signaled
+   */
+  public void onNext(T t);
 
-    /**
-     * Failed terminal state.
-     * <p>
-     * No further events will be sent even if {@link Subscription#request(long)} is invoked again.
-     *
-     * @param t the throwable signaled
-     */
-    public void onError(Throwable t);
+  /**
+   * Failed terminal state.
+   * <p>
+   * No further events will be sent even if {@link Subscription#request(long)} is invoked again.
+   *
+   * @param t the throwable signaled
+   */
+  public void onError(Throwable t);
 
-    /**
-     * Successful terminal state.
-     * <p>
-     * No further events will be sent even if {@link Subscription#request(long)} is invoked again.
-     */
-    public void onComplete();
+  /**
+   * Successful terminal state.
+   * <p>
+   * No further events will be sent even if {@link Subscription#request(long)} is invoked again.
+   */
+  public void onComplete();
 }

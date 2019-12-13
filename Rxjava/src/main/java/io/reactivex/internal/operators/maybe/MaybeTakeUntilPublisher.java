@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -32,126 +32,126 @@ import io.reactivex.plugins.RxJavaPlugins;
  */
 public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstream<T, T> {
 
-    final Publisher<U> other;
+  final Publisher<U> other;
 
-    public MaybeTakeUntilPublisher(MaybeSource<T> source, Publisher<U> other) {
-        super(source);
-        this.other = other;
+  public MaybeTakeUntilPublisher(MaybeSource<T> source, Publisher<U> other) {
+    super(source);
+    this.other = other;
+  }
+
+  @Override
+  protected void subscribeActual(MaybeObserver<? super T> observer) {
+    TakeUntilMainMaybeObserver<T, U> parent = new TakeUntilMainMaybeObserver<T, U>(observer);
+    observer.onSubscribe(parent);
+
+    other.subscribe(parent.other);
+
+    source.subscribe(parent);
+  }
+
+  static final class TakeUntilMainMaybeObserver<T, U>
+          extends AtomicReference<Disposable> implements MaybeObserver<T>, Disposable {
+
+    private static final long serialVersionUID = -2187421758664251153L;
+
+    final MaybeObserver<? super T> actual;
+
+    final TakeUntilOtherMaybeObserver<U> other;
+
+    TakeUntilMainMaybeObserver(MaybeObserver<? super T> actual) {
+      this.actual = actual;
+      this.other = new TakeUntilOtherMaybeObserver<U>(this);
     }
 
     @Override
-    protected void subscribeActual(MaybeObserver<? super T> observer) {
-        TakeUntilMainMaybeObserver<T, U> parent = new TakeUntilMainMaybeObserver<T, U>(observer);
-        observer.onSubscribe(parent);
-
-        other.subscribe(parent.other);
-
-        source.subscribe(parent);
+    public void dispose() {
+      DisposableHelper.dispose(this);
+      SubscriptionHelper.cancel(other);
     }
 
-    static final class TakeUntilMainMaybeObserver<T, U>
-    extends AtomicReference<Disposable> implements MaybeObserver<T>, Disposable {
-
-        private static final long serialVersionUID = -2187421758664251153L;
-
-        final MaybeObserver<? super T> actual;
-
-        final TakeUntilOtherMaybeObserver<U> other;
-
-        TakeUntilMainMaybeObserver(MaybeObserver<? super T> actual) {
-            this.actual = actual;
-            this.other = new TakeUntilOtherMaybeObserver<U>(this);
-        }
-
-        @Override
-        public void dispose() {
-            DisposableHelper.dispose(this);
-            SubscriptionHelper.cancel(other);
-        }
-
-        @Override
-        public boolean isDisposed() {
-            return DisposableHelper.isDisposed(get());
-        }
-
-        @Override
-        public void onSubscribe(Disposable d) {
-            DisposableHelper.setOnce(this, d);
-        }
-
-        @Override
-        public void onSuccess(T value) {
-            SubscriptionHelper.cancel(other);
-            if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
-                actual.onSuccess(value);
-            }
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            SubscriptionHelper.cancel(other);
-            if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
-                actual.onError(e);
-            } else {
-                RxJavaPlugins.onError(e);
-            }
-        }
-
-        @Override
-        public void onComplete() {
-            SubscriptionHelper.cancel(other);
-            if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
-                actual.onComplete();
-            }
-        }
-
-        void otherError(Throwable e) {
-            if (DisposableHelper.dispose(this)) {
-                actual.onError(e);
-            } else {
-                RxJavaPlugins.onError(e);
-            }
-        }
-
-        void otherComplete() {
-            if (DisposableHelper.dispose(this)) {
-                actual.onComplete();
-            }
-        }
-
-        static final class TakeUntilOtherMaybeObserver<U>
-        extends AtomicReference<Subscription> implements FlowableSubscriber<U> {
-
-            private static final long serialVersionUID = -1266041316834525931L;
-
-            final TakeUntilMainMaybeObserver<?, U> parent;
-
-            TakeUntilOtherMaybeObserver(TakeUntilMainMaybeObserver<?, U> parent) {
-                this.parent = parent;
-            }
-
-            @Override
-            public void onSubscribe(Subscription s) {
-                if (SubscriptionHelper.setOnce(this, s)) {
-                    s.request(Long.MAX_VALUE);
-                }
-            }
-
-            @Override
-            public void onNext(Object value) {
-                parent.otherComplete();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                parent.otherError(e);
-            }
-
-            @Override
-            public void onComplete() {
-                parent.otherComplete();
-            }
-        }
+    @Override
+    public boolean isDisposed() {
+      return DisposableHelper.isDisposed(get());
     }
+
+    @Override
+    public void onSubscribe(Disposable d) {
+      DisposableHelper.setOnce(this, d);
+    }
+
+    @Override
+    public void onSuccess(T value) {
+      SubscriptionHelper.cancel(other);
+      if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
+        actual.onSuccess(value);
+      }
+    }
+
+    @Override
+    public void onError(Throwable e) {
+      SubscriptionHelper.cancel(other);
+      if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
+        actual.onError(e);
+      } else {
+        RxJavaPlugins.onError(e);
+      }
+    }
+
+    @Override
+    public void onComplete() {
+      SubscriptionHelper.cancel(other);
+      if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
+        actual.onComplete();
+      }
+    }
+
+    void otherError(Throwable e) {
+      if (DisposableHelper.dispose(this)) {
+        actual.onError(e);
+      } else {
+        RxJavaPlugins.onError(e);
+      }
+    }
+
+    void otherComplete() {
+      if (DisposableHelper.dispose(this)) {
+        actual.onComplete();
+      }
+    }
+
+    static final class TakeUntilOtherMaybeObserver<U>
+            extends AtomicReference<Subscription> implements FlowableSubscriber<U> {
+
+      private static final long serialVersionUID = -1266041316834525931L;
+
+      final TakeUntilMainMaybeObserver<?, U> parent;
+
+      TakeUntilOtherMaybeObserver(TakeUntilMainMaybeObserver<?, U> parent) {
+        this.parent = parent;
+      }
+
+      @Override
+      public void onSubscribe(Subscription s) {
+        if (SubscriptionHelper.setOnce(this, s)) {
+          s.request(Long.MAX_VALUE);
+        }
+      }
+
+      @Override
+      public void onNext(Object value) {
+        parent.otherComplete();
+      }
+
+      @Override
+      public void onError(Throwable e) {
+        parent.otherError(e);
+      }
+
+      @Override
+      public void onComplete() {
+        parent.otherComplete();
+      }
+    }
+  }
 
 }

@@ -11,21 +11,21 @@ import java.util.List;
  */
 public class BookDiscountUtils {
 
-    /**
-     * 计算价格
-     *
-     * @param books
-     * @param discountStrategy
-     * @return
-     */
-    public static BigDecimal getBookDiscount(List<Book> books, DiscountStrategy discountStrategy) {
-        BigDecimal decimal = null;
-        if (books != null && books.size() > 0 && discountStrategy != null) {
-            for (Book book : books) {
-                decimal.add(discountStrategy.discount(book));
-            }
-        }
-        return decimal;
+  /**
+   * 计算价格
+   *
+   * @param books
+   * @param discountStrategy
+   * @return
+   */
+  public static BigDecimal getBookDiscount(List<Book> books, DiscountStrategy discountStrategy) {
+    BigDecimal decimal = null;
+    if (books != null && books.size() > 0 && discountStrategy != null) {
+      for (Book book : books) {
+        decimal.add(discountStrategy.discount(book));
+      }
     }
+    return decimal;
+  }
 
 }

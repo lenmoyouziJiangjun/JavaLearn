@@ -1,10 +1,10 @@
 package javapattern.Decorator.simplified1;
 
 public class ConcreteComponent {
-    public ConcreteComponent() {
-    }
+  public ConcreteComponent() {
+  }
 
-    public void sampleOperation(){
-        // Write your code here
-    }
+  public void sampleOperation() {
+    // Write your code here
+  }
 }

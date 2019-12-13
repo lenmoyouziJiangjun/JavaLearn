@@ -17,23 +17,21 @@ import java.io.Serializable;
  */
 public class CloningProvider<T extends Cloneable> implements ObjectProvider<T>, Serializable {
 
-    private final T cloneable;
+  private final T cloneable;
 
-    public CloningProvider(T cloneable) {
-        Validate.notNull(cloneable, "Cloneable object cannot be null.");
-        Validate.isTrue(MethodUtils.getAccessibleMethod(cloneable.getClass(), "clone") != null,
-                String.format("Class %s does not override clone() method as public.", cloneable.getClass().getName()));
-        this.cloneable = cloneable;
-    }
+  public CloningProvider(T cloneable) {
+    Validate.notNull(cloneable, "Cloneable object cannot be null.");
+    Validate.isTrue(MethodUtils.getAccessibleMethod(cloneable.getClass(), "clone") != null,
+            String.format("Class %s does not override clone() method as public.", cloneable.getClass().getName()));
+    this.cloneable = cloneable;
+  }
 
-    @Override
-    public T getObject() {
-        try
-        {
-            return ObjectUtils.clone(cloneable);
-        }
-        catch (CloneFailedException e) {
-            throw new ObjectProviderException(e.getMessage(), e.getCause());
-        }
+  @Override
+  public T getObject() {
+    try {
+      return ObjectUtils.clone(cloneable);
+    } catch (CloneFailedException e) {
+      throw new ObjectProviderException(e.getMessage(), e.getCause());
     }
+  }
 }

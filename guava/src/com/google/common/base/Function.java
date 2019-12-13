@@ -27,21 +27,21 @@ import com.sun.istack.internal.Nullable;
 @GwtCompatible
 @FunctionalInterface
 public interface Function<F, T> extends java.util.function.Function<F, T> {
-    @Override
-    @Nullable
-    T apply(@Nullable F input);
+  @Override
+  @Nullable
+  T apply(@Nullable F input);
 
-    /**
-     * <i>May</i> return {@code true} if {@code object} is a {@code Function} that behaves identically
-     * to this function.
-     * <p>
-     * <p><b>Warning: do not depend</b> on the behavior of this method.
-     * <p>
-     * <p>Historically, {@code Function} instances in this library have implemented this method to
-     * recognize certain cases where distinct {@code Function} instances would in fact behave
-     * identically. However, as code migrates to {@code java.util.function}, that behavior will
-     * disappear. It is best not to depend on it.
-     */
-    @Override
-    boolean equals(@Nullable Object object);
+  /**
+   * <i>May</i> return {@code true} if {@code object} is a {@code Function} that behaves identically
+   * to this function.
+   * <p>
+   * <p><b>Warning: do not depend</b> on the behavior of this method.
+   * <p>
+   * <p>Historically, {@code Function} instances in this library have implemented this method to
+   * recognize certain cases where distinct {@code Function} instances would in fact behave
+   * identically. However, as code migrates to {@code java.util.function}, that behavior will
+   * disappear. It is best not to depend on it.
+   */
+  @Override
+  boolean equals(@Nullable Object object);
 }

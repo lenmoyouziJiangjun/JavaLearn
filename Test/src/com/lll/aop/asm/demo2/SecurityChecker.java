@@ -10,9 +10,9 @@ package com.lll.aop.asm.demo2;/**
  */
 public class SecurityChecker {
 
-    public static boolean checkSecurity(){
-        System.out.println("账户检查1，通过");
-        return true;
-    }
+  public static boolean checkSecurity() {
+    System.out.println("账户检查1，通过");
+    return true;
+  }
 
 }

@@ -1,22 +1,20 @@
 package javapattern.Decorator.simplified1;
 
-public class Decorator extends ConcreteComponent
-{
-    public Decorator(ConcreteComponent component)
-    {
+public class Decorator extends ConcreteComponent {
+  public Decorator(ConcreteComponent component) {
 //        super();
-        this.component = component;
-    }
+    this.component = component;
+  }
 
-    public Decorator() {
-    }
+  public Decorator() {
+  }
 
-    public void sampleOperation(){
-        component.sampleOperation();
-    }
+  public void sampleOperation() {
+    component.sampleOperation();
+  }
 
-    /**
-     * @link aggregation 
-     */
-    private ConcreteComponent component;
+  /**
+   * @link aggregation
+   */
+  private ConcreteComponent component;
 }

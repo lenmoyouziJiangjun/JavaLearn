@@ -1,24 +1,23 @@
 package javapattern.design.isp;
 
-public interface BadExample
-{
-    void first();
+public interface BadExample {
+  void first();
 
-    void last();
+  void last();
 
-    void next();
+  void next();
 
-    void previous();
+  void previous();
 
-    String getExcerpt();
+  String getExcerpt();
 
-    String getFullRecord();
+  String getFullRecord();
 
-    void reIndexAll();
+  void reIndexAll();
 
-    void updateIndex();
+  void updateIndex();
 
-    void search(String[] keywords);
+  void search(String[] keywords);
 
-    void getResultset();
+  void getResultset();
 }

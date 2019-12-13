@@ -1,23 +1,20 @@
 package javapattern.Decorator;
 
-public class Decorator implements Component
-{
-	public Decorator(Component component)
-    {
+public class Decorator implements Component {
+  public Decorator(Component component) {
 //        super();
-        this.component = component;
-    }
+    this.component = component;
+  }
 
-    public Decorator() {
-    }
+  public Decorator() {
+  }
 
-    public void sampleOperation()
-    {
-        component.sampleOperation();
-    }
+  public void sampleOperation() {
+    component.sampleOperation();
+  }
 
-    /**
-     * @link aggregation 
-     */
-    private Component component;
+  /**
+   * @link aggregation
+   */
+  private Component component;
 }

@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -32,176 +32,176 @@ import io.reactivex.internal.observers.BasicQueueDisposable;
  */
 public final class MaybeFlatMapIterableObservable<T, R> extends Observable<R> {
 
-    final MaybeSource<T> source;
+  final MaybeSource<T> source;
+
+  final Function<? super T, ? extends Iterable<? extends R>> mapper;
+
+  public MaybeFlatMapIterableObservable(MaybeSource<T> source,
+                                        Function<? super T, ? extends Iterable<? extends R>> mapper) {
+    this.source = source;
+    this.mapper = mapper;
+  }
+
+  @Override
+  protected void subscribeActual(Observer<? super R> s) {
+    source.subscribe(new FlatMapIterableObserver<T, R>(s, mapper));
+  }
+
+  static final class FlatMapIterableObserver<T, R>
+          extends BasicQueueDisposable<R>
+          implements MaybeObserver<T> {
+
+    final Observer<? super R> actual;
 
     final Function<? super T, ? extends Iterable<? extends R>> mapper;
 
-    public MaybeFlatMapIterableObservable(MaybeSource<T> source,
-            Function<? super T, ? extends Iterable<? extends R>> mapper) {
-        this.source = source;
-        this.mapper = mapper;
+    Disposable d;
+
+    volatile Iterator<? extends R> it;
+
+    volatile boolean cancelled;
+
+    boolean outputFused;
+
+    FlatMapIterableObserver(Observer<? super R> actual,
+                            Function<? super T, ? extends Iterable<? extends R>> mapper) {
+      this.actual = actual;
+      this.mapper = mapper;
     }
 
     @Override
-    protected void subscribeActual(Observer<? super R> s) {
-        source.subscribe(new FlatMapIterableObserver<T, R>(s, mapper));
+    public void onSubscribe(Disposable d) {
+      if (DisposableHelper.validate(this.d, d)) {
+        this.d = d;
+
+        actual.onSubscribe(this);
+      }
     }
 
-    static final class FlatMapIterableObserver<T, R>
-    extends BasicQueueDisposable<R>
-    implements MaybeObserver<T> {
+    @Override
+    public void onSuccess(T value) {
+      Observer<? super R> a = actual;
 
-        final Observer<? super R> actual;
+      Iterator<? extends R> iterator;
+      boolean has;
+      try {
+        iterator = mapper.apply(value).iterator();
 
-        final Function<? super T, ? extends Iterable<? extends R>> mapper;
+        has = iterator.hasNext();
+      } catch (Throwable ex) {
+        Exceptions.throwIfFatal(ex);
+        a.onError(ex);
+        return;
+      }
 
-        Disposable d;
+      if (!has) {
+        a.onComplete();
+        return;
+      }
 
-        volatile Iterator<? extends R> it;
+      this.it = iterator;
 
-        volatile boolean cancelled;
+      if (outputFused) {
+        a.onNext(null);
+        a.onComplete();
+        return;
+      }
 
-        boolean outputFused;
-
-        FlatMapIterableObserver(Observer<? super R> actual,
-                Function<? super T, ? extends Iterable<? extends R>> mapper) {
-            this.actual = actual;
-            this.mapper = mapper;
+      for (; ; ) {
+        if (cancelled) {
+          return;
         }
 
-        @Override
-        public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+        R v;
 
-                actual.onSubscribe(this);
-            }
+        try {
+          v = iterator.next();
+        } catch (Throwable ex) {
+          Exceptions.throwIfFatal(ex);
+          a.onError(ex);
+          return;
         }
 
-        @Override
-        public void onSuccess(T value) {
-            Observer<? super R> a = actual;
+        a.onNext(v);
 
-            Iterator<? extends R> iterator;
-            boolean has;
-            try {
-                iterator = mapper.apply(value).iterator();
-
-                has = iterator.hasNext();
-            } catch (Throwable ex) {
-                Exceptions.throwIfFatal(ex);
-                a.onError(ex);
-                return;
-            }
-
-            if (!has) {
-                a.onComplete();
-                return;
-            }
-
-            this.it = iterator;
-
-            if (outputFused) {
-                a.onNext(null);
-                a.onComplete();
-                return;
-            }
-
-            for (;;) {
-                if (cancelled) {
-                    return;
-                }
-
-                R v;
-
-                try {
-                    v = iterator.next();
-                } catch (Throwable ex) {
-                    Exceptions.throwIfFatal(ex);
-                    a.onError(ex);
-                    return;
-                }
-
-                a.onNext(v);
-
-                if (cancelled) {
-                    return;
-                }
-
-
-                boolean b;
-
-                try {
-                    b = iterator.hasNext();
-                } catch (Throwable ex) {
-                    Exceptions.throwIfFatal(ex);
-                    a.onError(ex);
-                    return;
-                }
-
-                if (!b) {
-                    a.onComplete();
-                    return;
-                }
-            }
+        if (cancelled) {
+          return;
         }
 
-        @Override
-        public void onError(Throwable e) {
-            d = DisposableHelper.DISPOSED;
-            actual.onError(e);
+
+        boolean b;
+
+        try {
+          b = iterator.hasNext();
+        } catch (Throwable ex) {
+          Exceptions.throwIfFatal(ex);
+          a.onError(ex);
+          return;
         }
 
-        @Override
-        public void onComplete() {
-            actual.onComplete();
+        if (!b) {
+          a.onComplete();
+          return;
         }
-
-        @Override
-        public void dispose() {
-            cancelled = true;
-            d.dispose();
-            d = DisposableHelper.DISPOSED;
-        }
-
-        @Override
-        public boolean isDisposed() {
-            return cancelled;
-        }
-
-        @Override
-        public int requestFusion(int mode) {
-            if ((mode & ASYNC) != 0) {
-                outputFused = true;
-                return ASYNC;
-            }
-            return NONE;
-        }
-
-        @Override
-        public void clear() {
-            it = null;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return it == null;
-        }
-
-        @Nullable
-        @Override
-        public R poll() throws Exception {
-            Iterator<? extends R> iterator = it;
-
-            if (iterator != null) {
-                R v = ObjectHelper.requireNonNull(iterator.next(), "The iterator returned a null value");
-                if (!iterator.hasNext()) {
-                    it = null;
-                }
-                return v;
-            }
-            return null;
-        }
-
+      }
     }
+
+    @Override
+    public void onError(Throwable e) {
+      d = DisposableHelper.DISPOSED;
+      actual.onError(e);
+    }
+
+    @Override
+    public void onComplete() {
+      actual.onComplete();
+    }
+
+    @Override
+    public void dispose() {
+      cancelled = true;
+      d.dispose();
+      d = DisposableHelper.DISPOSED;
+    }
+
+    @Override
+    public boolean isDisposed() {
+      return cancelled;
+    }
+
+    @Override
+    public int requestFusion(int mode) {
+      if ((mode & ASYNC) != 0) {
+        outputFused = true;
+        return ASYNC;
+      }
+      return NONE;
+    }
+
+    @Override
+    public void clear() {
+      it = null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return it == null;
+    }
+
+    @Nullable
+    @Override
+    public R poll() throws Exception {
+      Iterator<? extends R> iterator = it;
+
+      if (iterator != null) {
+        R v = ObjectHelper.requireNonNull(iterator.next(), "The iterator returned a null value");
+        if (!iterator.hasNext()) {
+          it = null;
+        }
+        return v;
+      }
+      return null;
+    }
+
+  }
 }

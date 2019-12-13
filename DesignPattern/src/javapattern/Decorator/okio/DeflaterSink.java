@@ -25,118 +25,124 @@ import static javapattern.Decorator.okio.Util.checkOffsetAndCount;
  */
 public class DeflaterSink implements Sink {
 
-    private final BufferedSink sink;
-    private final Deflater deflater;
-    private boolean closed;
+  private final BufferedSink sink;
+  private final Deflater deflater;
+  private boolean closed;
 
-    public DeflaterSink(Sink sink,Deflater deflater){
-        this(Okio.buffer(sink), deflater);
+  public DeflaterSink(Sink sink, Deflater deflater) {
+    this(Okio.buffer(sink), deflater);
+  }
+
+  /**
+   * This package-private constructor shares a buffer with its trusted caller.
+   * In general we can't share a BufferedSource because the deflater holds input
+   * bytes until they are inflated.
+   */
+  DeflaterSink(BufferedSink sink, Deflater deflater) {
+    if (sink == null) throw new IllegalArgumentException("source == null");
+    if (deflater == null) throw new IllegalArgumentException("inflater == null");
+    this.sink = sink;
+    this.deflater = deflater;
+  }
+
+  @Override
+  public void write(Buffer source, long byteCount) throws IOException {
+    checkOffsetAndCount(source.size, 0, byteCount);
+    while (byteCount > 0) {
+      Segment head = source.head;
+      int toDeflate = (int) Math.min(byteCount, head.limit - head.pos);
+      deflater.setInput(head.data, head.pos, toDeflate);
+      // Deflate those bytes into sink.
+      deflate(false);
+
+      // Mark those bytes as read.
+      source.size -= toDeflate;
+      head.pos += toDeflate;
+      if (head.pos == head.limit) {
+        source.head = head.pop();
+        SegmentPool.recycle(head);
+      }
+
+      byteCount -= toDeflate;
     }
-    /**
-     * This package-private constructor shares a buffer with its trusted caller.
-     * In general we can't share a BufferedSource because the deflater holds input
-     * bytes until they are inflated.
-     */
-    DeflaterSink(BufferedSink sink, Deflater deflater) {
-        if (sink == null) throw new IllegalArgumentException("source == null");
-        if (deflater == null) throw new IllegalArgumentException("inflater == null");
-        this.sink = sink;
-        this.deflater = deflater;
-    }
-    @Override public void write(Buffer source, long byteCount) throws IOException {
-        checkOffsetAndCount(source.size, 0, byteCount);
-        while (byteCount > 0) {
-            Segment head = source.head;
-            int toDeflate = (int) Math.min(byteCount,head.limit-head.pos);
-            deflater.setInput(head.data,head.pos,toDeflate);
-            // Deflate those bytes into sink.
-            deflate(false);
+  }
 
-            // Mark those bytes as read.
-            source.size -= toDeflate;
-            head.pos += toDeflate;
-            if (head.pos == head.limit) {
-                source.head = head.pop();
-                SegmentPool.recycle(head);
-            }
+  private void deflate(boolean syncFlush) throws IOException {
+    Buffer buffer = sink.buffer();
+    while (true) {
+      Segment s = buffer.writableSegment(1);
+      // The 4-parameter overload of deflate() doesn't exist in the RI until
+      // Java 1.7, and is public (although with @hide) on Android since 2.3.
+      // The @hide tag means that this code won't compile against the Android
+      // 2.3 SDK, but it will run fine there.
+      int deflated = syncFlush
+              ? deflater.deflate(s.data, s.limit, Segment.SIZE - s.limit, Deflater.SYNC_FLUSH)
+              : deflater.deflate(s.data, s.limit, Segment.SIZE - s.limit);
 
-            byteCount -= toDeflate;
+      if (deflated > 0) {
+        s.limit += deflated;
+        buffer.size += deflated;
+        sink.emitCompleteSegments();
+      } else if (deflater.needsInput()) {
+        if (s.pos == s.limit) {
+          // We allocated a tail segment, but didn't end up needing it. Recycle!
+          buffer.head = s.pop();
+          SegmentPool.recycle(s);
         }
+        return;
+      }
+    }
+  }
+
+  @Override
+  public void flush() throws IOException {
+    deflate(true);
+    sink.flush();
+  }
+
+  void finishDeflate() throws IOException {
+    deflater.finish();
+    deflate(false);
+  }
+
+  @Override
+  public void close() throws IOException {
+    if (closed) return;
+
+    // Emit deflated data to the underlying sink. If this fails, we still need
+    // to close the deflater and the sink; otherwise we risk leaking resources.
+    Throwable thrown = null;
+    try {
+      finishDeflate();
+    } catch (Throwable e) {
+      thrown = e;
     }
 
-    private void deflate(boolean syncFlush) throws IOException{
-        Buffer buffer  = sink.buffer();
-        while (true){
-            Segment s = buffer.writableSegment(1);
-            // The 4-parameter overload of deflate() doesn't exist in the RI until
-            // Java 1.7, and is public (although with @hide) on Android since 2.3.
-            // The @hide tag means that this code won't compile against the Android
-            // 2.3 SDK, but it will run fine there.
-            int deflated = syncFlush
-                    ? deflater.deflate(s.data, s.limit, Segment.SIZE - s.limit, Deflater.SYNC_FLUSH)
-                    : deflater.deflate(s.data, s.limit, Segment.SIZE - s.limit);
-
-            if (deflated > 0) {
-                s.limit += deflated;
-                buffer.size += deflated;
-                sink.emitCompleteSegments();
-            } else if (deflater.needsInput()) {
-                if (s.pos == s.limit) {
-                    // We allocated a tail segment, but didn't end up needing it. Recycle!
-                    buffer.head = s.pop();
-                    SegmentPool.recycle(s);
-                }
-                return;
-            }
-        }
+    try {
+      deflater.end();
+    } catch (Throwable e) {
+      if (thrown == null) thrown = e;
     }
 
-    @Override public void flush() throws IOException {
-        deflate(true);
-        sink.flush();
+    try {
+      sink.close();
+    } catch (Throwable e) {
+      if (thrown == null) thrown = e;
     }
+    closed = true;
 
-    void finishDeflate() throws IOException {
-        deflater.finish();
-        deflate(false);
-    }
+    if (thrown != null) Util.sneakyRethrow(thrown);
+  }
 
-    @Override public void close() throws IOException {
-        if (closed) return;
+  @Override
+  public Timeout timeout() {
+    return sink.timeout();
+  }
 
-        // Emit deflated data to the underlying sink. If this fails, we still need
-        // to close the deflater and the sink; otherwise we risk leaking resources.
-        Throwable thrown = null;
-        try {
-            finishDeflate();
-        } catch (Throwable e) {
-            thrown = e;
-        }
-
-        try {
-            deflater.end();
-        } catch (Throwable e) {
-            if (thrown == null) thrown = e;
-        }
-
-        try {
-            sink.close();
-        } catch (Throwable e) {
-            if (thrown == null) thrown = e;
-        }
-        closed = true;
-
-        if (thrown != null) Util.sneakyRethrow(thrown);
-    }
-
-    @Override public Timeout timeout() {
-        return sink.timeout();
-    }
-
-    @Override public String toString() {
-        return "DeflaterSink(" + sink + ")";
-    }
-
+  @Override
+  public String toString() {
+    return "DeflaterSink(" + sink + ")";
+  }
 
 
 }

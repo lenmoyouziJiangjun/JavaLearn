@@ -1,14 +1,13 @@
 package javapattern.design.isp;
 
-public interface Searcher
-{
-    void search(String[] keywords);
+public interface Searcher {
+  void search(String[] keywords);
 
-    void getResultset();
+  void getResultset();
 
-    /**
-     * @link aggregation
-     * @directed 
-     */
-    /*#Resultset lnkResultset;*/
+  /**
+   * @link aggregation
+   * @directed
+   */
+  /*#Resultset lnkResultset;*/
 }

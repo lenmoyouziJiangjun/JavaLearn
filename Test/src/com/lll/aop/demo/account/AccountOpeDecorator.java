@@ -9,17 +9,17 @@ package com.lll.aop.demo.account;/**
  * copyright generalray4239@gmail.com
  */
 public class AccountOpeDecorator implements Account {
-    Account mAccount;
+  Account mAccount;
 
-    public AccountOpeDecorator(Account account){
-        this.mAccount = account;
-    }
+  public AccountOpeDecorator(Account account) {
+    this.mAccount = account;
+  }
 
-    @Override
-    public void operation() {
-       if(SecurityChecker.checkSecurity()){
-           mAccount.operation();
-       }
+  @Override
+  public void operation() {
+    if (SecurityChecker.checkSecurity()) {
+      mAccount.operation();
     }
+  }
 
 }

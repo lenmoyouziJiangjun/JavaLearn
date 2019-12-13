@@ -33,13 +33,14 @@ package effectivejava;
  */
 public class MethodLearn {
 
-    /**
-     * 返回零长度的数组或者集合，而不是null。
-     */
-    private static final String[] EMPTY_ARRAY = new String[0];
-    public String[] getCheeseArray(){
-        return EMPTY_ARRAY;
-    }
+  /**
+   * 返回零长度的数组或者集合，而不是null。
+   */
+  private static final String[] EMPTY_ARRAY = new String[0];
+
+  public String[] getCheeseArray() {
+    return EMPTY_ARRAY;
+  }
 
 
 }

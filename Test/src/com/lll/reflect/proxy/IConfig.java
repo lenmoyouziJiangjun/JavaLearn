@@ -9,12 +9,12 @@ package com.lll.reflect.proxy;/**
  * copyright generalray4239@gmail.com
  */
 public interface IConfig {
-    @Value("db.url")
-    String dbUrl();
+  @Value("db.url")
+  String dbUrl();
 
-    @Value("db.validation")
-    boolean isValidated();
+  @Value("db.validation")
+  boolean isValidated();
 
-    @Value("db.pool.size")
-    int poolSize();
+  @Value("db.pool.size")
+  int poolSize();
 }

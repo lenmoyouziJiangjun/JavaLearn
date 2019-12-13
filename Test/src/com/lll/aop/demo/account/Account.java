@@ -1,4 +1,5 @@
 package com.lll.aop.demo.account;
+
 /**
  * Version 1.0
  * Created by lll on 17/6/27.
@@ -6,8 +7,8 @@ package com.lll.aop.demo.account;
  * copyright generalray4239@gmail.com
  */
 public interface Account {
-    /**
-     * 账户操作
-     */
-    void operation();
+  /**
+   * 账户操作
+   */
+  void operation();
 }

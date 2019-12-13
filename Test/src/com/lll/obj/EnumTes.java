@@ -9,5 +9,4 @@ package com.lll.obj;
 public class EnumTes {
 
 
-
 }

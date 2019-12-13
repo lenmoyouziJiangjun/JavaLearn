@@ -1,22 +1,19 @@
 package javapattern.factory.abs;
 
-public class PcProducer implements ComputerProducer
-{
-    public Cpu createCpu()
-    {
-        return new PcCpu();
-    }
+public class PcProducer implements ComputerProducer {
+  public Cpu createCpu() {
+    return new PcCpu();
+  }
 
-    public Ram createRam()
-    {
-        return new PcRam();
-    }
+  public Ram createRam() {
+    return new PcRam();
+  }
 
-    /** @link dependency 
-     * @label Creates*/
-    /*# PcCpu lnkPcCpu; */
+  /** @link dependency
+   * @label Creates*/
+  /*# PcCpu lnkPcCpu; */
 
-    /** @link dependency 
-     * @label Creates*/
-    /*# PcRam lnkPcRam; */
+  /** @link dependency
+   * @label Creates*/
+  /*# PcRam lnkPcRam; */
 }

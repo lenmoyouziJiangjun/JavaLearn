@@ -8,9 +8,9 @@ import java.math.BigDecimal;
  * Description 具体算法一：
  * copyright generalray4239@gmail.com
  */
-public class FlatRateStrategy  extends DiscountStrategy<FlatRateBook>{
-    @Override
-    public BigDecimal discount(FlatRateBook book) {
-        return null;
-    }
+public class FlatRateStrategy extends DiscountStrategy<FlatRateBook> {
+  @Override
+  public BigDecimal discount(FlatRateBook book) {
+    return null;
+  }
 }

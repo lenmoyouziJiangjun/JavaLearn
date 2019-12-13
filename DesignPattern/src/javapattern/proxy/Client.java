@@ -1,13 +1,11 @@
 package javapattern.proxy;
 
-public class Client
-{
-  	private static Subject subject;
+public class Client {
+  private static Subject subject;
 
-    static public void main(String[] args)
-	{ 
-		subject = new ProxySubject();
-		subject.request();
-		subject.request();
-	}
+  static public void main(String[] args) {
+    subject = new ProxySubject();
+    subject.request();
+    subject.request();
+  }
 }

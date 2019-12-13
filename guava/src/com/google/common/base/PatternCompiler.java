@@ -15,10 +15,10 @@ import com.google.common.annotations.GwtIncompatible;
  */
 @GwtIncompatible
 public interface PatternCompiler {
-    /**
-     * Compiles the given pattern.
-     *
-     * @throws IllegalArgumentException if the pattern is invalid
-     */
-    CommonPattern compile(String pattern);
+  /**
+   * Compiles the given pattern.
+   *
+   * @throws IllegalArgumentException if the pattern is invalid
+   */
+  CommonPattern compile(String pattern);
 }

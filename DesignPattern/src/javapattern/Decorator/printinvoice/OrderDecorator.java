@@ -1,24 +1,21 @@
 package javapattern.Decorator.printinvoice;
 
-abstract public class OrderDecorator extends Order
-{
-    /**
-     * @link aggregation
-     * @directed
-     * @supplierCardinality 1
-     * @clientCardinality 0..1
-     */
-    protected Order order;
+abstract public class OrderDecorator extends Order {
+  /**
+   * @link aggregation
+   * @directed
+   * @supplierCardinality 1
+   * @clientCardinality 0..1
+   */
+  protected Order order;
 
-    public OrderDecorator(Order order)
-    {
-        this.order = order;
-        this.setSalesDate( order.getSalesDate() );
-        this.setCustomerName( order.getCustomerName() );
-    }
+  public OrderDecorator(Order order) {
+    this.order = order;
+    this.setSalesDate(order.getSalesDate());
+    this.setCustomerName(order.getCustomerName());
+  }
 
-    public void print()
-    {
-		super.print();
-    }
+  public void print() {
+    super.print();
+  }
 }

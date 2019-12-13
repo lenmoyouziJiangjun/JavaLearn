@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -36,262 +36,262 @@ import io.reactivex.internal.util.BackpressureHelper;
  */
 public final class MaybeFlatMapIterableFlowable<T, R> extends Flowable<R> {
 
-    final MaybeSource<T> source;
+  final MaybeSource<T> source;
+
+  final Function<? super T, ? extends Iterable<? extends R>> mapper;
+
+  public MaybeFlatMapIterableFlowable(MaybeSource<T> source,
+                                      Function<? super T, ? extends Iterable<? extends R>> mapper) {
+    this.source = source;
+    this.mapper = mapper;
+  }
+
+  @Override
+  protected void subscribeActual(Subscriber<? super R> s) {
+    source.subscribe(new FlatMapIterableObserver<T, R>(s, mapper));
+  }
+
+  static final class FlatMapIterableObserver<T, R>
+          extends BasicIntQueueSubscription<R>
+          implements MaybeObserver<T> {
+
+    private static final long serialVersionUID = -8938804753851907758L;
+
+    final Subscriber<? super R> actual;
 
     final Function<? super T, ? extends Iterable<? extends R>> mapper;
 
-    public MaybeFlatMapIterableFlowable(MaybeSource<T> source,
-            Function<? super T, ? extends Iterable<? extends R>> mapper) {
-        this.source = source;
-        this.mapper = mapper;
+    final AtomicLong requested;
+
+    Disposable d;
+
+    volatile Iterator<? extends R> it;
+
+    volatile boolean cancelled;
+
+    boolean outputFused;
+
+    FlatMapIterableObserver(Subscriber<? super R> actual,
+                            Function<? super T, ? extends Iterable<? extends R>> mapper) {
+      this.actual = actual;
+      this.mapper = mapper;
+      this.requested = new AtomicLong();
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super R> s) {
-        source.subscribe(new FlatMapIterableObserver<T, R>(s, mapper));
+    public void onSubscribe(Disposable d) {
+      if (DisposableHelper.validate(this.d, d)) {
+        this.d = d;
+
+        actual.onSubscribe(this);
+      }
     }
 
-    static final class FlatMapIterableObserver<T, R>
-    extends BasicIntQueueSubscription<R>
-    implements MaybeObserver<T> {
+    @Override
+    public void onSuccess(T value) {
+      Iterator<? extends R> iterator;
+      boolean has;
+      try {
+        iterator = mapper.apply(value).iterator();
 
-        private static final long serialVersionUID = -8938804753851907758L;
+        has = iterator.hasNext();
+      } catch (Throwable ex) {
+        Exceptions.throwIfFatal(ex);
+        actual.onError(ex);
+        return;
+      }
 
-        final Subscriber<? super R> actual;
+      if (!has) {
+        actual.onComplete();
+        return;
+      }
 
-        final Function<? super T, ? extends Iterable<? extends R>> mapper;
+      this.it = iterator;
+      drain();
+    }
 
-        final AtomicLong requested;
+    @Override
+    public void onError(Throwable e) {
+      d = DisposableHelper.DISPOSED;
+      actual.onError(e);
+    }
 
-        Disposable d;
+    @Override
+    public void onComplete() {
+      actual.onComplete();
+    }
 
-        volatile Iterator<? extends R> it;
+    @Override
+    public void request(long n) {
+      if (SubscriptionHelper.validate(n)) {
+        BackpressureHelper.add(requested, n);
+        drain();
+      }
+    }
 
-        volatile boolean cancelled;
+    @Override
+    public void cancel() {
+      cancelled = true;
+      d.dispose();
+      d = DisposableHelper.DISPOSED;
+    }
 
-        boolean outputFused;
-
-        FlatMapIterableObserver(Subscriber<? super R> actual,
-                Function<? super T, ? extends Iterable<? extends R>> mapper) {
-            this.actual = actual;
-            this.mapper = mapper;
-            this.requested = new AtomicLong();
+    void fastPath(Subscriber<? super R> a, Iterator<? extends R> iterator) {
+      for (; ; ) {
+        if (cancelled) {
+          return;
         }
 
-        @Override
-        public void onSubscribe(Disposable d) {
-            if (DisposableHelper.validate(this.d, d)) {
-                this.d = d;
+        R v;
 
-                actual.onSubscribe(this);
+        try {
+          v = iterator.next();
+        } catch (Throwable ex) {
+          Exceptions.throwIfFatal(ex);
+          a.onError(ex);
+          return;
+        }
+
+        a.onNext(v);
+
+        if (cancelled) {
+          return;
+        }
+
+
+        boolean b;
+
+        try {
+          b = iterator.hasNext();
+        } catch (Throwable ex) {
+          Exceptions.throwIfFatal(ex);
+          a.onError(ex);
+          return;
+        }
+
+        if (!b) {
+          a.onComplete();
+          return;
+        }
+      }
+    }
+
+    void drain() {
+      if (getAndIncrement() != 0) {
+        return;
+      }
+
+      Subscriber<? super R> a = actual;
+      Iterator<? extends R> iterator = this.it;
+
+      if (outputFused && iterator != null) {
+        a.onNext(null);
+        a.onComplete();
+        return;
+      }
+
+      int missed = 1;
+
+      for (; ; ) {
+
+        if (iterator != null) {
+          long r = requested.get();
+
+          if (r == Long.MAX_VALUE) {
+            fastPath(a, iterator);
+            return;
+          }
+
+          long e = 0L;
+
+          while (e != r) {
+            if (cancelled) {
+              return;
             }
-        }
 
-        @Override
-        public void onSuccess(T value) {
-            Iterator<? extends R> iterator;
-            boolean has;
+            R v;
+
             try {
-                iterator = mapper.apply(value).iterator();
-
-                has = iterator.hasNext();
+              v = ObjectHelper.requireNonNull(iterator.next(), "The iterator returned a null value");
             } catch (Throwable ex) {
-                Exceptions.throwIfFatal(ex);
-                actual.onError(ex);
-                return;
+              Exceptions.throwIfFatal(ex);
+              a.onError(ex);
+              return;
             }
 
-            if (!has) {
-                actual.onComplete();
-                return;
+            a.onNext(v);
+
+            if (cancelled) {
+              return;
             }
 
-            this.it = iterator;
-            drain();
-        }
+            e++;
 
-        @Override
-        public void onError(Throwable e) {
-            d = DisposableHelper.DISPOSED;
-            actual.onError(e);
-        }
+            boolean b;
 
-        @Override
-        public void onComplete() {
-            actual.onComplete();
-        }
-
-        @Override
-        public void request(long n) {
-            if (SubscriptionHelper.validate(n)) {
-                BackpressureHelper.add(requested, n);
-                drain();
-            }
-        }
-
-        @Override
-        public void cancel() {
-            cancelled = true;
-            d.dispose();
-            d = DisposableHelper.DISPOSED;
-        }
-
-        void fastPath(Subscriber<? super R> a, Iterator<? extends R> iterator) {
-            for (;;) {
-                if (cancelled) {
-                    return;
-                }
-
-                R v;
-
-                try {
-                    v = iterator.next();
-                } catch (Throwable ex) {
-                    Exceptions.throwIfFatal(ex);
-                    a.onError(ex);
-                    return;
-                }
-
-                a.onNext(v);
-
-                if (cancelled) {
-                    return;
-                }
-
-
-                boolean b;
-
-                try {
-                    b = iterator.hasNext();
-                } catch (Throwable ex) {
-                    Exceptions.throwIfFatal(ex);
-                    a.onError(ex);
-                    return;
-                }
-
-                if (!b) {
-                    a.onComplete();
-                    return;
-                }
-            }
-        }
-
-        void drain() {
-            if (getAndIncrement() != 0) {
-                return;
+            try {
+              b = iterator.hasNext();
+            } catch (Throwable ex) {
+              Exceptions.throwIfFatal(ex);
+              a.onError(ex);
+              return;
             }
 
-            Subscriber<? super R> a = actual;
-            Iterator<? extends R> iterator = this.it;
-
-            if (outputFused && iterator != null) {
-                a.onNext(null);
-                a.onComplete();
-                return;
+            if (!b) {
+              a.onComplete();
+              return;
             }
+          }
 
-            int missed = 1;
-
-            for (;;) {
-
-                if (iterator != null) {
-                    long r = requested.get();
-
-                    if (r == Long.MAX_VALUE) {
-                        fastPath(a, iterator);
-                        return;
-                    }
-
-                    long e = 0L;
-
-                    while (e != r) {
-                        if (cancelled) {
-                            return;
-                        }
-
-                        R v;
-
-                        try {
-                            v = ObjectHelper.requireNonNull(iterator.next(), "The iterator returned a null value");
-                        } catch (Throwable ex) {
-                            Exceptions.throwIfFatal(ex);
-                            a.onError(ex);
-                            return;
-                        }
-
-                        a.onNext(v);
-
-                        if (cancelled) {
-                            return;
-                        }
-
-                        e++;
-
-                        boolean b;
-
-                        try {
-                            b = iterator.hasNext();
-                        } catch (Throwable ex) {
-                            Exceptions.throwIfFatal(ex);
-                            a.onError(ex);
-                            return;
-                        }
-
-                        if (!b) {
-                            a.onComplete();
-                            return;
-                        }
-                    }
-
-                    if (e != 0L) {
-                        BackpressureHelper.produced(requested, e);
-                    }
-                }
-
-                missed = addAndGet(-missed);
-                if (missed == 0) {
-                    break;
-                }
-
-                if (iterator == null) {
-                    iterator = it;
-                }
-            }
+          if (e != 0L) {
+            BackpressureHelper.produced(requested, e);
+          }
         }
 
-        @Override
-        public int requestFusion(int mode) {
-            if ((mode & ASYNC) != 0) {
-                outputFused = true;
-                return ASYNC;
-            }
-            return NONE;
+        missed = addAndGet(-missed);
+        if (missed == 0) {
+          break;
         }
 
-        @Override
-        public void clear() {
-            it = null;
+        if (iterator == null) {
+          iterator = it;
         }
-
-        @Override
-        public boolean isEmpty() {
-            return it == null;
-        }
-
-        @Nullable
-        @Override
-        public R poll() throws Exception {
-            Iterator<? extends R> iterator = it;
-
-            if (iterator != null) {
-                R v = ObjectHelper.requireNonNull(iterator.next(), "The iterator returned a null value");
-                if (!iterator.hasNext()) {
-                    it = null;
-                }
-                return v;
-            }
-            return null;
-        }
-
+      }
     }
+
+    @Override
+    public int requestFusion(int mode) {
+      if ((mode & ASYNC) != 0) {
+        outputFused = true;
+        return ASYNC;
+      }
+      return NONE;
+    }
+
+    @Override
+    public void clear() {
+      it = null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return it == null;
+    }
+
+    @Nullable
+    @Override
+    public R poll() throws Exception {
+      Iterator<? extends R> iterator = it;
+
+      if (iterator != null) {
+        R v = ObjectHelper.requireNonNull(iterator.next(), "The iterator returned a null value");
+        if (!iterator.hasNext()) {
+          it = null;
+        }
+        return v;
+      }
+      return null;
+    }
+
+  }
 }

@@ -1,9 +1,7 @@
 package javapattern.factory.simple;
 
-public class BadShapeException extends Exception
-{
-    public BadShapeException(String msg)
-    {
-		super(msg);
-    }
+public class BadShapeException extends Exception {
+  public BadShapeException(String msg) {
+    super(msg);
+  }
 }

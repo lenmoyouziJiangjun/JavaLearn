@@ -12,6 +12,6 @@ import org.apache.commons.proxy2.Invocation;
  */
 public interface InvocationMatcher {
 
-    boolean matches(Invocation invocation);
+  boolean matches(Invocation invocation);
 
 }

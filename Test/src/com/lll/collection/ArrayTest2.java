@@ -16,29 +16,29 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ArrayTest2 {
 
 
-    public static void testArraySubList() {
-        List<String> names = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            names.add("haha----" + i);
-        }
-
-        printList(names);
-
-        List subName=names.subList(9,10);
-        System.out.println("--------------------------");
-        printList(subName);
+  public static void testArraySubList() {
+    List<String> names = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      names.add("haha----" + i);
     }
 
-    private static void printList(List<String> list) {
-        for (String str : list) {
-            System.out.print(str+"    ");
-        }
+    printList(names);
+
+    List subName = names.subList(9, 10);
+    System.out.println("--------------------------");
+    printList(subName);
+  }
+
+  private static void printList(List<String> list) {
+    for (String str : list) {
+      System.out.print(str + "    ");
     }
+  }
 
 
-    public static void main(String[] args) {
-        testArraySubList();
-    }
+  public static void main(String[] args) {
+    testArraySubList();
+  }
 
 
 }

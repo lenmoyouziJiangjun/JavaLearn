@@ -7,5 +7,5 @@ package main.org.apache.commons.lang3.builder;
  * copyright generalray4239@gmail.com
  */
 public interface Builder<T> {
-    T build();
+  T build();
 }

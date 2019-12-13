@@ -11,12 +11,12 @@ import org.apache.commons.proxy2.exception.ObjectProviderException;
  */
 public interface ObjectProvider<T> {
 
-    /**
-     * Returns an object. Implementing classes should throw a
-     * {@link ObjectProviderException} if any problems arise while
-     * constructing/finding the object.
-     *
-     * @return the object on which the method should be called
-     */
-    T getObject();
+  /**
+   * Returns an object. Implementing classes should throw a
+   * {@link ObjectProviderException} if any problems arise while
+   * constructing/finding the object.
+   *
+   * @return the object on which the method should be called
+   */
+  T getObject();
 }

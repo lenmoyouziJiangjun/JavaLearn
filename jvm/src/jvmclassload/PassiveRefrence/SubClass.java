@@ -8,8 +8,8 @@ package jvmclassload.PassiveRefrence;
  */
 public class SubClass extends SuperClass {
 
-    static {
-        System.out.println("subclass init");
-    }
+  static {
+    System.out.println("subclass init");
+  }
 
 }

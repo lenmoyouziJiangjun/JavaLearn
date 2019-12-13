@@ -26,46 +26,46 @@ import org.apache.commons.proxy2.ProxyFactory;
  * @since 1.0
  */
 public class ProxyFactoryException extends RuntimeException {
-    /**
-     * Serialization version
-     */
-    private static final long serialVersionUID = -1L;
+  /**
+   * Serialization version
+   */
+  private static final long serialVersionUID = -1L;
 
-    //******************************************************************************************************************
-    // Constructors
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // Constructors
+  //******************************************************************************************************************
 
-    /**
-     * Create a new ProxyFactoryException instance.
-     */
-    public ProxyFactoryException() {
-    }
+  /**
+   * Create a new ProxyFactoryException instance.
+   */
+  public ProxyFactoryException() {
+  }
 
-    /**
-     * Create a new ProxyFactoryException instance.
-     *
-     * @param message
-     */
-    public ProxyFactoryException(String message) {
-        super(message);
-    }
+  /**
+   * Create a new ProxyFactoryException instance.
+   *
+   * @param message
+   */
+  public ProxyFactoryException(String message) {
+    super(message);
+  }
 
-    /**
-     * Create a new ProxyFactoryException instance.
-     *
-     * @param cause
-     */
-    public ProxyFactoryException(Throwable cause) {
-        super(cause);
-    }
+  /**
+   * Create a new ProxyFactoryException instance.
+   *
+   * @param cause
+   */
+  public ProxyFactoryException(Throwable cause) {
+    super(cause);
+  }
 
-    /**
-     * Create a new ProxyFactoryException instance.
-     *
-     * @param message
-     * @param cause
-     */
-    public ProxyFactoryException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  /**
+   * Create a new ProxyFactoryException instance.
+   *
+   * @param message
+   * @param cause
+   */
+  public ProxyFactoryException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

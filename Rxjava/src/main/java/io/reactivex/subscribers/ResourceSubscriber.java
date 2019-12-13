@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -93,80 +93,86 @@ import io.reactivex.internal.util.EndConsumerHelper;
  * @param <T> the value type
  */
 public abstract class ResourceSubscriber<T> implements FlowableSubscriber<T>, Disposable {
-    /** The active subscription. */
-    private final AtomicReference<Subscription> s = new AtomicReference<Subscription>();
+  /**
+   * The active subscription.
+   */
+  private final AtomicReference<Subscription> s = new AtomicReference<Subscription>();
 
-    /** The resource composite, can never be null. */
-    private final ListCompositeDisposable resources = new ListCompositeDisposable();
+  /**
+   * The resource composite, can never be null.
+   */
+  private final ListCompositeDisposable resources = new ListCompositeDisposable();
 
-    /** Remembers the request(n) counts until a subscription arrives. */
-    private final AtomicLong missedRequested = new AtomicLong();
+  /**
+   * Remembers the request(n) counts until a subscription arrives.
+   */
+  private final AtomicLong missedRequested = new AtomicLong();
 
-    /**
-     * Adds a resource to this AsyncObserver.
-     *
-     * @param resource the resource to add
-     *
-     * @throws NullPointerException if resource is null
-     */
-    public final void add(Disposable resource) {
-        ObjectHelper.requireNonNull(resource, "resource is null");
-        resources.add(resource);
+  /**
+   * Adds a resource to this AsyncObserver.
+   *
+   * @param resource the resource to add
+   * @throws NullPointerException if resource is null
+   */
+  public final void add(Disposable resource) {
+    ObjectHelper.requireNonNull(resource, "resource is null");
+    resources.add(resource);
+  }
+
+  @Override
+  public final void onSubscribe(Subscription s) {
+    if (EndConsumerHelper.setOnce(this.s, s, getClass())) {
+      long r = missedRequested.getAndSet(0L);
+      if (r != 0L) {
+        s.request(r);
+      }
+      onStart();
     }
+  }
 
-    @Override
-    public final void onSubscribe(Subscription s) {
-        if (EndConsumerHelper.setOnce(this.s, s, getClass())) {
-            long r = missedRequested.getAndSet(0L);
-            if (r != 0L) {
-                s.request(r);
-            }
-            onStart();
-        }
-    }
+  /**
+   * Called once the upstream sets a Subscription on this AsyncObserver.
+   *
+   * <p>You can perform initialization at this moment. The default
+   * implementation requests Long.MAX_VALUE from upstream.
+   */
+  protected void onStart() {
+    request(Long.MAX_VALUE);
+  }
 
-    /**
-     * Called once the upstream sets a Subscription on this AsyncObserver.
-     *
-     * <p>You can perform initialization at this moment. The default
-     * implementation requests Long.MAX_VALUE from upstream.
-     */
-    protected void onStart() {
-        request(Long.MAX_VALUE);
-    }
+  /**
+   * Request the specified amount of elements from upstream.
+   *
+   * <p>This method can be called before the upstream calls onSubscribe().
+   * When the subscription happens, all missed requests are requested.
+   *
+   * @param n the request amount, must be positive
+   */
+  protected final void request(long n) {
+    SubscriptionHelper.deferredRequest(s, missedRequested, n);
+  }
 
-    /**
-     * Request the specified amount of elements from upstream.
-     *
-     * <p>This method can be called before the upstream calls onSubscribe().
-     * When the subscription happens, all missed requests are requested.
-     *
-     * @param n the request amount, must be positive
-     */
-    protected final void request(long n) {
-        SubscriptionHelper.deferredRequest(s, missedRequested, n);
+  /**
+   * Cancels the subscription (if any) and disposes the resources associated with
+   * this AsyncObserver (if any).
+   *
+   * <p>This method can be called before the upstream calls onSubscribe at which
+   * case the Subscription will be immediately cancelled.
+   */
+  @Override
+  public final void dispose() {
+    if (SubscriptionHelper.cancel(s)) {
+      resources.dispose();
     }
+  }
 
-    /**
-     * Cancels the subscription (if any) and disposes the resources associated with
-     * this AsyncObserver (if any).
-     *
-     * <p>This method can be called before the upstream calls onSubscribe at which
-     * case the Subscription will be immediately cancelled.
-     */
-    @Override
-    public final void dispose() {
-        if (SubscriptionHelper.cancel(s)) {
-            resources.dispose();
-        }
-    }
-
-    /**
-     * Returns true if this AsyncObserver has been disposed/cancelled.
-     * @return true if this AsyncObserver has been disposed/cancelled
-     */
-    @Override
-    public final boolean isDisposed() {
-        return SubscriptionHelper.isCancelled(s.get());
-    }
+  /**
+   * Returns true if this AsyncObserver has been disposed/cancelled.
+   *
+   * @return true if this AsyncObserver has been disposed/cancelled
+   */
+  @Override
+  public final boolean isDisposed() {
+    return SubscriptionHelper.isCancelled(s.get());
+  }
 }

@@ -53,48 +53,47 @@ import java.util.Collection;
  */
 public class RecursiveToStringStyle extends ToStringStyle {
 
-    /**
-     * Required for serialization support.
-     *
-     * @see java.io.Serializable
-     */
-    private static final long serialVersionUID = 1L;
+  /**
+   * Required for serialization support.
+   *
+   * @see java.io.Serializable
+   */
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * <p>Constructor.</p>
-     */
-    public RecursiveToStringStyle() {
-        super();
-    }
+  /**
+   * <p>Constructor.</p>
+   */
+  public RecursiveToStringStyle() {
+    super();
+  }
 
-    @Override
-    public void appendDetail(final StringBuffer buffer, final String fieldName, final Object value) {
-        if (!ClassUtils.isPrimitiveWrapper(value.getClass()) &&
+  @Override
+  public void appendDetail(final StringBuffer buffer, final String fieldName, final Object value) {
+    if (!ClassUtils.isPrimitiveWrapper(value.getClass()) &&
             !String.class.equals(value.getClass()) &&
             accept(value.getClass())) {
-            buffer.append(ReflectionToStringBuilder.toString(value, this));
-        } else {
-            super.appendDetail(buffer, fieldName, value);
-        }
+      buffer.append(ReflectionToStringBuilder.toString(value, this));
+    } else {
+      super.appendDetail(buffer, fieldName, value);
     }
+  }
 
-    @Override
-    protected void appendDetail(final StringBuffer buffer, final String fieldName, final Collection<?> coll) {
-        appendClassName(buffer, coll);
-        appendIdentityHashCode(buffer, coll);
-        appendDetail(buffer, fieldName, coll.toArray());
-    }
+  @Override
+  protected void appendDetail(final StringBuffer buffer, final String fieldName, final Collection<?> coll) {
+    appendClassName(buffer, coll);
+    appendIdentityHashCode(buffer, coll);
+    appendDetail(buffer, fieldName, coll.toArray());
+  }
 
-    /**
-     * Returns whether or not to recursively format the given <code>Class</code>.
-     * By default, this method always returns {@code true}, but may be overwritten by
-     * sub-classes to filter specific classes.
-     *
-     * @param clazz
-     *            The class to test.
-     * @return Whether or not to recursively format the given <code>Class</code>.
-     */
-    protected boolean accept(final Class<?> clazz) {
-        return true;
-    }
+  /**
+   * Returns whether or not to recursively format the given <code>Class</code>.
+   * By default, this method always returns {@code true}, but may be overwritten by
+   * sub-classes to filter specific classes.
+   *
+   * @param clazz The class to test.
+   * @return Whether or not to recursively format the given <code>Class</code>.
+   */
+  protected boolean accept(final Class<?> clazz) {
+    return true;
+  }
 }

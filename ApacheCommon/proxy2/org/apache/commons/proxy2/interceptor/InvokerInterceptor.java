@@ -13,17 +13,17 @@ import org.apache.commons.proxy2.Invoker;
  */
 public class InvokerInterceptor implements Interceptor {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private final Invoker invoker;
+  private final Invoker invoker;
 
-    public InvokerInterceptor(@NotNull Invoker invoker) {
-        super();
-        this.invoker = invoker;
-    }
+  public InvokerInterceptor(@NotNull Invoker invoker) {
+    super();
+    this.invoker = invoker;
+  }
 
-    @Override
-    public Object intercept(Invocation invocation) throws Throwable {
-        return invoker.invoke(invocation.getProxy(), invocation.getMethod(), invocation.getArguments());
-    }
+  @Override
+  public Object intercept(Invocation invocation) throws Throwable {
+    return invoker.invoke(invocation.getProxy(), invocation.getMethod(), invocation.getArguments());
+  }
 }

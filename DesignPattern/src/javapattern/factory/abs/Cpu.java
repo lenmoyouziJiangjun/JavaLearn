@@ -1,5 +1,4 @@
 package javapattern.factory.abs;
 
-public interface Cpu
-{
+public interface Cpu {
 }

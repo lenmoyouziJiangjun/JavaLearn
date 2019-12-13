@@ -10,8 +10,8 @@ import java.math.BigDecimal;
  */
 public class PercentageStrategy extends DiscountStrategy<PercentageBook> {
 
-    @Override
-    public BigDecimal discount(PercentageBook book) {
-        return null;
-    }
+  @Override
+  public BigDecimal discount(PercentageBook book) {
+    return null;
+  }
 }

@@ -10,5 +10,5 @@ import java.math.BigDecimal;
  */
 public abstract class DiscountStrategy<T extends Book> {
 
-    public abstract BigDecimal discount(T book);
+  public abstract BigDecimal discount(T book);
 }

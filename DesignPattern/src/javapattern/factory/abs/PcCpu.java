@@ -1,5 +1,4 @@
 package javapattern.factory.abs;
 
-public class PcCpu implements Cpu
-{
+public class PcCpu implements Cpu {
 }

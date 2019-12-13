@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -32,147 +32,147 @@ import io.reactivex.plugins.RxJavaPlugins;
  */
 public final class MaybeConcatArrayDelayError<T> extends Flowable<T> {
 
+  final MaybeSource<? extends T>[] sources;
+
+  public MaybeConcatArrayDelayError(MaybeSource<? extends T>[] sources) {
+    this.sources = sources;
+  }
+
+  @Override
+  protected void subscribeActual(Subscriber<? super T> s) {
+    ConcatMaybeObserver<T> parent = new ConcatMaybeObserver<T>(s, sources);
+    s.onSubscribe(parent);
+    parent.drain();
+  }
+
+  static final class ConcatMaybeObserver<T>
+          extends AtomicInteger
+          implements MaybeObserver<T>, Subscription {
+
+    private static final long serialVersionUID = 3520831347801429610L;
+
+    final Subscriber<? super T> actual;
+
+    final AtomicLong requested;
+
+    final AtomicReference<Object> current;
+
+    final SequentialDisposable disposables;
+
     final MaybeSource<? extends T>[] sources;
 
-    public MaybeConcatArrayDelayError(MaybeSource<? extends T>[] sources) {
-        this.sources = sources;
+    final AtomicThrowable errors;
+
+    int index;
+
+    long produced;
+
+    ConcatMaybeObserver(Subscriber<? super T> actual, MaybeSource<? extends T>[] sources) {
+      this.actual = actual;
+      this.sources = sources;
+      this.requested = new AtomicLong();
+      this.disposables = new SequentialDisposable();
+      this.current = new AtomicReference<Object>(NotificationLite.COMPLETE); // as if a previous completed
+      this.errors = new AtomicThrowable();
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super T> s) {
-        ConcatMaybeObserver<T> parent = new ConcatMaybeObserver<T>(s, sources);
-        s.onSubscribe(parent);
-        parent.drain();
+    public void request(long n) {
+      if (SubscriptionHelper.validate(n)) {
+        BackpressureHelper.add(requested, n);
+        drain();
+      }
     }
 
-    static final class ConcatMaybeObserver<T>
-    extends AtomicInteger
-    implements MaybeObserver<T>, Subscription {
+    @Override
+    public void cancel() {
+      disposables.dispose();
+    }
 
-        private static final long serialVersionUID = 3520831347801429610L;
+    @Override
+    public void onSubscribe(Disposable d) {
+      disposables.replace(d);
+    }
 
-        final Subscriber<? super T> actual;
+    @Override
+    public void onSuccess(T value) {
+      current.lazySet(value);
+      drain();
+    }
 
-        final AtomicLong requested;
+    @Override
+    public void onError(Throwable e) {
+      current.lazySet(NotificationLite.COMPLETE);
+      if (errors.addThrowable(e)) {
+        drain();
+      } else {
+        RxJavaPlugins.onError(e);
+      }
+    }
 
-        final AtomicReference<Object> current;
+    @Override
+    public void onComplete() {
+      current.lazySet(NotificationLite.COMPLETE);
+      drain();
+    }
 
-        final SequentialDisposable disposables;
+    @SuppressWarnings("unchecked")
+    void drain() {
+      if (getAndIncrement() != 0) {
+        return;
+      }
 
-        final MaybeSource<? extends T>[] sources;
+      AtomicReference<Object> c = current;
+      Subscriber<? super T> a = actual;
+      Disposable cancelled = disposables;
 
-        final AtomicThrowable errors;
-
-        int index;
-
-        long produced;
-
-        ConcatMaybeObserver(Subscriber<? super T> actual, MaybeSource<? extends T>[] sources) {
-            this.actual = actual;
-            this.sources = sources;
-            this.requested = new AtomicLong();
-            this.disposables = new SequentialDisposable();
-            this.current = new AtomicReference<Object>(NotificationLite.COMPLETE); // as if a previous completed
-            this.errors = new AtomicThrowable();
+      for (; ; ) {
+        if (cancelled.isDisposed()) {
+          c.lazySet(null);
+          return;
         }
 
-        @Override
-        public void request(long n) {
-            if (SubscriptionHelper.validate(n)) {
-                BackpressureHelper.add(requested, n);
-                drain();
-            }
-        }
+        Object o = c.get();
 
-        @Override
-        public void cancel() {
-            disposables.dispose();
-        }
+        if (o != null) {
+          boolean goNextSource;
+          if (o != NotificationLite.COMPLETE) {
+            long p = produced;
+            if (p != requested.get()) {
+              produced = p + 1;
+              c.lazySet(null);
+              goNextSource = true;
 
-        @Override
-        public void onSubscribe(Disposable d) {
-            disposables.replace(d);
-        }
-
-        @Override
-        public void onSuccess(T value) {
-            current.lazySet(value);
-            drain();
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            current.lazySet(NotificationLite.COMPLETE);
-            if (errors.addThrowable(e)) {
-                drain();
+              a.onNext((T) o);
             } else {
-                RxJavaPlugins.onError(e);
+              goNextSource = false;
             }
+          } else {
+            goNextSource = true;
+            c.lazySet(null);
+          }
+
+          if (goNextSource && !cancelled.isDisposed()) {
+            int i = index;
+            if (i == sources.length) {
+              Throwable ex = errors.get();
+              if (ex != null) {
+                a.onError(errors.terminate());
+              } else {
+                a.onComplete();
+              }
+              return;
+            }
+            index = i + 1;
+
+            sources[i].subscribe(this);
+          }
         }
 
-        @Override
-        public void onComplete() {
-            current.lazySet(NotificationLite.COMPLETE);
-            drain();
+        if (decrementAndGet() == 0) {
+          break;
         }
-
-        @SuppressWarnings("unchecked")
-        void drain() {
-            if (getAndIncrement() != 0) {
-                return;
-            }
-
-            AtomicReference<Object> c = current;
-            Subscriber<? super T> a = actual;
-            Disposable cancelled = disposables;
-
-            for (;;) {
-                if (cancelled.isDisposed()) {
-                    c.lazySet(null);
-                    return;
-                }
-
-                Object o = c.get();
-
-                if (o != null) {
-                    boolean goNextSource;
-                    if (o != NotificationLite.COMPLETE) {
-                        long p = produced;
-                        if (p != requested.get()) {
-                            produced = p + 1;
-                            c.lazySet(null);
-                            goNextSource = true;
-
-                            a.onNext((T)o);
-                        } else {
-                            goNextSource = false;
-                        }
-                    } else {
-                        goNextSource = true;
-                        c.lazySet(null);
-                    }
-
-                    if (goNextSource && !cancelled.isDisposed()) {
-                        int i = index;
-                        if (i == sources.length) {
-                            Throwable ex = errors.get();
-                            if (ex != null) {
-                                a.onError(errors.terminate());
-                            } else {
-                                a.onComplete();
-                            }
-                            return;
-                        }
-                        index = i + 1;
-
-                        sources[i].subscribe(this);
-                    }
-                }
-
-                if (decrementAndGet() == 0) {
-                    break;
-                }
-            }
-        }
+      }
     }
+  }
 }

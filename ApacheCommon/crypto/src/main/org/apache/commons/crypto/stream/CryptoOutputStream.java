@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,398 +47,412 @@ import org.apache.commons.crypto.utils.Utils;
 
 public class CryptoOutputStream extends OutputStream implements
         WritableByteChannel {
-    private final byte[] oneByteBuf = new byte[1];
+  private final byte[] oneByteBuf = new byte[1];
 
-    /** The output. */
-    Output output;
+  /**
+   * The output.
+   */
+  Output output;
 
-    /** the CryptoCipher instance */
-    final CryptoCipher cipher;
+  /**
+   * the CryptoCipher instance
+   */
+  final CryptoCipher cipher;
 
-    /** The buffer size. */
-    final int bufferSize;
+  /**
+   * The buffer size.
+   */
+  final int bufferSize;
 
-    /** Crypto key for the cipher. */
-    final Key key;
+  /**
+   * Crypto key for the cipher.
+   */
+  final Key key;
 
-    /** the algorithm parameters */
-    final AlgorithmParameterSpec params;
+  /**
+   * the algorithm parameters
+   */
+  final AlgorithmParameterSpec params;
 
-    /** Flag to mark whether the output stream is closed. */
-    private boolean closed;
+  /**
+   * Flag to mark whether the output stream is closed.
+   */
+  private boolean closed;
 
-    /**
-     * Input data buffer. The data starts at inBuffer.position() and ends at
-     * inBuffer.limit().
-     */
-    ByteBuffer inBuffer;
+  /**
+   * Input data buffer. The data starts at inBuffer.position() and ends at
+   * inBuffer.limit().
+   */
+  ByteBuffer inBuffer;
 
-    /**
-     * Encrypted data buffer. The data starts at outBuffer.position() and ends
-     * at outBuffer.limit().
-     */
-    ByteBuffer outBuffer;
+  /**
+   * Encrypted data buffer. The data starts at outBuffer.position() and ends
+   * at outBuffer.limit().
+   */
+  ByteBuffer outBuffer;
 
-    /**
-     * Constructs a {@link CryptoOutputStream}.
-     *
-     * @param transformation the name of the transformation, e.g.,
-     * <i>AES/CBC/PKCS5Padding</i>.
-     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
-     * for information about standard transformation names.
-     * @param props The <code>Properties</code> class represents a set of
-     *        properties.
-     * @param out the output stream.
-     * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
-     * @throws IOException if an I/O error occurs.
-     */
+  /**
+   * Constructs a {@link CryptoOutputStream}.
+   *
+   * @param transformation the name of the transformation, e.g.,
+   *                       <i>AES/CBC/PKCS5Padding</i>.
+   *                       See the Java Cryptography Architecture Standard Algorithm Name Documentation
+   *                       for information about standard transformation names.
+   * @param props          The <code>Properties</code> class represents a set of
+   *                       properties.
+   * @param out            the output stream.
+   * @param key            crypto key for the cipher.
+   * @param params         the algorithm parameters.
+   * @throws IOException if an I/O error occurs.
+   */
 
-    public CryptoOutputStream(String transformation,
-            Properties props, OutputStream out, Key key,
-            AlgorithmParameterSpec params) throws IOException {
-        this(out, Utils.getCipherInstance(transformation, props),
-                CryptoInputStream.getBufferSize(props), key, params);
+  public CryptoOutputStream(String transformation,
+                            Properties props, OutputStream out, Key key,
+                            AlgorithmParameterSpec params) throws IOException {
+    this(out, Utils.getCipherInstance(transformation, props),
+            CryptoInputStream.getBufferSize(props), key, params);
 
+  }
+
+  /**
+   * Constructs a {@link CryptoOutputStream}.
+   *
+   * @param transformation the name of the transformation, e.g.,
+   *                       <i>AES/CBC/PKCS5Padding</i>.
+   *                       See the Java Cryptography Architecture Standard Algorithm Name Documentation
+   *                       for information about standard transformation names.
+   * @param props          The <code>Properties</code> class represents a set of
+   *                       properties.
+   * @param out            the WritableByteChannel instance.
+   * @param key            crypto key for the cipher.
+   * @param params         the algorithm parameters.
+   * @throws IOException if an I/O error occurs.
+   */
+  public CryptoOutputStream(String transformation,
+                            Properties props, WritableByteChannel out, Key key,
+                            AlgorithmParameterSpec params) throws IOException {
+    this(out, Utils.getCipherInstance(transformation, props), CryptoInputStream
+            .getBufferSize(props), key, params);
+
+  }
+
+  /**
+   * Constructs a {@link CryptoOutputStream}.
+   *
+   * @param out        the output stream.
+   * @param cipher     the CryptoCipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key        crypto key for the cipher.
+   * @param params     the algorithm parameters.
+   * @throws IOException if an I/O error occurs.
+   */
+  protected CryptoOutputStream(OutputStream out, CryptoCipher cipher,
+                               int bufferSize, Key key, AlgorithmParameterSpec params)
+          throws IOException {
+    this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, params);
+  }
+
+  /**
+   * Constructs a {@link CryptoOutputStream}.
+   *
+   * @param channel    the WritableByteChannel instance.
+   * @param cipher     the cipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key        crypto key for the cipher.
+   * @param params     the algorithm parameters.
+   * @throws IOException if an I/O error occurs.
+   */
+  protected CryptoOutputStream(WritableByteChannel channel, CryptoCipher cipher,
+                               int bufferSize, Key key, AlgorithmParameterSpec params)
+          throws IOException {
+    this(new ChannelOutput(channel), cipher, bufferSize, key, params);
+  }
+
+  /**
+   * Constructs a {@link CryptoOutputStream}.
+   *
+   * @param output     the output stream.
+   * @param cipher     the CryptoCipher instance.
+   * @param bufferSize the bufferSize.
+   * @param key        crypto key for the cipher.
+   * @param params     the algorithm parameters.
+   * @throws IOException if an I/O error occurs.
+   */
+  protected CryptoOutputStream(Output output, CryptoCipher cipher,
+                               int bufferSize, Key key, AlgorithmParameterSpec params)
+          throws IOException {
+
+    this.output = output;
+    this.bufferSize = CryptoInputStream.checkBufferSize(cipher, bufferSize);
+    this.cipher = cipher;
+
+    this.key = key;
+    this.params = params;
+
+    if (!(params instanceof IvParameterSpec)) {
+      // other AlgorithmParameterSpec such as GCMParameterSpec is not
+      // supported now.
+      throw new IOException("Illegal parameters");
     }
 
-    /**
-     * Constructs a {@link CryptoOutputStream}.
-     *
-     * @param transformation the name of the transformation, e.g.,
-     * <i>AES/CBC/PKCS5Padding</i>.
-     * See the Java Cryptography Architecture Standard Algorithm Name Documentation
-     * for information about standard transformation names.
-     * @param props The <code>Properties</code> class represents a set of
-     *        properties.
-     * @param out the WritableByteChannel instance.
-     * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
-     * @throws IOException if an I/O error occurs.
-     */
-    public CryptoOutputStream(String transformation,
-            Properties props, WritableByteChannel out, Key key,
-            AlgorithmParameterSpec params) throws IOException {
-        this(out, Utils.getCipherInstance(transformation, props), CryptoInputStream
-                .getBufferSize(props), key, params);
+    inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
+    outBuffer = ByteBuffer.allocateDirect(this.bufferSize
+            + cipher.getBlockSize());
 
+    initCipher();
+  }
+
+  /**
+   * Overrides the {@link OutputStream#write(byte[])}. Writes the
+   * specified byte to this output stream.
+   *
+   * @param b the data.
+   * @throws IOException if an I/O error occurs.
+   */
+  @Override
+  public void write(int b) throws IOException {
+    oneByteBuf[0] = (byte) (b & 0xff);
+    write(oneByteBuf, 0, oneByteBuf.length);
+  }
+
+  /**
+   * Overrides the {@link OutputStream#write(byte[], int, int)}.
+   * Encryption is buffer based. If there is enough room in {@link #inBuffer},
+   * then write to this buffer. If {@link #inBuffer} is full, then do
+   * encryption and write data to the underlying stream.
+   *
+   * @param b   the data.
+   * @param off the start offset in the data.
+   * @param len the number of bytes to write.
+   * @throws IOException if an I/O error occurs.
+   */
+  @Override
+  public void write(byte[] b, int off, int len) throws IOException {
+    checkStream();
+    if (b == null) {
+      throw new NullPointerException();
+    } else if (off < 0 || len < 0 || off > b.length || len > b.length - off) {
+      throw new IndexOutOfBoundsException();
     }
 
-    /**
-     * Constructs a {@link CryptoOutputStream}.
-     *
-     * @param out the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
-     * @throws IOException if an I/O error occurs.
-     */
-    protected CryptoOutputStream(OutputStream out, CryptoCipher cipher,
-            int bufferSize, Key key, AlgorithmParameterSpec params)
-            throws IOException {
-        this(new StreamOutput(out, bufferSize), cipher, bufferSize, key, params);
-    }
-
-    /**
-     * Constructs a {@link CryptoOutputStream}.
-     *
-     * @param channel the WritableByteChannel instance.
-     * @param cipher the cipher instance.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
-     * @throws IOException if an I/O error occurs.
-     */
-    protected CryptoOutputStream(WritableByteChannel channel, CryptoCipher cipher,
-            int bufferSize, Key key, AlgorithmParameterSpec params)
-            throws IOException {
-        this(new ChannelOutput(channel), cipher, bufferSize, key, params);
-    }
-
-    /**
-     * Constructs a {@link CryptoOutputStream}.
-     *
-     * @param output the output stream.
-     * @param cipher the CryptoCipher instance.
-     * @param bufferSize the bufferSize.
-     * @param key crypto key for the cipher.
-     * @param params the algorithm parameters.
-     * @throws IOException if an I/O error occurs.
-     */
-    protected CryptoOutputStream(Output output, CryptoCipher cipher,
-            int bufferSize, Key key, AlgorithmParameterSpec params)
-            throws IOException {
-
-        this.output = output;
-        this.bufferSize = CryptoInputStream.checkBufferSize(cipher, bufferSize);
-        this.cipher = cipher;
-
-        this.key = key;
-        this.params = params;
-
-        if (!(params instanceof IvParameterSpec)) {
-            // other AlgorithmParameterSpec such as GCMParameterSpec is not
-            // supported now.
-            throw new IOException("Illegal parameters");
-        }
-
-        inBuffer = ByteBuffer.allocateDirect(this.bufferSize);
-        outBuffer = ByteBuffer.allocateDirect(this.bufferSize
-                + cipher.getBlockSize());
-
-        initCipher();
-    }
-
-    /**
-     * Overrides the {@link OutputStream#write(byte[])}. Writes the
-     * specified byte to this output stream.
-     *
-     * @param b the data.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void write(int b) throws IOException {
-        oneByteBuf[0] = (byte) (b & 0xff);
-        write(oneByteBuf, 0, oneByteBuf.length);
-    }
-
-    /**
-     * Overrides the {@link OutputStream#write(byte[], int, int)}.
-     * Encryption is buffer based. If there is enough room in {@link #inBuffer},
-     * then write to this buffer. If {@link #inBuffer} is full, then do
-     * encryption and write data to the underlying stream.
-     *
-     * @param b the data.
-     * @param off the start offset in the data.
-     * @param len the number of bytes to write.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-        checkStream();
-        if (b == null) {
-            throw new NullPointerException();
-        } else if (off < 0 || len < 0 || off > b.length || len > b.length - off) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        while (len > 0) {
-            final int remaining = inBuffer.remaining();
-            if (len < remaining) {
-                inBuffer.put(b, off, len);
-                len = 0;
-            } else {
-                inBuffer.put(b, off, remaining);
-                off += remaining;
-                len -= remaining;
-                encrypt();
-            }
-        }
-    }
-
-    /**
-     * Overrides the {@link OutputStream#flush()}. To flush, we need to encrypt
-     * the data in the buffer and write to the underlying stream, then do the
-     * flush.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void flush() throws IOException {
-        checkStream();
+    while (len > 0) {
+      final int remaining = inBuffer.remaining();
+      if (len < remaining) {
+        inBuffer.put(b, off, len);
+        len = 0;
+      } else {
+        inBuffer.put(b, off, remaining);
+        off += remaining;
+        len -= remaining;
         encrypt();
-        output.flush();
-        super.flush();
+      }
+    }
+  }
+
+  /**
+   * Overrides the {@link OutputStream#flush()}. To flush, we need to encrypt
+   * the data in the buffer and write to the underlying stream, then do the
+   * flush.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
+  @Override
+  public void flush() throws IOException {
+    checkStream();
+    encrypt();
+    output.flush();
+    super.flush();
+  }
+
+  /**
+   * Overrides the {@link OutputStream#close()}. Closes this output stream and
+   * releases any system resources associated with this stream.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
+  @Override
+  public void close() throws IOException {
+    if (closed) {
+      return;
     }
 
-    /**
-     * Overrides the {@link OutputStream#close()}. Closes this output stream and
-     * releases any system resources associated with this stream.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void close() throws IOException {
-        if (closed) {
-            return;
-        }
+    try {
+      encryptFinal();
+      output.close();
+      freeBuffers();
+      cipher.close();
+      super.close();
+    } finally {
+      closed = true;
+    }
+  }
 
-        try {
-            encryptFinal();
-            output.close();
-            freeBuffers();
-            cipher.close();
-            super.close();
-        } finally {
-            closed = true;
-        }
+  /**
+   * Overrides the {@link java.nio.channels.Channel#isOpen()}. Tells whether or not this channel
+   * is open.
+   *
+   * @return <tt>true</tt> if, and only if, this channel is open
+   */
+  @Override
+  public boolean isOpen() {
+    return !closed;
+  }
+
+  /**
+   * Overrides the
+   * {@link WritableByteChannel#write(ByteBuffer)}. Writes a
+   * sequence of bytes to this channel from the given buffer.
+   *
+   * @param src The buffer from which bytes are to be retrieved.
+   * @return The number of bytes written, possibly zero.
+   * @throws IOException if an I/O error occurs.
+   */
+  @Override
+  public int write(ByteBuffer src) throws IOException {
+    checkStream();
+    final int len = src.remaining();
+    int remaining = len;
+    while (remaining > 0) {
+      final int space = inBuffer.remaining();
+      if (remaining < space) {
+        inBuffer.put(src);
+        remaining = 0;
+      } else {
+        // to void copy twice, we set the limit to copy directly
+        final int oldLimit = src.limit();
+        final int newLimit = src.position() + space;
+        src.limit(newLimit);
+
+        inBuffer.put(src);
+
+        // restore the old limit
+        src.limit(oldLimit);
+
+        remaining -= space;
+        encrypt();
+      }
     }
 
-    /**
-     * Overrides the {@link java.nio.channels.Channel#isOpen()}. Tells whether or not this channel
-     * is open.
-     *
-     * @return <tt>true</tt> if, and only if, this channel is open
-     */
-    @Override
-    public boolean isOpen() {
-        return !closed;
+    return len;
+  }
+
+  /**
+   * Initializes the cipher.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
+  protected void initCipher() throws IOException {
+    try {
+      cipher.init(Cipher.ENCRYPT_MODE, key, params);
+    } catch (InvalidKeyException e) {
+      throw new IOException(e);
+    } catch (InvalidAlgorithmParameterException e) {
+      throw new IOException(e);
+    }
+  }
+
+  /**
+   * Does the encryption, input is {@link #inBuffer} and output is
+   * {@link #outBuffer}.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
+  protected void encrypt() throws IOException {
+
+    inBuffer.flip();
+    outBuffer.clear();
+
+    try {
+      cipher.update(inBuffer, outBuffer);
+    } catch (ShortBufferException e) {
+      throw new IOException(e);
     }
 
-    /**
-     * Overrides the
-     * {@link WritableByteChannel#write(ByteBuffer)}. Writes a
-     * sequence of bytes to this channel from the given buffer.
-     *
-     * @param src The buffer from which bytes are to be retrieved.
-     * @return The number of bytes written, possibly zero.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public int write(ByteBuffer src) throws IOException {
-        checkStream();
-        final int len = src.remaining();
-        int remaining = len;
-        while (remaining > 0) {
-            final int space = inBuffer.remaining();
-            if (remaining < space) {
-                inBuffer.put(src);
-                remaining = 0;
-            } else {
-                // to void copy twice, we set the limit to copy directly
-                final int oldLimit = src.limit();
-                final int newLimit = src.position() + space;
-                src.limit(newLimit);
+    inBuffer.clear();
+    outBuffer.flip();
 
-                inBuffer.put(src);
+    // write to output
+    output.write(outBuffer);
+  }
 
-                // restore the old limit
-                src.limit(oldLimit);
+  /**
+   * Does final encryption of the last data.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
+  protected void encryptFinal() throws IOException {
+    inBuffer.flip();
+    outBuffer.clear();
 
-                remaining -= space;
-                encrypt();
-            }
-        }
-
-        return len;
+    try {
+      cipher.doFinal(inBuffer, outBuffer);
+    } catch (ShortBufferException e) {
+      throw new IOException(e);
+    } catch (IllegalBlockSizeException e) {
+      throw new IOException(e);
+    } catch (BadPaddingException e) {
+      throw new IOException(e);
     }
 
-    /**
-     * Initializes the cipher.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    protected void initCipher() throws IOException {
-        try {
-            cipher.init(Cipher.ENCRYPT_MODE, key, params);
-        } catch (InvalidKeyException e) {
-            throw new IOException(e);
-        } catch (InvalidAlgorithmParameterException e) {
-            throw new IOException(e);
-        }
+    inBuffer.clear();
+    outBuffer.flip();
+
+    // write to output
+    output.write(outBuffer);
+  }
+
+  /**
+   * Checks whether the stream is closed.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
+  protected void checkStream() throws IOException {
+    if (closed) {
+      throw new IOException("Stream closed");
     }
+  }
 
-    /**
-     * Does the encryption, input is {@link #inBuffer} and output is
-     * {@link #outBuffer}.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    protected void encrypt() throws IOException {
+  /**
+   * Forcibly free the direct buffers.
+   */
+  protected void freeBuffers() {
+    CryptoInputStream.freeDirectBuffer(inBuffer);
+    CryptoInputStream.freeDirectBuffer(outBuffer);
+  }
 
-        inBuffer.flip();
-        outBuffer.clear();
+  /**
+   * Gets the outBuffer.
+   *
+   * @return the outBuffer.
+   */
+  protected ByteBuffer getOutBuffer() {
+    return outBuffer;
+  }
 
-        try {
-            cipher.update(inBuffer, outBuffer);
-        } catch (ShortBufferException e) {
-            throw new IOException(e);
-        }
+  /**
+   * Gets the internal Cipher.
+   *
+   * @return the cipher instance.
+   */
+  protected CryptoCipher getCipher() {
+    return cipher;
+  }
 
-        inBuffer.clear();
-        outBuffer.flip();
+  /**
+   * Gets the buffer size.
+   *
+   * @return the buffer size.
+   */
+  protected int getBufferSize() {
+    return bufferSize;
+  }
 
-        // write to output
-        output.write(outBuffer);
-    }
-
-    /**
-     * Does final encryption of the last data.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    protected void encryptFinal() throws IOException {
-        inBuffer.flip();
-        outBuffer.clear();
-
-        try {
-            cipher.doFinal(inBuffer, outBuffer);
-        } catch (ShortBufferException e) {
-            throw new IOException(e);
-        } catch (IllegalBlockSizeException e) {
-            throw new IOException(e);
-        } catch (BadPaddingException e) {
-            throw new IOException(e);
-        }
-
-        inBuffer.clear();
-        outBuffer.flip();
-
-        // write to output
-        output.write(outBuffer);
-    }
-
-    /**
-     * Checks whether the stream is closed.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    protected void checkStream() throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
-        }
-    }
-
-    /** Forcibly free the direct buffers. */
-    protected void freeBuffers() {
-        CryptoInputStream.freeDirectBuffer(inBuffer);
-        CryptoInputStream.freeDirectBuffer(outBuffer);
-    }
-
-    /**
-     * Gets the outBuffer.
-     *
-     * @return the outBuffer.
-     */
-    protected ByteBuffer getOutBuffer() {
-        return outBuffer;
-    }
-
-    /**
-     * Gets the internal Cipher.
-     *
-     * @return the cipher instance.
-     */
-    protected CryptoCipher getCipher() {
-        return cipher;
-    }
-
-    /**
-     * Gets the buffer size.
-     *
-     * @return the buffer size.
-     */
-    protected int getBufferSize() {
-        return bufferSize;
-    }
-
-    /**
-     * Gets the inBuffer.
-     *
-     * @return the inBuffer.
-     */
-    protected ByteBuffer getInBuffer() {
-        return inBuffer;
-    }
+  /**
+   * Gets the inBuffer.
+   *
+   * @return the inBuffer.
+   */
+  protected ByteBuffer getInBuffer() {
+    return inBuffer;
+  }
 }

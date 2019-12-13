@@ -7,17 +7,17 @@ package com.lll.aop.asm.demo1;
  * copyright generalray4239@gmail.com
  */
 public class AopInterceptor {
-    /**
-     * 具体业务逻辑之前调用
-     */
-    public static void beforeInvoke() {
-        System.out.println("before");
-    }
+  /**
+   * 具体业务逻辑之前调用
+   */
+  public static void beforeInvoke() {
+    System.out.println("before");
+  }
 
-    /**
-     * 业务逻辑之后调用
-     */
-    public static void afterInvoke() {
-        System.out.println("after");
-    }
+  /**
+   * 业务逻辑之后调用
+   */
+  public static void afterInvoke() {
+    System.out.println("after");
+  }
 }

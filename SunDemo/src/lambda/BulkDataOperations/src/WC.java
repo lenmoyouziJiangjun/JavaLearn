@@ -55,163 +55,162 @@ import java.util.regex.Pattern;
  * <li>Constructor reference.</li>
  * <li>Try-with-resources feature.</li>
  * </ul>
- *
  */
 public class WC {
 
-    //The number of characters that may be read.
-    private static final int READ_AHEAD_LIMIT = 100_000_000;
+  //The number of characters that may be read.
+  private static final int READ_AHEAD_LIMIT = 100_000_000;
 
-    //The pattern for splitting strings by non word characters to get words.
-    private static final Pattern nonWordPattern = Pattern.compile("\\W");
+  //The pattern for splitting strings by non word characters to get words.
+  private static final Pattern nonWordPattern = Pattern.compile("\\W");
 
-    /**
-     * The main method for the WC program. Run the program with an empty
-     * argument list to see possible arguments.
-     *
-     * @param args the argument list for WC
-     * @throws IOException If an input exception occurred.
+  /**
+   * The main method for the WC program. Run the program with an empty
+   * argument list to see possible arguments.
+   *
+   * @param args the argument list for WC
+   * @throws IOException If an input exception occurred.
+   */
+  public static void main(String[] args) throws IOException {
+
+    if (args.length != 1) {
+      usage();
+      return;
+    }
+
+    try (BufferedReader reader = new BufferedReader(
+            new FileReader(args[0]))) {
+      reader.mark(READ_AHEAD_LIMIT);
+      /*
+       * Statistics can be gathered in four passes using a built-in API.
+       * The method demonstrates how separate operations can be
+       * implemented using a built-in API.
+       */
+      collectInFourPasses(reader);
+      /*
+       * Usage of several passes to collect data is not the best way.
+       * Statistics can be gathered by a custom collector in one pass.
+       */
+      reader.reset();
+      collectInOnePass(reader);
+    } catch (FileNotFoundException e) {
+      usage();
+      System.err.println(e);
+    }
+  }
+
+  private static void collectInFourPasses(BufferedReader reader)
+          throws IOException {
+    /*
+     * Input is read as a stream of lines by lines().
+     * Every line is turned into a stream of chars by the flatMapToInt(...)
+     * method.
+     * Length of the stream is counted by count().
      */
-    public static void main(String[] args) throws IOException {
+    System.out.println("Character count = "
+            + reader.lines().flatMapToInt(String::chars).count());
+    /*
+     * Input is read as a stream of lines by lines().
+     * Every line is split by nonWordPattern into words by flatMap(...)
+     * method.
+     * Empty lines are removed by the filter(...) method.
+     * Length of the stream is counted by count().
+     */
+    reader.reset();
+    System.out.println("Word count = "
+            + reader.lines()
+            .flatMap(nonWordPattern::splitAsStream)
+            .filter(str -> !str.isEmpty()).count());
 
-        if (args.length != 1) {
-            usage();
-            return;
-        }
+    reader.reset();
+    System.out.println("Newline count = " + reader.lines().count());
+    /*
+     * Input is read as a stream of lines by lines().
+     * Every line is mapped to its length.
+     * Maximum of the lengths is calculated.
+     */
+    reader.reset();
+    System.out.println("Max line length = "
+            + reader.lines().mapToInt(String::length).max().getAsInt());
+  }
 
-        try (BufferedReader reader = new BufferedReader(
-                new FileReader(args[0]))) {
-            reader.mark(READ_AHEAD_LIMIT);
-            /*
-             * Statistics can be gathered in four passes using a built-in API.
-             * The method demonstrates how separate operations can be
-             * implemented using a built-in API.
-             */
-            collectInFourPasses(reader);
-            /*
-             * Usage of several passes to collect data is not the best way.
-             * Statistics can be gathered by a custom collector in one pass.
-             */
-            reader.reset();
-            collectInOnePass(reader);
-        } catch (FileNotFoundException e) {
-            usage();
-            System.err.println(e);
-        }
+  private static void collectInOnePass(BufferedReader reader) {
+    /*
+     * The collect() method has three parameters:
+     * The first parameter is the {@code WCStatistic} constructor reference.
+     * collect() will create {@code WCStatistics} instances, where
+     * statistics will be aggregated.
+     * The second parameter shows how {@code WCStatistics} will process
+     * String.
+     * The third parameter shows how to merge two {@code WCStatistic}
+     * instances.
+     *
+     * Also {@code Collector} can be used, which would be more reusable
+     * solution. See {@code CSVProcessor} example for how {@code Collector}
+     * can be implemented.
+     *
+     * Note that the any performance increase when going parallel will
+     * depend on the size of the input (lines) and the cost per-element.
+     */
+    WCStatistics wc = reader.lines().parallel()
+            .collect(WCStatistics::new,
+                    WCStatistics::accept,
+                    WCStatistics::combine);
+    System.out.println(wc);
+  }
+
+  private static void usage() {
+    System.out.println("Usage: " + WC.class.getSimpleName() + " FILE");
+    System.out.println("Print newline, word,"
+            + "  character counts and max line length for FILE.");
+  }
+
+  private static class WCStatistics implements Consumer<String> {
+    /*
+     * @implNote This implementation does not need to be thread safe because
+     * the parallel implementation of
+     * {@link java.util.stream.Stream#collect Stream.collect()}
+     * provides the necessary partitioning and isolation for safe parallel
+     * execution.
+     */
+
+    private long characterCount;
+    private long lineCount;
+    private long wordCount;
+    private long maxLineLength;
+
+
+    /*
+     * Processes line.
+     */
+    @Override
+    public void accept(String line) {
+      characterCount += line.length();
+      lineCount++;
+      wordCount += nonWordPattern.splitAsStream(line)
+              .filter(str -> !str.isEmpty()).count();
+      maxLineLength = Math.max(maxLineLength, line.length());
     }
 
-    private static void collectInFourPasses(BufferedReader reader)
-            throws IOException {
-        /*
-         * Input is read as a stream of lines by lines().
-         * Every line is turned into a stream of chars by the flatMapToInt(...)
-         * method.
-         * Length of the stream is counted by count().
-         */
-        System.out.println("Character count = "
-                + reader.lines().flatMapToInt(String::chars).count());
-        /*
-         * Input is read as a stream of lines by lines().
-         * Every line is split by nonWordPattern into words by flatMap(...)
-         * method.
-         * Empty lines are removed by the filter(...) method.
-         * Length of the stream is counted by count().
-         */
-        reader.reset();
-        System.out.println("Word count = "
-                + reader.lines()
-                .flatMap(nonWordPattern::splitAsStream)
-                .filter(str -> !str.isEmpty()).count());
-
-        reader.reset();
-        System.out.println("Newline count = " + reader.lines().count());
-        /*
-         * Input is read as a stream of lines by lines().
-         * Every line is mapped to its length.
-         * Maximum of the lengths is calculated.
-         */
-        reader.reset();
-        System.out.println("Max line length = "
-                + reader.lines().mapToInt(String::length).max().getAsInt());
+    /*
+     * Merges two WCStatistics.
+     */
+    public void combine(WCStatistics stat) {
+      wordCount += stat.wordCount;
+      lineCount += stat.lineCount;
+      characterCount += stat.characterCount;
+      maxLineLength = Math.max(maxLineLength, stat.maxLineLength);
     }
 
-    private static void collectInOnePass(BufferedReader reader) {
-        /*
-         * The collect() method has three parameters:
-         * The first parameter is the {@code WCStatistic} constructor reference.
-         * collect() will create {@code WCStatistics} instances, where
-         * statistics will be aggregated.
-         * The second parameter shows how {@code WCStatistics} will process
-         * String.
-         * The third parameter shows how to merge two {@code WCStatistic}
-         * instances.
-         *
-         * Also {@code Collector} can be used, which would be more reusable
-         * solution. See {@code CSVProcessor} example for how {@code Collector}
-         * can be implemented.
-         *
-         * Note that the any performance increase when going parallel will
-         * depend on the size of the input (lines) and the cost per-element.
-         */
-        WCStatistics wc = reader.lines().parallel()
-                .collect(WCStatistics::new,
-                        WCStatistics::accept,
-                        WCStatistics::combine);
-        System.out.println(wc);
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder();
+      sb.append("#------WCStatistic------#\n");
+      sb.append("Character count = ").append(characterCount).append('\n');
+      sb.append("Word count = ").append(wordCount).append('\n');
+      sb.append("Newline count = ").append(lineCount).append('\n');
+      sb.append("Max line length = ").append(maxLineLength).append('\n');
+      return sb.toString();
     }
-
-    private static void usage() {
-        System.out.println("Usage: " + WC.class.getSimpleName() + " FILE");
-        System.out.println("Print newline, word,"
-                + "  character counts and max line length for FILE.");
-    }
-
-    private static class WCStatistics implements Consumer<String> {
-        /*
-         * @implNote This implementation does not need to be thread safe because
-         * the parallel implementation of
-         * {@link java.util.stream.Stream#collect Stream.collect()}
-         * provides the necessary partitioning and isolation for safe parallel
-         * execution.
-         */
-
-        private long characterCount;
-        private long lineCount;
-        private long wordCount;
-        private long maxLineLength;
-
-
-        /*
-         * Processes line.
-         */
-        @Override
-        public void accept(String line) {
-            characterCount += line.length();
-            lineCount++;
-            wordCount += nonWordPattern.splitAsStream(line)
-                    .filter(str -> !str.isEmpty()).count();
-            maxLineLength = Math.max(maxLineLength, line.length());
-        }
-
-        /*
-         * Merges two WCStatistics.
-         */
-        public void combine(WCStatistics stat) {
-            wordCount += stat.wordCount;
-            lineCount += stat.lineCount;
-            characterCount += stat.characterCount;
-            maxLineLength = Math.max(maxLineLength, stat.maxLineLength);
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("#------WCStatistic------#\n");
-            sb.append("Character count = ").append(characterCount).append('\n');
-            sb.append("Word count = ").append(wordCount).append('\n');
-            sb.append("Newline count = ").append(lineCount).append('\n');
-            sb.append("Max line length = ").append(maxLineLength).append('\n');
-            return sb.toString();
-        }
-    }
+  }
 }

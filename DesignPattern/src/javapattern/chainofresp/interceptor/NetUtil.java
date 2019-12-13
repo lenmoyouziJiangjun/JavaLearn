@@ -12,16 +12,16 @@ import java.util.List;
  * copyright generalray4239@gmail.com
  */
 public class NetUtil {
-    public List<NetInterceptor> interceptors = new ArrayList<>();
+  public List<NetInterceptor> interceptors = new ArrayList<>();
 
 
-    public void doHttpRequest(){
-        if(interceptors!=null){
-            for(NetInterceptor interceptor:interceptors){
+  public void doHttpRequest() {
+    if (interceptors != null) {
+      for (NetInterceptor interceptor : interceptors) {
 //                javapattern.chainofresp.interceptor.intercept();
-            }
-        }
+      }
     }
+  }
 
 
 }

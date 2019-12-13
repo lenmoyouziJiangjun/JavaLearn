@@ -24,30 +24,27 @@ import org.apache.commons.proxy2.interceptor.matcher.InvocationMatcher;
  * A {@link MethodNameMatcher} simply checks to see that the method name of the invocation matches the target method
  * name given in the constructor.
  */
-public class MethodNameMatcher implements InvocationMatcher
-{
-    //******************************************************************************************************************
-    // Fields
-    //******************************************************************************************************************
+public class MethodNameMatcher implements InvocationMatcher {
+  //******************************************************************************************************************
+  // Fields
+  //******************************************************************************************************************
 
-    private final String methodName;
+  private final String methodName;
 
-    //******************************************************************************************************************
-    // Constructors
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // Constructors
+  //******************************************************************************************************************
 
-    public MethodNameMatcher(String methodName)
-    {
-        this.methodName = methodName;
-    }
+  public MethodNameMatcher(String methodName) {
+    this.methodName = methodName;
+  }
 
-    //******************************************************************************************************************
-    // InvocationMatcher Implementation
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // InvocationMatcher Implementation
+  //******************************************************************************************************************
 
-    @Override
-    public boolean matches(Invocation invocation)
-    {
-        return methodName.equals(invocation.getMethod().getName());
-    }
+  @Override
+  public boolean matches(Invocation invocation) {
+    return methodName.equals(invocation.getMethod().getName());
+  }
 }

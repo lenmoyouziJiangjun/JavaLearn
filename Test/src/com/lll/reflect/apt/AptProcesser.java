@@ -18,18 +18,18 @@ import java.util.Set;
 public class AptProcesser extends AbstractProcessor {
 
 
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        try {
-            Set<? extends Element> anns = roundEnv.getElementsAnnotatedWith(FruitName.class);
-            while (anns.iterator().hasNext()){
+  @Override
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    try {
+      Set<? extends Element> anns = roundEnv.getElementsAnnotatedWith(FruitName.class);
+      while (anns.iterator().hasNext()) {
 
 
-                anns.iterator().next();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        anns.iterator().next();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return false;
+  }
 }

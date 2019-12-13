@@ -1,5 +1,6 @@
 package javapattern.adapter.classadapter;
 
 public class Adaptee {
-    public void sampleOperation1(){}
+  public void sampleOperation1() {
+  }
 }

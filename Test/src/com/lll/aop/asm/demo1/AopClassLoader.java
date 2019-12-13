@@ -12,28 +12,28 @@ import java.io.InputStream;
  * Description 代理加载类
  * copyright generalray4239@gmail.com
  */
-public class AopClassLoader extends ClassLoader implements Opcodes{
-    public AopClassLoader(ClassLoader loader){
-        super(loader);
-    }
+public class AopClassLoader extends ClassLoader implements Opcodes {
+  public AopClassLoader(ClassLoader loader) {
+    super(loader);
+  }
 
-    @Override
-    public Class<?> loadClass(String name) throws ClassNotFoundException {
-        if(!name.contains("_Proxy")){//不是代理类
-            return super.loadClass(name);
-        }else{//替换类
-            try {
-                ClassWriter cw = new ClassWriter(0);
-                //加载class文件
-                InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("com.lll.aop.asm.javapattern.proxy.TestAsm.class");
-                ClassReader reader = new ClassReader(is);
-                reader.accept(new AopClassAdaptor(ASM4, cw),ClassReader.SKIP_DEBUG);
-                byte[] code = cw.toByteArray();
-                return this.defineClass(name,code,0,code.length);
-            }catch (Exception e){
-                e.printStackTrace();
-                throw new ClassNotFoundException();
-            }
-        }
+  @Override
+  public Class<?> loadClass(String name) throws ClassNotFoundException {
+    if (!name.contains("_Proxy")) {//不是代理类
+      return super.loadClass(name);
+    } else {//替换类
+      try {
+        ClassWriter cw = new ClassWriter(0);
+        //加载class文件
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("com.lll.aop.asm.javapattern.proxy.TestAsm.class");
+        ClassReader reader = new ClassReader(is);
+        reader.accept(new AopClassAdaptor(ASM4, cw), ClassReader.SKIP_DEBUG);
+        byte[] code = cw.toByteArray();
+        return this.defineClass(name, code, 0, code.length);
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new ClassNotFoundException();
+      }
     }
+  }
 }

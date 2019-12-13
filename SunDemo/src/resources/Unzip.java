@@ -48,36 +48,36 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  */
 public class Unzip {
 
-    /**
-     * The main method for the Unzip program. Run the program with an empty
-     * argument list to see possible arguments.
-     *
-     * @param args the argument list for {@code Unzip}.
-     */
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            System.out.println("Usage: Unzip zipfile");
-        }
-        final Path destDir = Paths.get(".");
-        /*
-         * Create AutoCloseable FileSystem. It will be closed automatically
-         * after the try block.
-         */
-        try (FileSystem zipFileSystem = FileSystems.newFileSystem(Paths.get(args[0]), null)) {
-
-            Path top = zipFileSystem.getPath("/");
-            Files.walk(top).skip(1).forEach(file -> {
-                Path target = destDir.resolve(top.relativize(file).toString());
-                System.out.println("Extracting " + target);
-                try {
-                    Files.copy(file, target, REPLACE_EXISTING);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-            });
-        } catch (UncheckedIOException | IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+  /**
+   * The main method for the Unzip program. Run the program with an empty
+   * argument list to see possible arguments.
+   *
+   * @param args the argument list for {@code Unzip}.
+   */
+  public static void main(String[] args) {
+    if (args.length != 1) {
+      System.out.println("Usage: Unzip zipfile");
     }
+    final Path destDir = Paths.get(".");
+    /*
+     * Create AutoCloseable FileSystem. It will be closed automatically
+     * after the try block.
+     */
+    try (FileSystem zipFileSystem = FileSystems.newFileSystem(Paths.get(args[0]), null)) {
+
+      Path top = zipFileSystem.getPath("/");
+      Files.walk(top).skip(1).forEach(file -> {
+        Path target = destDir.resolve(top.relativize(file).toString());
+        System.out.println("Extracting " + target);
+        try {
+          Files.copy(file, target, REPLACE_EXISTING);
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
+      });
+    } catch (UncheckedIOException | IOException e) {
+      e.printStackTrace();
+      System.exit(1);
+    }
+  }
 }

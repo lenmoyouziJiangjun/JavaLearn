@@ -50,256 +50,258 @@ import java.util.regex.Pattern;
 
 public class AclEdit {
 
-    // parse string as list of ACE permissions separated by /
-    static Set<AclEntryPermission> parsePermissions(String permsString) {
-        Set<AclEntryPermission> perms = new HashSet<AclEntryPermission>();
-        String[] result = permsString.split("/");
-        for (String s : result) {
-            if (s.equals(""))
-                continue;
-            try {
-                perms.add(AclEntryPermission.valueOf(s.toUpperCase()));
-            } catch (IllegalArgumentException x) {
-                System.err.format("Invalid permission '%s'\n", s);
-                System.exit(-1);
-            }
-        }
-        return perms;
-    }
-
-    // parse string as list of ACE flags separated by /
-    static Set<AclEntryFlag> parseFlags(String flagsString) {
-        Set<AclEntryFlag> flags = new HashSet<AclEntryFlag>();
-        String[] result = flagsString.split("/");
-        for (String s : result) {
-            if (s.equals(""))
-                continue;
-            try {
-                flags.add(AclEntryFlag.valueOf(s.toUpperCase()));
-            } catch (IllegalArgumentException x) {
-                System.err.format("Invalid flag '%s'\n", s);
-                System.exit(-1);
-            }
-        }
-        return flags;
-    }
-
-    // parse ACE type
-    static AclEntryType parseType(String typeString) {
-        // FIXME: support audit and alarm types in the future
-        if (typeString.equalsIgnoreCase("allow"))
-            return AclEntryType.ALLOW;
-        if (typeString.equalsIgnoreCase("deny"))
-            return AclEntryType.DENY;
-        System.err.format("Invalid type '%s'\n", typeString);
+  // parse string as list of ACE permissions separated by /
+  static Set<AclEntryPermission> parsePermissions(String permsString) {
+    Set<AclEntryPermission> perms = new HashSet<AclEntryPermission>();
+    String[] result = permsString.split("/");
+    for (String s : result) {
+      if (s.equals(""))
+        continue;
+      try {
+        perms.add(AclEntryPermission.valueOf(s.toUpperCase()));
+      } catch (IllegalArgumentException x) {
+        System.err.format("Invalid permission '%s'\n", s);
         System.exit(-1);
-        return null;    // keep compiler happy
+      }
+    }
+    return perms;
+  }
+
+  // parse string as list of ACE flags separated by /
+  static Set<AclEntryFlag> parseFlags(String flagsString) {
+    Set<AclEntryFlag> flags = new HashSet<AclEntryFlag>();
+    String[] result = flagsString.split("/");
+    for (String s : result) {
+      if (s.equals(""))
+        continue;
+      try {
+        flags.add(AclEntryFlag.valueOf(s.toUpperCase()));
+      } catch (IllegalArgumentException x) {
+        System.err.format("Invalid flag '%s'\n", s);
+        System.exit(-1);
+      }
+    }
+    return flags;
+  }
+
+  // parse ACE type
+  static AclEntryType parseType(String typeString) {
+    // FIXME: support audit and alarm types in the future
+    if (typeString.equalsIgnoreCase("allow"))
+      return AclEntryType.ALLOW;
+    if (typeString.equalsIgnoreCase("deny"))
+      return AclEntryType.DENY;
+    System.err.format("Invalid type '%s'\n", typeString);
+    System.exit(-1);
+    return null;    // keep compiler happy
+  }
+
+  /**
+   * Parse string of the form:
+   * [user|group:]<username|groupname>:<perms>[:flags]:<allow|deny>
+   */
+  static AclEntry parseAceString(String s,
+                                 UserPrincipalLookupService lookupService) {
+    String[] result = s.split(":");
+
+    // must have at least 3 components (username:perms:type)
+    if (result.length < 3)
+      usage();
+
+    int index = 0;
+    int remaining = result.length;
+
+    // optional first component can indicate user or group type
+    boolean isGroup = false;
+    if (result[index].equalsIgnoreCase("user") ||
+            result[index].equalsIgnoreCase("group")) {
+      if (--remaining < 3)
+        usage();
+      isGroup = result[index++].equalsIgnoreCase("group");
     }
 
-    /**
-     * Parse string of the form:
-     *   [user|group:]<username|groupname>:<perms>[:flags]:<allow|deny>
-     */
-    static AclEntry parseAceString(String s,
-                                   UserPrincipalLookupService lookupService)
-    {
-        String[] result = s.split(":");
+    // user and permissions required
+    String userString = result[index++];
+    remaining--;
+    String permsString = result[index++];
+    remaining--;
 
-        // must have at least 3 components (username:perms:type)
-        if (result.length < 3)
-            usage();
+    // flags are optional
+    String flagsString = "";
+    String typeString = null;
+    if (remaining == 1) {
+      typeString = result[index++];
+    } else {
+      if (remaining == 2) {
+        flagsString = result[index++];
+        typeString = result[index++];
+      } else {
+        usage();
+      }
+    }
 
-        int index = 0;
-        int remaining = result.length;
+    // lookup UserPrincipal
+    UserPrincipal user = null;
+    try {
+      user = (isGroup) ?
+              lookupService.lookupPrincipalByGroupName(userString) :
+              lookupService.lookupPrincipalByName(userString);
+    } catch (UserPrincipalNotFoundException x) {
+      System.err.format("Invalid %s '%s'\n",
+              ((isGroup) ? "group" : "user"),
+              userString);
+      System.exit(-1);
+    } catch (IOException x) {
+      System.err.format("Lookup of '%s' failed: %s\n", userString, x);
+      System.exit(-1);
+    }
 
-        // optional first component can indicate user or group type
-        boolean isGroup = false;
-        if (result[index].equalsIgnoreCase("user") ||
-            result[index].equalsIgnoreCase("group"))
-        {
-            if (--remaining < 3)
-                usage();
-            isGroup = result[index++].equalsIgnoreCase("group");
-        }
+    // map string representation of permissions, flags, and type
+    Set<AclEntryPermission> perms = parsePermissions(permsString);
+    Set<AclEntryFlag> flags = parseFlags(flagsString);
+    AclEntryType type = parseType(typeString);
 
-        // user and permissions required
-        String userString = result[index++]; remaining--;
-        String permsString = result[index++]; remaining--;
-
-        // flags are optional
-        String flagsString = "";
-        String typeString = null;
-        if (remaining == 1) {
-            typeString = result[index++];
-        } else {
-            if (remaining == 2) {
-                flagsString = result[index++];
-                typeString = result[index++];
-            } else {
-                usage();
-            }
-        }
-
-        // lookup UserPrincipal
-        UserPrincipal user = null;
-        try {
-            user = (isGroup) ?
-                lookupService.lookupPrincipalByGroupName(userString) :
-                lookupService.lookupPrincipalByName(userString);
-        } catch (UserPrincipalNotFoundException x) {
-            System.err.format("Invalid %s '%s'\n",
-                ((isGroup) ? "group" : "user"),
-                userString);
-            System.exit(-1);
-        } catch (IOException x) {
-            System.err.format("Lookup of '%s' failed: %s\n", userString, x);
-            System.exit(-1);
-        }
-
-        // map string representation of permissions, flags, and type
-        Set<AclEntryPermission> perms = parsePermissions(permsString);
-        Set<AclEntryFlag> flags = parseFlags(flagsString);
-        AclEntryType type = parseType(typeString);
-
-        // build the ACL entry
-        return AclEntry.newBuilder()
+    // build the ACL entry
+    return AclEntry.newBuilder()
             .setType(type)
             .setPrincipal(user)
             .setPermissions(perms).setFlags(flags).build();
-    }
+  }
 
-    static void usage() {
-        System.err.println("usage: java AclEdit [ACL-operation] file");
-        System.err.println("");
-        System.err.println("Example 1: Prepends access control entry to the begining of the myfile's ACL");
-        System.err.println("       java AclEdit A+alice:read_data/read_attributes:allow myfile");
-        System.err.println("");
-        System.err.println("Example 2: Remove the entry at index 6 of myfile's ACL");
-        System.err.println("       java AclEdit A6- myfile");
-        System.err.println("");
-        System.err.println("Example 3: Replace the entry at index 2 of myfile's ACL");
-        System.err.println("       java AclEdit A2=bob:write_data/append_data:deny myfile");
-        System.exit(-1);
-    }
+  static void usage() {
+    System.err.println("usage: java AclEdit [ACL-operation] file");
+    System.err.println("");
+    System.err.println("Example 1: Prepends access control entry to the begining of the myfile's ACL");
+    System.err.println("       java AclEdit A+alice:read_data/read_attributes:allow myfile");
+    System.err.println("");
+    System.err.println("Example 2: Remove the entry at index 6 of myfile's ACL");
+    System.err.println("       java AclEdit A6- myfile");
+    System.err.println("");
+    System.err.println("Example 3: Replace the entry at index 2 of myfile's ACL");
+    System.err.println("       java AclEdit A2=bob:write_data/append_data:deny myfile");
+    System.exit(-1);
+  }
 
-    static enum Action {
-        PRINT,
-        ADD,
-        REMOVE,
-        REPLACE;
-    }
+  static enum Action
 
-    /**
-     * Main class: parses arguments and prints or edits ACL
-     */
-    public static void main(String[] args) throws IOException {
-        Action action = null;
-        int index = -1;
-        String entryString = null;
+  {
+    PRINT,
+            ADD,
+            REMOVE,
+            REPLACE;
+  }
 
-        // parse arguments
-        if (args.length < 1 || args[0].equals("-help") || args[0].equals("-?"))
-            usage();
+  /**
+   * Main class: parses arguments and prints or edits ACL
+   */
+  public static void main(String[] args) throws IOException {
+    Action action = null;
+    int index = -1;
+    String entryString = null;
 
-        if (args.length == 1) {
-            action = Action.PRINT;
-        } else {
-            String s = args[0];
+    // parse arguments
+    if (args.length < 1 || args[0].equals("-help") || args[0].equals("-?"))
+      usage();
 
-            // A[index]+entry
-            if (Pattern.matches("^A[0-9]*\\+.*", s)) {
-                String[] result = s.split("\\+", 2);
-                if (result.length == 2) {
-                    if (result[0].length() < 2) {
-                        index = 0;
-                    } else {
-                        index = Integer.parseInt(result[0].substring(1));
-                    }
-                    entryString = result[1];
-                    action = Action.ADD;
-                }
-            }
+    if (args.length == 1) {
+      action = Action.PRINT;
+    } else {
+      String s = args[0];
 
-            // Aindex-
-            if (Pattern.matches("^A[0-9]+\\-", s)) {
-                String[] result = s.split("\\-", 2);
-                if (result.length == 2) {
-                    index = Integer.parseInt(result[0].substring(1));
-                    entryString = result[1];
-                    action = Action.REMOVE;
-                }
-            }
-
-            // Aindex=entry
-            if (Pattern.matches("^A[0-9]+=.*", s)) {
-                String[] result = s.split("=", 2);
-                if (result.length == 2) {
-                    index = Integer.parseInt(result[0].substring(1));
-                    entryString = result[1];
-                    action = Action.REPLACE;
-                }
-            }
+      // A[index]+entry
+      if (Pattern.matches("^A[0-9]*\\+.*", s)) {
+        String[] result = s.split("\\+", 2);
+        if (result.length == 2) {
+          if (result[0].length() < 2) {
+            index = 0;
+          } else {
+            index = Integer.parseInt(result[0].substring(1));
+          }
+          entryString = result[1];
+          action = Action.ADD;
         }
-        if (action == null)
-            usage();
+      }
 
-        int fileArg = (action == Action.PRINT) ? 0 : 1;
-        Path file = Paths.get(args[fileArg]);
+      // Aindex-
+      if (Pattern.matches("^A[0-9]+\\-", s)) {
+        String[] result = s.split("\\-", 2);
+        if (result.length == 2) {
+          index = Integer.parseInt(result[0].substring(1));
+          entryString = result[1];
+          action = Action.REMOVE;
+        }
+      }
 
-        // read file's ACL
-        AclFileAttributeView view =
+      // Aindex=entry
+      if (Pattern.matches("^A[0-9]+=.*", s)) {
+        String[] result = s.split("=", 2);
+        if (result.length == 2) {
+          index = Integer.parseInt(result[0].substring(1));
+          entryString = result[1];
+          action = Action.REPLACE;
+        }
+      }
+    }
+    if (action == null)
+      usage();
+
+    int fileArg = (action == Action.PRINT) ? 0 : 1;
+    Path file = Paths.get(args[fileArg]);
+
+    // read file's ACL
+    AclFileAttributeView view =
             Files.getFileAttributeView(file, AclFileAttributeView.class);
-        if (view == null) {
-            System.err.println("ACLs not supported on this platform");
-            System.exit(-1);
-        }
-        List<AclEntry> acl = view.getAcl();
-
-        switch (action) {
-            // print ACL
-            case PRINT : {
-                for (int i=0; i<acl.size(); i++) {
-                    System.out.format("%5d: %s\n", i, acl.get(i));
-                }
-                break;
-            }
-
-            // add ACE to existing ACL
-            case ADD: {
-                AclEntry entry = parseAceString(entryString, file
-                    .getFileSystem().getUserPrincipalLookupService());
-                if (index >= acl.size()) {
-                    acl.add(entry);
-                } else {
-                    acl.add(index, entry);
-                }
-                view.setAcl(acl);
-                break;
-            }
-
-            // remove ACE
-            case REMOVE: {
-                if (index >= acl.size()) {
-                    System.err.format("Index '%d' is invalid", index);
-                    System.exit(-1);
-                }
-                acl.remove(index);
-                view.setAcl(acl);
-                break;
-            }
-
-            // replace ACE
-            case REPLACE: {
-                if (index >= acl.size()) {
-                    System.err.format("Index '%d' is invalid", index);
-                    System.exit(-1);
-                }
-                AclEntry entry = parseAceString(entryString, file
-                    .getFileSystem().getUserPrincipalLookupService());
-                acl.set(index, entry);
-                view.setAcl(acl);
-                break;
-            }
-        }
+    if (view == null) {
+      System.err.println("ACLs not supported on this platform");
+      System.exit(-1);
     }
+    List<AclEntry> acl = view.getAcl();
+
+    switch (action) {
+      // print ACL
+      case PRINT: {
+        for (int i = 0; i < acl.size(); i++) {
+          System.out.format("%5d: %s\n", i, acl.get(i));
+        }
+        break;
+      }
+
+      // add ACE to existing ACL
+      case ADD: {
+        AclEntry entry = parseAceString(entryString, file
+                .getFileSystem().getUserPrincipalLookupService());
+        if (index >= acl.size()) {
+          acl.add(entry);
+        } else {
+          acl.add(index, entry);
+        }
+        view.setAcl(acl);
+        break;
+      }
+
+      // remove ACE
+      case REMOVE: {
+        if (index >= acl.size()) {
+          System.err.format("Index '%d' is invalid", index);
+          System.exit(-1);
+        }
+        acl.remove(index);
+        view.setAcl(acl);
+        break;
+      }
+
+      // replace ACE
+      case REPLACE: {
+        if (index >= acl.size()) {
+          System.err.format("Index '%d' is invalid", index);
+          System.exit(-1);
+        }
+        AclEntry entry = parseAceString(entryString, file
+                .getFileSystem().getUserPrincipalLookupService());
+        acl.set(index, entry);
+        view.setAcl(acl);
+        break;
+      }
+    }
+  }
 }

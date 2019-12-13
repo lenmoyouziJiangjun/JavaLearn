@@ -10,19 +10,19 @@ package com.lll.nio;/**
  */
 public class SocketChannelTest {
 
-    public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
 
-    }
+  }
 
 
-    private static void testSocketChannel() {
+  private static void testSocketChannel() {
 
-    }
+  }
 
-    /**
-     * 测试一个socket服务器
-     */
-    private static void openSocketServer() {
+  /**
+   * 测试一个socket服务器
+   */
+  private static void openSocketServer() {
 
-    }
+  }
 }

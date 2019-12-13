@@ -19,18 +19,15 @@ package org.apache.commons.proxy2.stub;
 
 import java.lang.annotation.Annotation;
 
-class AnnotationTypeTrainer<R extends Annotation> extends AnnotationTrainer<R>
-{
+class AnnotationTypeTrainer<R extends Annotation> extends AnnotationTrainer<R> {
 
-    AnnotationTypeTrainer(Class<R> annotationType)
-    {
-        super(annotationType);
-    }
+  AnnotationTypeTrainer(Class<R> annotationType) {
+    super(annotationType);
+  }
 
-    @Override
-    protected void train(R trainee)
-    {
-        when(trainee.annotationType()).thenReturn(traineeType);
-    }
+  @Override
+  protected void train(R trainee) {
+    when(trainee.annotationType()).thenReturn(traineeType);
+  }
 
 }

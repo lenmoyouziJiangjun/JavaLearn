@@ -1,10 +1,9 @@
 package javapattern.factory.factory;
 
-public interface Fruit
-{
-    void grow();
+public interface Fruit {
+  void grow();
 
-    void harvest();
+  void harvest();
 
-    void plant();
+  void plant();
 }

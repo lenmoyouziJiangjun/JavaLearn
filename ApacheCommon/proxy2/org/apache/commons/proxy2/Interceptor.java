@@ -9,12 +9,12 @@ import java.io.Serializable;
  * copyright generalray4239@gmail.com
  */
 public interface Interceptor extends Serializable {
-    /**
-     * Intercept the specified {@link Invocation}.
-     *
-     * @param invocation
-     * @return return value of the method
-     * @throws Throwable
-     */
-    Object intercept(Invocation invocation) throws Throwable;
+  /**
+   * Intercept the specified {@link Invocation}.
+   *
+   * @param invocation
+   * @return return value of the method
+   * @throws Throwable
+   */
+  Object intercept(Invocation invocation) throws Throwable;
 }

@@ -13,32 +13,32 @@ import java.util.Properties;
  */
 public class JavaCryptoRandom implements CryptoRandom {
 
-    private final SecureRandom instance;
+  private final SecureRandom instance;
 
-    /**
-     * Constructs a {@link JavaCryptoRandom}.
-     *
-     * @param properties the configuration properties.
-     *                   Uses the key {@link CryptoRandomFactory#SECURE_RANDOM_JAVA_ALGORITHM_KEY}
-     *                   to get the name of the algorithm, with a default of
-     *                   {@link CryptoRandomFactory#JAVA_ALGORITHM_DEFAULT}
-     * @throws NoSuchAlgorithmException if no Provider supports a
-     *                                  SecureRandomSpi implementation for the specified algorithm.
-     */
-    public JavaCryptoRandom(Properties properties) throws NoSuchAlgorithmException {
-        instance = SecureRandom.getInstance(properties.getProperty(
-                CryptoRandomFactory.JAVA_ALGORITHM_KEY,
-                CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT));
-    }
+  /**
+   * Constructs a {@link JavaCryptoRandom}.
+   *
+   * @param properties the configuration properties.
+   *                   Uses the key {@link CryptoRandomFactory#SECURE_RANDOM_JAVA_ALGORITHM_KEY}
+   *                   to get the name of the algorithm, with a default of
+   *                   {@link CryptoRandomFactory#JAVA_ALGORITHM_DEFAULT}
+   * @throws NoSuchAlgorithmException if no Provider supports a
+   *                                  SecureRandomSpi implementation for the specified algorithm.
+   */
+  public JavaCryptoRandom(Properties properties) throws NoSuchAlgorithmException {
+    instance = SecureRandom.getInstance(properties.getProperty(
+            CryptoRandomFactory.JAVA_ALGORITHM_KEY,
+            CryptoRandomFactory.JAVA_ALGORITHM_DEFAULT));
+  }
 
 
-    @Override
-    public void nextBytes(byte[] bytes) {
-        instance.nextBytes(bytes);
-    }
+  @Override
+  public void nextBytes(byte[] bytes) {
+    instance.nextBytes(bytes);
+  }
 
-    @Override
-    public void close() throws IOException {
+  @Override
+  public void close() throws IOException {
 
-    }
+  }
 }

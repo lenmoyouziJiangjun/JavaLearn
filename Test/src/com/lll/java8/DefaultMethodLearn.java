@@ -10,13 +10,13 @@ package com.lll.java8;
 public class DefaultMethodLearn {
 
 
-    /**
-     *
-     */
-    interface DefaultInteface {
+  /**
+   *
+   */
+  interface DefaultInteface {
 
-        default void syOut() {
-           System.out.println("我是默认方法");
-        }
+    default void syOut() {
+      System.out.println("我是默认方法");
     }
+  }
 }

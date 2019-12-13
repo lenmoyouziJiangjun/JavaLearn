@@ -49,13 +49,13 @@ import java.io.*;
  */
 interface Sendable {
 
-    void prepare() throws IOException;
+  void prepare() throws IOException;
 
-    // Sends (some) content to the given channel.
-    // Returns true if more bytes remain to be written.
-    // Throws IllegalStateException if not prepared.
-    //
-    boolean send(ChannelIO cio) throws IOException;
+  // Sends (some) content to the given channel.
+  // Returns true if more bytes remain to be written.
+  // Throws IllegalStateException if not prepared.
+  //
+  boolean send(ChannelIO cio) throws IOException;
 
-    void release() throws IOException;
+  void release() throws IOException;
 }

@@ -52,86 +52,86 @@ import java.nio.file.Paths;
  */
 public class CustomAutoCloseableSample {
 
+  /**
+   * The main method for the CustomAutoCloseableSample program.
+   *
+   * @param args is not used.
+   */
+  public static void main(String[] args) {
+    /*
+     * TeeStream will be closed automatically after the try block.
+     */
+    try (TeeStream teeStream = new TeeStream(System.out, Paths.get("out.txt"));
+         PrintStream out = new PrintStream(teeStream)) {
+      out.print("Hello, world");
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.exit(1);
+    }
+  }
+
+  /**
+   * Passes the output through to the specified output stream while copying it into a file.
+   * The TeeStream functionality is similar to the Unix tee utility.
+   * TeeStream implements AutoCloseable interface. See OutputStream for details.
+   */
+  public static class TeeStream extends OutputStream {
+
+    private final OutputStream fileStream;
+    private final OutputStream outputStream;
+
     /**
-     * The main method for the CustomAutoCloseableSample program.
+     * Creates a TeeStream.
      *
-     * @param args is not used.
+     * @param outputStream an output stream.
+     * @param outputFile   an path to file.
+     * @throws IOException If an I/O error occurs.
      */
-    public static void main(String[] args) {
-        /*
-         * TeeStream will be closed automatically after the try block.
-         */
-        try (TeeStream teeStream = new TeeStream(System.out, Paths.get("out.txt"));
-             PrintStream out = new PrintStream(teeStream)) {
-            out.print("Hello, world");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+    public TeeStream(OutputStream outputStream, Path outputFile) throws IOException {
+      this.fileStream = new BufferedOutputStream(Files.newOutputStream(outputFile));
+      this.outputStream = outputStream;
     }
 
     /**
-     * Passes the output through to the specified output stream while copying it into a file.
-     * The TeeStream functionality is similar to the Unix tee utility.
-     * TeeStream implements AutoCloseable interface. See OutputStream for details.
+     * Writes the specified byte to the specified output stream
+     * and copies it to the file.
+     *
+     * @param b the byte to be written.
+     * @throws IOException If an I/O error occurs.
      */
-    public static class TeeStream extends OutputStream {
-
-        private final OutputStream fileStream;
-        private final OutputStream outputStream;
-
-        /**
-         * Creates a TeeStream.
-         *
-         * @param outputStream an output stream.
-         * @param outputFile   an path to file.
-         * @throws IOException If an I/O error occurs.
-         */
-        public TeeStream(OutputStream outputStream, Path outputFile) throws IOException {
-            this.fileStream = new BufferedOutputStream(Files.newOutputStream(outputFile));
-            this.outputStream = outputStream;
-        }
-
-        /**
-         * Writes the specified byte to the specified output stream
-         * and copies it to the file.
-         *
-         * @param b the byte to be written.
-         * @throws IOException If an I/O error occurs.
-         */
-        @Override
-        public void write(int b) throws IOException {
-            fileStream.write(b);
-            outputStream.write(b);
-        }
-
-        /**
-         * Flushes this output stream and forces any buffered output bytes
-         * to be written out.
-         * The <code>flush</code> method of <code>TeeStream</code> flushes
-         * the specified output stream and the file output stream.
-         *
-         * @throws IOException if an I/O error occurs.
-         */
-        @Override
-        public void flush() throws IOException {
-            outputStream.flush();
-            fileStream.flush();
-        }
-
-        /**
-         * Closes underlying streams and resources.
-         * The external output stream won't be closed.
-         * This method is the member of AutoCloseable interface and
-         * it will be invoked automatically after the try-with-resources block.
-         *
-         * @throws IOException If an I/O error occurs.
-         */
-        @Override
-        public void close() throws IOException {
-            try (OutputStream file = fileStream) {
-                flush();
-            }
-        }
+    @Override
+    public void write(int b) throws IOException {
+      fileStream.write(b);
+      outputStream.write(b);
     }
+
+    /**
+     * Flushes this output stream and forces any buffered output bytes
+     * to be written out.
+     * The <code>flush</code> method of <code>TeeStream</code> flushes
+     * the specified output stream and the file output stream.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
+    @Override
+    public void flush() throws IOException {
+      outputStream.flush();
+      fileStream.flush();
+    }
+
+    /**
+     * Closes underlying streams and resources.
+     * The external output stream won't be closed.
+     * This method is the member of AutoCloseable interface and
+     * it will be invoked automatically after the try-with-resources block.
+     *
+     * @throws IOException If an I/O error occurs.
+     */
+    @Override
+    public void close() throws IOException {
+      try (OutputStream file = fileStream) {
+        flush();
+      }
+    }
+  }
 }

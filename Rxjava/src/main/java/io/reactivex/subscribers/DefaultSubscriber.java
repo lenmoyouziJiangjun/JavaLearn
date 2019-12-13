@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -47,68 +47,72 @@ import io.reactivex.internal.util.EndConsumerHelper;
  * and {@link #onComplete()} are not allowed to throw any unchecked exceptions.
  * If for some reason this can't be avoided, use {@link io.reactivex.Flowable#safeSubscribe(org.reactivestreams.Subscriber)}
  * instead of the standard {@code subscribe()} method.
+ *
  * @param <T> the value type
  *
- * <p>Example<pre><code>
- * Flowable.range(1, 5)
- *     .subscribe(new DefaultSubscriber&lt;Integer>() {
- *         &#64;Override public void onStart() {
- *             System.out.println("Start!");
- *             request(1);
- *         }
- *         &#64;Override public void onNext(Integer t) {
- *             if (t == 3) {
- *                 cancel();
- *             }
- *             System.out.println(t);
- *             request(1);
- *         }
- *         &#64;Override public void onError(Throwable t) {
- *             t.printStackTrace();
- *         }
- *         &#64;Override public void onComplete() {
- *             System.out.println("Done!");
- *         }
- *     });
- * </code></pre>
+ *            <p>Example<pre><code>
+ *            Flowable.range(1, 5)
+ *                .subscribe(new DefaultSubscriber&lt;Integer>() {
+ *                    &#64;Override public void onStart() {
+ *                        System.out.println("Start!");
+ *                        request(1);
+ *                    }
+ *                    &#64;Override public void onNext(Integer t) {
+ *                        if (t == 3) {
+ *                            cancel();
+ *                        }
+ *                        System.out.println(t);
+ *                        request(1);
+ *                    }
+ *                    &#64;Override public void onError(Throwable t) {
+ *                        t.printStackTrace();
+ *                    }
+ *                    &#64;Override public void onComplete() {
+ *                        System.out.println("Done!");
+ *                    }
+ *                });
+ *            </code></pre>
  */
 public abstract class DefaultSubscriber<T> implements FlowableSubscriber<T> {
-    private Subscription s;
-    @Override
-    public final void onSubscribe(Subscription s) {
-        if (EndConsumerHelper.validate(this.s, s, getClass())) {
-            this.s = s;
-            onStart();
-        }
-    }
+  private Subscription s;
 
-    /**
-     * Requests from the upstream Subscription.
-     * @param n the request amount, positive
-     */
-    protected final void request(long n) {
-        Subscription s = this.s;
-        if (s != null) {
-            s.request(n);
-        }
+  @Override
+  public final void onSubscribe(Subscription s) {
+    if (EndConsumerHelper.validate(this.s, s, getClass())) {
+      this.s = s;
+      onStart();
     }
+  }
 
-    /**
-     * Cancels the upstream's Subscription.
-     */
-    protected final void cancel() {
-        Subscription s = this.s;
-        this.s = SubscriptionHelper.CANCELLED;
-        s.cancel();
+  /**
+   * Requests from the upstream Subscription.
+   *
+   * @param n the request amount, positive
+   */
+  protected final void request(long n) {
+    Subscription s = this.s;
+    if (s != null) {
+      s.request(n);
     }
-    /**
-     * Called once the subscription has been set on this observer; override this
-     * to perform initialization or issue an initial request.
-     * <p>
-     * The default implementation requests {@link Long#MAX_VALUE}.
-     */
-    protected void onStart() {
-        request(Long.MAX_VALUE);
-    }
+  }
+
+  /**
+   * Cancels the upstream's Subscription.
+   */
+  protected final void cancel() {
+    Subscription s = this.s;
+    this.s = SubscriptionHelper.CANCELLED;
+    s.cancel();
+  }
+
+  /**
+   * Called once the subscription has been set on this observer; override this
+   * to perform initialization or issue an initial request.
+   * <p>
+   * The default implementation requests {@link Long#MAX_VALUE}.
+   */
+  protected void onStart() {
+    request(Long.MAX_VALUE);
+  }
 
 }

@@ -12,25 +12,25 @@ import org.apache.commons.proxy2.ObjectProvider;
  */
 public class SingletonProvider<T> extends ProviderDecorator<T> {
 
-    private T instance;
+  private T instance;
 
-    /**
-     * Create a new ProviderDecorator instance.
-     *
-     * @param inner
-     */
-    public SingletonProvider(ObjectProvider<? extends T> inner) {
-        super(inner);
-    }
+  /**
+   * Create a new ProviderDecorator instance.
+   *
+   * @param inner
+   */
+  public SingletonProvider(ObjectProvider<? extends T> inner) {
+    super(inner);
+  }
 
-    @Override
-    public T getObject() {
-        synchronized (this) {
-            if (instance == null) {
-                instance = super.getObject();
-                setInner(null);
-            }
-            return instance;
-        }
+  @Override
+  public T getObject() {
+    synchronized (this) {
+      if (instance == null) {
+        instance = super.getObject();
+        setInner(null);
+      }
+      return instance;
     }
+  }
 }

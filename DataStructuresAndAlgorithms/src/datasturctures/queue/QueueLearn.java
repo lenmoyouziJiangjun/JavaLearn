@@ -9,8 +9,4 @@ package datasturctures.queue;
 public class QueueLearn {
 
 
-
-
-
-
 }

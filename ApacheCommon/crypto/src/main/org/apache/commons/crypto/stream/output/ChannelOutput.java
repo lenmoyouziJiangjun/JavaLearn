@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,52 +28,51 @@ import java.nio.channels.WritableByteChannel;
  */
 public class ChannelOutput implements Output {
 
-    private final WritableByteChannel channel;
+  private final WritableByteChannel channel;
 
-    /**
-     * Constructs a
-     * {@link ChannelOutput}.
-     *
-     * @param channel the WritableByteChannel object.
-     */
-    public ChannelOutput(WritableByteChannel channel) {
-        this.channel = channel;
-    }
+  /**
+   * Constructs a
+   * {@link ChannelOutput}.
+   *
+   * @param channel the WritableByteChannel object.
+   */
+  public ChannelOutput(WritableByteChannel channel) {
+    this.channel = channel;
+  }
 
-    /**
-     * Overrides the
-     * {@link Output#write(ByteBuffer)}.
-     * Writes a sequence of bytes to this output from the given buffer.
-     *
-     * @param src The buffer from which bytes are to be retrieved.
-     *
-     * @return The number of bytes written, possibly zero.
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public int write(ByteBuffer src) throws IOException {
-        return channel.write(src);
-    }
+  /**
+   * Overrides the
+   * {@link Output#write(ByteBuffer)}.
+   * Writes a sequence of bytes to this output from the given buffer.
+   *
+   * @param src The buffer from which bytes are to be retrieved.
+   * @return The number of bytes written, possibly zero.
+   * @throws IOException if an I/O error occurs.
+   */
+  @Override
+  public int write(ByteBuffer src) throws IOException {
+    return channel.write(src);
+  }
 
-    /**
-     * Overrides the {@link Output#flush()}. Flushes this output and forces any
-     * buffered output bytes to be written out if the under layer output method
-     * support.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void flush() throws IOException {
-    }
+  /**
+   * Overrides the {@link Output#flush()}. Flushes this output and forces any
+   * buffered output bytes to be written out if the under layer output method
+   * support.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
+  @Override
+  public void flush() throws IOException {
+  }
 
-    /**
-     * Overrides the {@link Output#close()}. Closes this output and releases any
-     * system resources associated with the under layer output.
-     *
-     * @throws IOException if an I/O error occurs.
-     */
-    @Override
-    public void close() throws IOException {
-        channel.close();
-    }
+  /**
+   * Overrides the {@link Output#close()}. Closes this output and releases any
+   * system resources associated with the under layer output.
+   *
+   * @throws IOException if an I/O error occurs.
+   */
+  @Override
+  public void close() throws IOException {
+    channel.close();
+  }
 }

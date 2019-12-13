@@ -12,7 +12,7 @@ import java.lang.instrument.ClassFileTransformer;
  */
 public class ClassFileTransformerTest {
 
-    public void test(){
+  public void test() {
 //        ClassFileTransformer fileTransformer = new
-    }
+  }
 }

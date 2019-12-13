@@ -23,67 +23,67 @@ import java.util.Properties;
  */
 public class JceCipher implements CryptoCipher {
 
-    private final Cipher cipher;
+  private final Cipher cipher;
 
-    /**
-     * Constructs a {@link CryptoCipher} based on JCE Cipher {@link Cipher}.
-     *
-     * @param props          properties for JCE cipher (only uses {@link CryptoCipherFactory#JCE_PROVIDER_KEY})
-     * @param transformation transformation for JCE cipher (algorithm/mode/padding)
-     * @throws GeneralSecurityException if JCE cipher initialize failed
-     */
-    // N.B. this class is not public/protected so does not appear in the main Javadoc
-    // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
-    public JceCipher(Properties props, String transformation) throws GeneralSecurityException {
-        final String provider = props.getProperty(CryptoCipherFactory.JCE_PROVIDER_KEY);
-        if (provider == null || provider.isEmpty()) {
-            cipher = Cipher.getInstance(transformation);
-        } else {
-            cipher = Cipher.getInstance(transformation, provider);
-        }
+  /**
+   * Constructs a {@link CryptoCipher} based on JCE Cipher {@link Cipher}.
+   *
+   * @param props          properties for JCE cipher (only uses {@link CryptoCipherFactory#JCE_PROVIDER_KEY})
+   * @param transformation transformation for JCE cipher (algorithm/mode/padding)
+   * @throws GeneralSecurityException if JCE cipher initialize failed
+   */
+  // N.B. this class is not public/protected so does not appear in the main Javadoc
+  // Please ensure that property use is documented in the enum CryptoRandomFactory.RandomProvider
+  public JceCipher(Properties props, String transformation) throws GeneralSecurityException {
+    final String provider = props.getProperty(CryptoCipherFactory.JCE_PROVIDER_KEY);
+    if (provider == null || provider.isEmpty()) {
+      cipher = Cipher.getInstance(transformation);
+    } else {
+      cipher = Cipher.getInstance(transformation, provider);
     }
+  }
 
-    @Override
-    public int getBlockSize() {
-        return cipher.getBlockSize();
-    }
+  @Override
+  public int getBlockSize() {
+    return cipher.getBlockSize();
+  }
 
-    @Override
-    public String getAlgorithm() {
-        return cipher.getAlgorithm();
-    }
+  @Override
+  public String getAlgorithm() {
+    return cipher.getAlgorithm();
+  }
 
-    @Override
-    public void init(int mode, Key key, AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
-        Utils.checkNotNull(key);
-        Utils.checkNotNull(params);
+  @Override
+  public void init(int mode, Key key, AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    Utils.checkNotNull(key);
+    Utils.checkNotNull(params);
 
-        // Jce uses the javax.crypto.Cipher modes; no need to convert the input
-        cipher.init(mode, key, params);
-    }
+    // Jce uses the javax.crypto.Cipher modes; no need to convert the input
+    cipher.init(mode, key, params);
+  }
 
-    @Override
-    public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws ShortBufferException {
-        return cipher.update(inBuffer, outBuffer);
-    }
+  @Override
+  public int update(ByteBuffer inBuffer, ByteBuffer outBuffer) throws ShortBufferException {
+    return cipher.update(inBuffer, outBuffer);
+  }
 
-    @Override
-    public int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset) throws ShortBufferException {
-        return cipher.update(input, inputOffset, inputLen, output, outputOffset);
-    }
+  @Override
+  public int update(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset) throws ShortBufferException {
+    return cipher.update(input, inputOffset, inputLen, output, outputOffset);
+  }
 
-    @Override
-    public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
-        return cipher.doFinal(inBuffer, outBuffer);
-    }
+  @Override
+  public int doFinal(ByteBuffer inBuffer, ByteBuffer outBuffer) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    return cipher.doFinal(inBuffer, outBuffer);
+  }
 
-    @Override
-    public int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
-        return cipher.doFinal(input, inputOffset, inputLen, output, outputOffset);
-    }
+  @Override
+  public int doFinal(byte[] input, int inputOffset, int inputLen, byte[] output, int outputOffset) throws ShortBufferException, IllegalBlockSizeException, BadPaddingException {
+    return cipher.doFinal(input, inputOffset, inputLen, output, outputOffset);
+  }
 
-    @Override
-    public void close() throws IOException {
+  @Override
+  public void close() throws IOException {
 
-    }
+  }
 }

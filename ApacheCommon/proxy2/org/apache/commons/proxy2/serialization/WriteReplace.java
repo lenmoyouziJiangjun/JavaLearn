@@ -20,15 +20,14 @@ import java.io.Serializable;
 
 /**
  * Defines a contract around the {@code Object writeReplace()} method used by Java deserialization.
- * 
+ *
  * @since 2.0
  */
-public interface WriteReplace extends Serializable
-{
-    /**
-     * Get the serialized version of this object.
-     * 
-     * @return Object
-     */
-    Object writeReplace();
+public interface WriteReplace extends Serializable {
+  /**
+   * Get the serialized version of this object.
+   *
+   * @return Object
+   */
+  Object writeReplace();
 }

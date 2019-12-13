@@ -9,7 +9,7 @@ package com.lll.aop.asm.demo2;/**
  * copyright generalray4239@gmail.com
  */
 public class Account {
-    public void operation() {
-        System.out.println("挣了300块钱");
-    }
+  public void operation() {
+    System.out.println("挣了300块钱");
+  }
 }

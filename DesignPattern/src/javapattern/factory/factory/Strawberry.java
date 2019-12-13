@@ -1,21 +1,17 @@
 package javapattern.factory.factory;
 
-public class Strawberry implements Fruit
-{
-    
-    public void grow()
-    {
-    	System.out.println("Strawberry is growing...");
-    }
+public class Strawberry implements Fruit {
 
-    public void harvest()
-    {
-    	System.out.println("Strawberry has been harvested.");
-    }
+  public void grow() {
+    System.out.println("Strawberry is growing...");
+  }
 
-    public void plant()
-    {
-        System.out.println("Strawberry has been planted.");
-    }
+  public void harvest() {
+    System.out.println("Strawberry has been harvested.");
+  }
+
+  public void plant() {
+    System.out.println("Strawberry has been planted.");
+  }
 
 }

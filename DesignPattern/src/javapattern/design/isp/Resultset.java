@@ -1,16 +1,15 @@
 package javapattern.design.isp;
 
-public interface Resultset
-{
-    void first();
+public interface Resultset {
+  void first();
 
-    void last();
+  void last();
 
-    void next();
+  void next();
 
-    void previous();
+  void previous();
 
-    String getExcerpt();
+  String getExcerpt();
 
-    String getFullRecord();
+  String getFullRecord();
 }

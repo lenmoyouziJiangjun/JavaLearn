@@ -9,8 +9,8 @@ package com.lll.aop.demo.account;/**
  * copyright generalray4239@gmail.com
  */
 public class AccountImpl implements Account {
-    @Override
-    public void operation() {
-        System.out.println("挣了300块钱");
-    }
+  @Override
+  public void operation() {
+    System.out.println("挣了300块钱");
+  }
 }

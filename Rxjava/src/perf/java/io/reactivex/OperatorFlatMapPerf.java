@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License is
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
@@ -27,66 +27,67 @@ import io.reactivex.schedulers.Schedulers;
 @State(Scope.Thread)
 public class OperatorFlatMapPerf {
 
-    @State(Scope.Thread)
-    public static class Input extends InputWithIncrementingInteger {
+  @State(Scope.Thread)
+  public static class Input extends InputWithIncrementingInteger {
 
-        @Param({ "1", "1000", "1000000" })
-        public int size;
+    @Param({"1", "1000", "1000000"})
+    public int size;
 
-        @Override
-        public int getSize() {
-            return size;
-        }
-
+    @Override
+    public int getSize() {
+      return size;
     }
 
-    @Benchmark
-    public void flatMapIntPassthruSync(Input input) throws InterruptedException {
-        input.observable.flatMap(new Function<Integer, Publisher<Integer>>() {
-            @Override
-            public Publisher<Integer> apply(Integer v) {
-                return Flowable.just(v);
-            }
-        }).subscribe(input.newSubscriber());
-    }
+  }
 
-    @Benchmark
-    public void flatMapIntPassthruAsync(Input input) throws InterruptedException {
-        PerfSubscriber latchedObserver = input.newLatchedObserver();
-        input.observable.flatMap(new Function<Integer, Publisher<Integer>>() {
-            @Override
-            public Publisher<Integer> apply(Integer i) {
-                    return Flowable.just(i).subscribeOn(Schedulers.computation());
-            }
-        }).subscribe(latchedObserver);
-        if (input.size == 1) {
-            while (latchedObserver.latch.getCount() != 0) { }
-        } else {
-            latchedObserver.latch.await();
-        }
-    }
+  @Benchmark
+  public void flatMapIntPassthruSync(Input input) throws InterruptedException {
+    input.observable.flatMap(new Function<Integer, Publisher<Integer>>() {
+      @Override
+      public Publisher<Integer> apply(Integer v) {
+        return Flowable.just(v);
+      }
+    }).subscribe(input.newSubscriber());
+  }
 
-    @Benchmark
-    public void flatMapTwoNestedSync(final Input input) throws InterruptedException {
-        Flowable.range(1, 2).flatMap(new Function<Integer, Publisher<Integer>>() {
-            @Override
-            public Publisher<Integer> apply(Integer i) {
-                    return input.observable;
-            }
-        }).subscribe(input.newSubscriber());
+  @Benchmark
+  public void flatMapIntPassthruAsync(Input input) throws InterruptedException {
+    PerfSubscriber latchedObserver = input.newLatchedObserver();
+    input.observable.flatMap(new Function<Integer, Publisher<Integer>>() {
+      @Override
+      public Publisher<Integer> apply(Integer i) {
+        return Flowable.just(i).subscribeOn(Schedulers.computation());
+      }
+    }).subscribe(latchedObserver);
+    if (input.size == 1) {
+      while (latchedObserver.latch.getCount() != 0) {
+      }
+    } else {
+      latchedObserver.latch.await();
     }
+  }
 
-    // this runs out of memory currently
-    //    @Benchmark
-    //    public void flatMapTwoNestedAsync(final Input input) throws InterruptedException {
-    //        Observable.range(1, 2).flatMap(new Func1<Integer, Observable<Integer>>() {
-    //
-    //            @Override
-    //            public Observable<Integer> call(Integer i) {
-    //                return input.observable.subscribeOn(Schedulers.computation());
-    //            }
-    //
-    //        }).subscribe(input.observer);
-    //    }
+  @Benchmark
+  public void flatMapTwoNestedSync(final Input input) throws InterruptedException {
+    Flowable.range(1, 2).flatMap(new Function<Integer, Publisher<Integer>>() {
+      @Override
+      public Publisher<Integer> apply(Integer i) {
+        return input.observable;
+      }
+    }).subscribe(input.newSubscriber());
+  }
+
+  // this runs out of memory currently
+  //    @Benchmark
+  //    public void flatMapTwoNestedAsync(final Input input) throws InterruptedException {
+  //        Observable.range(1, 2).flatMap(new Func1<Integer, Observable<Integer>>() {
+  //
+  //            @Override
+  //            public Observable<Integer> call(Integer i) {
+  //                return input.observable.subscribeOn(Schedulers.computation());
+  //            }
+  //
+  //        }).subscribe(input.observer);
+  //    }
 
 }

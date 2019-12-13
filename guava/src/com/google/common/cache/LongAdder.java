@@ -12,6 +12,7 @@
 package com.google.common.cache;
 
 import com.google.common.annotations.GwtCompatible;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -36,20 +37,25 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * <p><em>jsr166e note: This class is targeted to be placed in java.util.concurrent.atomic.</em>
  *
- * @since 1.8
  * @author Doug Lea
+ * @since 1.8
  */
 @GwtCompatible(emulated = true)
 final class LongAdder extends Striped64 implements Serializable, LongAddable {
   private static final long serialVersionUID = 7249069246863182397L;
 
-  /** Version of plus for use in retryUpdate */
+  /**
+   * Version of plus for use in retryUpdate
+   */
   final long fn(long v, long x) {
     return v + x;
   }
 
-  /** Creates a new adder with initial sum of zero. */
-  public LongAdder() {}
+  /**
+   * Creates a new adder with initial sum of zero.
+   */
+  public LongAdder() {
+  }
 
   /**
    * Adds the given value.
@@ -65,19 +71,23 @@ final class LongAdder extends Striped64 implements Serializable, LongAddable {
     if ((as = cells) != null || !casBase(b = base, b + x)) {
       boolean uncontended = true;
       if ((hc = threadHashCode.get()) == null
-          || as == null
-          || (n = as.length) < 1
-          || (a = as[(n - 1) & hc[0]]) == null
-          || !(uncontended = a.cas(v = a.value, v + x))) retryUpdate(x, hc, uncontended);
+              || as == null
+              || (n = as.length) < 1
+              || (a = as[(n - 1) & hc[0]]) == null
+              || !(uncontended = a.cas(v = a.value, v + x))) retryUpdate(x, hc, uncontended);
     }
   }
 
-  /** Equivalent to {@code add(1)}. */
+  /**
+   * Equivalent to {@code add(1)}.
+   */
   public void increment() {
     add(1L);
   }
 
-  /** Equivalent to {@code add(-1)}. */
+  /**
+   * Equivalent to {@code add(-1)}.
+   */
   public void decrement() {
     add(-1L);
   }
@@ -155,17 +165,23 @@ final class LongAdder extends Striped64 implements Serializable, LongAddable {
     return sum();
   }
 
-  /** Returns the {@link #sum} as an {@code int} after a narrowing primitive conversion. */
+  /**
+   * Returns the {@link #sum} as an {@code int} after a narrowing primitive conversion.
+   */
   public int intValue() {
     return (int) sum();
   }
 
-  /** Returns the {@link #sum} as a {@code float} after a widening primitive conversion. */
+  /**
+   * Returns the {@link #sum} as a {@code float} after a widening primitive conversion.
+   */
   public float floatValue() {
     return (float) sum();
   }
 
-  /** Returns the {@link #sum} as a {@code double} after a widening primitive conversion. */
+  /**
+   * Returns the {@link #sum} as a {@code double} after a widening primitive conversion.
+   */
   public double doubleValue() {
     return (double) sum();
   }

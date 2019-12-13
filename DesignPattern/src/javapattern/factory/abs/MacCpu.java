@@ -1,5 +1,4 @@
 package javapattern.factory.abs;
 
-public class MacCpu implements Cpu
-{
+public class MacCpu implements Cpu {
 }

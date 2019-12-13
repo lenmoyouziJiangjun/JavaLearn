@@ -12,33 +12,33 @@ import org.apache.commons.crypto.random.CryptoRandom;
  */
 public class OpenSslJna {
 
-    /**
-     * @return The cipher class of JNA implementation
-     */
-    public static Class<? extends CryptoCipher> getCipherClass() {
-        return OpenSslJnaCipher.class;
-    }
+  /**
+   * @return The cipher class of JNA implementation
+   */
+  public static Class<? extends CryptoCipher> getCipherClass() {
+    return OpenSslJnaCipher.class;
+  }
 
-    /**
-     * @return The random class of JNA implementation
-     */
-    public static Class<? extends CryptoRandom> getRandomClass() {
-        return OpenSslJnaCryptoRandom.class;
-    }
+  /**
+   * @return The random class of JNA implementation
+   */
+  public static Class<? extends CryptoRandom> getRandomClass() {
+    return OpenSslJnaCryptoRandom.class;
+  }
 
-    /**
-     * @return true if JNA native loads successfully
-     */
-    public static boolean isEnabled() {
-        return OpenSslNativeJna.INIT_OK;
-    }
+  /**
+   * @return true if JNA native loads successfully
+   */
+  public static boolean isEnabled() {
+    return OpenSslNativeJna.INIT_OK;
+  }
 
-    /**
-     * @return the error of JNA
-     */
-    public static Throwable initialisationError() {
-        return OpenSslNativeJna.INIT_ERROR;
-    }
+  /**
+   * @return the error of JNA
+   */
+  public static Throwable initialisationError() {
+    return OpenSslNativeJna.INIT_ERROR;
+  }
 
 
 }

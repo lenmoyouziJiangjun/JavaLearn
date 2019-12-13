@@ -15,22 +15,22 @@ import java.lang.reflect.Method;
  */
 public class DelegatingInvoker<T> implements Invoker {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private final ObjectProvider<? extends T> delegateProvider;
+  private final ObjectProvider<? extends T> delegateProvider;
 
-    public DelegatingInvoker(@NotNull ObjectProvider<? extends T> delegateProvider) {
-        this.delegateProvider = delegateProvider;
+  public DelegatingInvoker(@NotNull ObjectProvider<? extends T> delegateProvider) {
+    this.delegateProvider = delegateProvider;
+  }
+
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
+    try {
+      return method.invoke(delegateProvider.getObject(), arguments);
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+      throw e.getTargetException();
     }
-
-
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
-        try {
-            return method.invoke(delegateProvider.getObject(), arguments);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            throw e.getTargetException();
-        }
-    }
+  }
 }

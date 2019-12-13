@@ -19,23 +19,23 @@ package org.apache.commons.proxy2.provider;
 
 /**
  * Always returns null.
- * 
+ *
  * @since 1.0
  */
-public class NullProvider<T> extends ConstantProvider<T>
-{
-    /** Serialization version */
-    private static final long serialVersionUID = 1L;
+public class NullProvider<T> extends ConstantProvider<T> {
+  /**
+   * Serialization version
+   */
+  private static final long serialVersionUID = 1L;
 
-    //******************************************************************************************************************
-    // Constructors
-    //******************************************************************************************************************
+  //******************************************************************************************************************
+  // Constructors
+  //******************************************************************************************************************
 
-    /**
-     * Create a new NullProvider instance.
-     */
-    public NullProvider()
-    {
-        super(null);
-    }
+  /**
+   * Create a new NullProvider instance.
+   */
+  public NullProvider() {
+    super(null);
+  }
 }

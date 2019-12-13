@@ -13,15 +13,15 @@ import org.apache.commons.proxy2.ObjectProvider;
  */
 public class ObjectProviderInterceptor implements Interceptor {
 
-    private final ObjectProvider<?> provider;
+  private final ObjectProvider<?> provider;
 
-    public ObjectProviderInterceptor(ObjectProvider<?> provider) {
-        this.provider = Validate.notNull(provider, "Provider cannot be null.");
-    }
+  public ObjectProviderInterceptor(ObjectProvider<?> provider) {
+    this.provider = Validate.notNull(provider, "Provider cannot be null.");
+  }
 
-    @Override
-    public Object intercept(Invocation invocation) throws Throwable {
+  @Override
+  public Object intercept(Invocation invocation) throws Throwable {
 
-        return provider.getObject();
-    }
+    return provider.getObject();
+  }
 }

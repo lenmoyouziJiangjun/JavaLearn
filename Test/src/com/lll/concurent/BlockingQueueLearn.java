@@ -30,145 +30,148 @@ import java.util.concurrent.*;
 public class BlockingQueueLearn {
 
 
-    /**
-     * 数组组成的阻塞队列
-     * <p>
-     * 第一个参数表示 初始大小，第二个表示顺序 true 表示有序FIFO，false表示无序
-     * 原理就是里面有个Object[] 数组。 put的时候，判断数组是否已满，满了就wait，等待take。
-     */
-    public ArrayBlockingQueue<String> arrayBlockingQueue = new ArrayBlockingQueue<String>(4, false);
+  /**
+   * 数组组成的阻塞队列
+   * <p>
+   * 第一个参数表示 初始大小，第二个表示顺序 true 表示有序FIFO，false表示无序
+   * 原理就是里面有个Object[] 数组。 put的时候，判断数组是否已满，满了就wait，等待take。
+   */
+  public ArrayBlockingQueue<String> arrayBlockingQueue = new ArrayBlockingQueue<String>(4, false);
 
-    /**
-     * 链表组成的阻塞队列
-     */
-    public LinkedBlockingQueue<String> linkedBlockingQueue = new LinkedBlockingQueue<>(5);
+  /**
+   * 链表组成的阻塞队列
+   */
+  public LinkedBlockingQueue<String> linkedBlockingQueue = new LinkedBlockingQueue<>(5);
 
-    /**
-     * 优先级阻塞队列
-     */
-    public PriorityBlockingQueue<MyPriority> priorityPriorityBlockingQueue = new PriorityBlockingQueue<>();
+  /**
+   * 优先级阻塞队列
+   */
+  public PriorityBlockingQueue<MyPriority> priorityBlockingQueue = new PriorityBlockingQueue<>();
 
-    /**
-     * 延时队列
-     *
-     */
-    public DelayQueue<MyDelay> delayQueue  = new DelayQueue<>();
+  /**
+   * 延时队列
+   */
+  public DelayQueue<MyDelay> delayQueue = new DelayQueue<>();
 
+  /**
+   *
+   */
+  public SynchronousQueue<String> synchronousQueue = new SynchronousQueue<>(true);
 
-    private volatile boolean isStopProducer = false;
-    private volatile boolean isStopConsumer = false;
+  private volatile boolean isStopProducer = false;
+  private volatile boolean isStopConsumer = false;
 
-    private int num;
-    private List<String> integerList = new CopyOnWriteArrayList<>();
+  private volatile int num;
+  private List<String> integerList = new CopyOnWriteArrayList<>();
 
-    /**
-     * 生成者
-     */
-    public class Producer implements Runnable {
-        public final BlockingQueue queue;
+  /**
+   * 生成者
+   */
+  public class Producer implements Runnable {
+    public final BlockingQueue queue;
 
-        public Producer(BlockingQueue queue) {
-            this.queue = queue;
-        }
-
-        @Override
-        public void run() {
-            while (!isStopProducer) {
-                try {
-                    queue.put(produce());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public int produce() {
-            synchronized (queue) {
-                num += 1;
-                integerList.add(num + "");
-                if (num == 20) {
-                    isStopProducer = true;
-                }
-                System.out.println(Thread.currentThread().getName() + "---------生产了------" + num);
-                return num;
-            }
-        }
+    public Producer(BlockingQueue queue) {
+      this.queue = queue;
     }
 
-    /**
-     * 消费者
-     */
-    public class Consumer implements Runnable {
-
-        public final BlockingQueue queue;
-
-        public Consumer(BlockingQueue queue) {
-            this.queue = queue;
+    @Override
+    public void run() {
+      while (!isStopProducer) {
+        try {
+          queue.put(produce());
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
-
-        @Override
-        public void run() {
-            while (!isStopConsumer) {
-                try {
-                    consume((Integer) queue.take());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public void consume(int obj) {
-            synchronized (queue) {
-                integerList.remove(obj + "");
-                if (integerList.size() == 0) {
-                    isStopConsumer = true;
-                }
-                System.out.println(Thread.currentThread().getName() + "---------消费了------" + obj);
-            }
-        }
+      }
     }
 
-
-    public class MyPriority implements Comparable{
-
-
-        @Override
-        public int compareTo(Object o) {
-            return 0;
+    public int produce() {
+      synchronized (queue) {
+        num += 1;
+        integerList.add(num + "");
+        if (num == 20) {
+          isStopProducer = true;
         }
+        System.out.println(Thread.currentThread().getName() + "---------生产了------" + num);
+        return num;
+      }
+    }
+  }
+
+  /**
+   * 消费者
+   */
+  public class Consumer implements Runnable {
+
+    public final BlockingQueue queue;
+
+    public Consumer(BlockingQueue queue) {
+      this.queue = queue;
     }
 
-    /**
-     *  验证DelayQueue
-     */
-    public class MyDelay implements Delayed {
-
-        @Override
-        public long getDelay(TimeUnit unit) {
-            return 0;
+    @Override
+    public void run() {
+      while (!isStopConsumer) {
+        try {
+          consume((Integer) queue.take());
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
-
-        @Override
-        public int compareTo(Delayed o) {
-            return 0;
-        }
+      }
     }
 
-
-    public static void main(String[] args) {
-        BlockingQueueLearn lean = new BlockingQueueLearn();
-        Producer producer;
-        for (int i = 0; i < 10; i++) {
-            producer = lean.new Producer(lean.arrayBlockingQueue);
-            new Thread(producer, "生产者" + i + " 号").start();
+    public void consume(int obj) {
+      synchronized (queue) {
+        integerList.remove(obj + "");
+        if (integerList.size() == 0) {
+          isStopConsumer = true;
         }
-
-        Consumer consumer;
-        for (int i = 0; i < 10; i++) {
-            consumer = lean.new Consumer(lean.arrayBlockingQueue);
-            new Thread(consumer, "消费者" + i + " 号").start();
-        }
-
+        System.out.println(Thread.currentThread().getName() + "---------消费了------" + obj);
+      }
     }
+  }
+
+
+  public class MyPriority implements Comparable {
+
+
+    @Override
+    public int compareTo(Object o) {
+      return 0;
+    }
+  }
+
+  /**
+   * 验证DelayQueue
+   */
+  public class MyDelay implements Delayed {
+
+    @Override
+    public long getDelay(TimeUnit unit) {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(Delayed o) {
+      return 0;
+    }
+  }
+
+
+  public static void main(String[] args) {
+    BlockingQueueLearn lean = new BlockingQueueLearn();
+    Producer producer;
+    for (int i = 0; i < 10; i++) {
+      producer = lean.new Producer(lean.arrayBlockingQueue);
+      new Thread(producer, "生产者" + i + " 号").start();
+    }
+
+    Consumer consumer;
+    for (int i = 0; i < 10; i++) {
+      consumer = lean.new Consumer(lean.arrayBlockingQueue);
+      new Thread(consumer, "消费者" + i + " 号").start();
+    }
+
+  }
 
 }

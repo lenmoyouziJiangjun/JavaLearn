@@ -1,5 +1,7 @@
 package algorithms.sort;
 
+import java.util.Arrays;
+
 /**
  * Version 1.0
  * Created by lll on 11/30/17.
@@ -22,6 +24,7 @@ public class QuickSort {
     int q = partition(a, p, r); // 获取分区点
     quickSortInternally(a, p, q-1);
     quickSortInternally(a, q+1, r);
+
   }
 
   private static int partition(int[] a, int p, int r) {

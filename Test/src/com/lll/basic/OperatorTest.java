@@ -19,14 +19,23 @@ public class OperatorTest {
 
 
   public static void main(String[] args) throws Exception {
-//        binaryOperator();
+        binaryOperator();
 //        dualOperatorTest();
 //        testDataType();
 //        testNum(3.8f);
 //        testOpe2();
 //        testDextroposition();
 
-    testSort();
+//    int i = 0;
+//    System.out.println(i++ + ++i);
+//    System.out.println("i===" + i);
+//
+//    int k = 0;
+//    int j = 0;
+//    System.out.println("k++ ===" + k++ + " k==" + k);
+//    System.out.println("++j ===" + ++j + " k==" + j);
+//
+//    testSort();
   }
 
   /**
@@ -238,5 +247,11 @@ public class OperatorTest {
     System.out.println("b====" + b);
   }
 
+
+  protected static final int FLAG_DISALLOW_INTERCEPT = 0x80000;
+  public static void requestDisallowInterceptTouchEvent(boolean disallow){
+
+
+  }
 
 }

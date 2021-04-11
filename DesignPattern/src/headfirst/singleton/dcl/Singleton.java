@@ -5,6 +5,12 @@ package headfirst.singleton.dcl;
 // guaranteed to work prior to Java 5
 //
 
+/**
+ * double check 双重检查，
+ *    实现起来比较麻烦
+ *
+ *
+ */
 public class Singleton {
   private volatile static Singleton uniqueInstance;
 

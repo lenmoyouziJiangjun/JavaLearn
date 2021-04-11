@@ -220,6 +220,7 @@ public class SearchTree {
 
     /**
      * 前序遍历树
+     *  parent-> left -> right
      */
     public void preDumpTree(TreeNode currentRootNode) {
       if (currentRootNode != null) {
@@ -229,6 +230,11 @@ public class SearchTree {
       }
     }
 
+    /**
+     * 中序遍历
+     *   left -> parent -> right
+     * @param currentRootNode
+     */
     public void midDumpTree(TreeNode currentRootNode) {
       if (currentRootNode != null) {
         midDumpTree(currentRootNode.leftChild); // print left leaf node
@@ -237,6 +243,10 @@ public class SearchTree {
       }
     }
 
+    /**
+     * 后续， left -> right -> parent
+     * @param currentRootNode
+     */
     public void postDumpTree(TreeNode currentRootNode) {
       if (currentRootNode != null) {
         postDumpTree(currentRootNode.leftChild); // print left leaf node

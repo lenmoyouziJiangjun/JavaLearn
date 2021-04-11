@@ -8,13 +8,18 @@ package com.lll.basic;
  */
 public class MathTest {
 
-  public static void main(String[] args) {
-    //ceil 取大于当前数的最近一个整数
-    System.out.println("ceil(3.8)======" + Math.ceil(3.8) + "=======ceil(-3.8)====" + Math.ceil(-3.8));
+    public static void main(String[] args) {
 
-    //和ceil相反：取小于当前数的最近一个整数
-    System.out.println("floor(3.8)======" + Math.floor(3.8) + "=======floor(-3.8)====" + Math.floor(-3.8));
-  }
+        double log = Math.log10(1 + (Math.abs(200) / 30));
+
+        System.out.println("the log10 === " + log);
+
+        //ceil 取大于当前数的最近一个整数
+        System.out.println("ceil(3.8)======" + Math.ceil(3.8) + "=======ceil(-3.8)====" + Math.ceil(-3.8));
+
+        //和ceil相反：取小于当前数的最近一个整数
+        System.out.println("floor(3.8)======" + Math.floor(3.8) + "=======floor(-3.8)====" + Math.floor(-3.8));
+    }
 
 
 }

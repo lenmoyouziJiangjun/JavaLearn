@@ -17,6 +17,7 @@ public class WeakReferenceLearn {
   public Entry entry = new Entry(this, this);
 
 
+
   public WeakReferenceLearn(String name, String address) {
     this.name = name;
     this.address = address;

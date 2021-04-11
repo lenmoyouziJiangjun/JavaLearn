@@ -24,10 +24,20 @@ public class WeatherData implements Subject {
     }
   }
 
+  @Override
+  public void registerObserver(headfirst.observer.WeatherStation.Observer o) {
+
+  }
+
+  @Override
+  public void removeObserver(headfirst.observer.WeatherStation.Observer o) {
+
+  }
+
   public void notifyObservers() {
     for (int i = 0; i < observers.size(); i++) {
       java.util.Observer observer = (Observer) observers.get(i);
-      observer.update(temperature, humidity, pressure);
+//      observer.update(temperature, humidity, pressure);
     }
   }
 

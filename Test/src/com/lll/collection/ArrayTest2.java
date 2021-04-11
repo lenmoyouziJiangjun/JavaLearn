@@ -16,28 +16,40 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ArrayTest2 {
 
 
-  public static void testArraySubList() {
-    List<String> names = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
-      names.add("haha----" + i);
+  public static void remove11(List<String> list, String target) {
+    for (int i = 0; i < list.size(); i++) {
+      String item = list.get(i);
+      if (target.contains(item)) {
+        list.remove(item);
+      }
     }
-
-    printList(names);
-
-    List subName = names.subList(9, 10);
-    System.out.println("--------------------------");
-    printList(subName);
   }
 
-  private static void printList(List<String> list) {
-    for (String str : list) {
-      System.out.print(str + "    ");
+  public static void remove13(List<String> list, String target) {
+    for (String item : list) {
+      if (target.equals(item)) {
+        list.remove(item);
+      }
     }
   }
 
 
   public static void main(String[] args) {
-    testArraySubList();
+    System.out.println("value ==" + ((16 - 1) & 14));
+    System.out.println("value ==" + ((16 - 1) & 15));
+    System.out.println("value ==" + ((16 - 1) & 16));
+    System.out.println("value2 == " + ((16 - 1) & 17));
+    System.out.println("value2 == " + ((16 - 1) & 18));
+    System.out.println("value2 == " + ((16 - 1) & 19));
+
+    int n =  - 1;
+    n |= n >>> 1;
+    n |= n >>> 2;
+    n |= n >>> 4;
+    n |= n >>> 8;
+    n |= n >>> 16;
+
+    System.out.println("value3 == " +n);
   }
 
 

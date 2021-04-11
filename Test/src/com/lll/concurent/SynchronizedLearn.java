@@ -1,5 +1,8 @@
 package com.lll.concurent;
 
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+
 /**
  * Version 1.0
  * Created by lll on 12/4/17.
@@ -52,6 +55,7 @@ public class SynchronizedLearn {
           SynchronizedLearn.addJ();
           System.out.print(Thread.currentThread().getName() + "i===" + learn.i + "-------static.j=====" + SynchronizedLearn.j + "--------obj.j==" + learn.j + "\n");
         }
+
       }
     }.start();
 

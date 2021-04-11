@@ -30,4 +30,9 @@ public class ForecastDisplay implements Observer, DisplayElement {
       System.out.println("Watch out for cooler, rainy weather");
     }
   }
+
+  @Override
+  public void update(Observable o, Object arg) {
+
+  }
 }

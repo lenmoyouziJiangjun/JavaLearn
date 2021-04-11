@@ -2,7 +2,11 @@ package com.lll.concurent.collection;
 
 import com.lll.collection.learn.ArrayMap;
 
+import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Version 1.0
@@ -12,20 +16,34 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class ConcurrentHashMapLearn {
 
-  /**
-   * 并发容器：
-   *
-   * <pre>
-   *     ConcurrentHashMap;
-   Hashtable;
-   ConcurrentLinkedQueue;
-   ConcurrentLinkedDeque
-   *
-   * </pre>
-   *
-   *
-   *
-   */
+    /**
+     * 并发容器：
+     *
+     * <pre>
+     *     ConcurrentHashMap;
+     * Hashtable;
+     * ConcurrentLinkedQueue;
+     * ConcurrentLinkedDeque
+     *
+     * </pre>
+     */
 
+    ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
+
+
+    /**
+     *
+     */
+    Hashtable hashtable = new Hashtable();
+
+    /**
+     *
+     */
+    ConcurrentSkipListMap skipListMap = new ConcurrentSkipListMap();
+
+    /**
+     *
+     */
+    CopyOnWriteArrayList list = new CopyOnWriteArrayList();
 
 }

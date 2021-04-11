@@ -54,7 +54,7 @@ public class BlockingQueueLearn {
   public DelayQueue<MyDelay> delayQueue = new DelayQueue<>();
 
   /**
-   *
+   * 不存储元素的无界队列，对于并发性操作，
    */
   public SynchronousQueue<String> synchronousQueue = new SynchronousQueue<>(true);
 
